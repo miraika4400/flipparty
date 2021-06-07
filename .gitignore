@@ -1,0 +1,9 @@
+/チーム制作③/TeamProjects/.vs/TeamProjects/v14/.suo
+*.exe
+*.ilk
+*.pdb
+*.obj
+*.log
+*.idb
+TeamProjects.tlog
+*.db
