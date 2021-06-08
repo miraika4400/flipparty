@@ -29,6 +29,7 @@
 #include "model.h"
 #include "resource_texture.h"
 #include "resource_model.h"
+#include "player.h"
 
 //=============================
 // 静的メンバ変数宣言
@@ -123,9 +124,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	CResourceModel::Create();
 
 	// テクスチャ・モデルの読み込み
-	CNumber::Load();        // ナンバー
 	CPause::Load();         // ポーズ
-
+	CPlayer::Load();
 
 	// ポーズ状態の時
 	return S_OK;
@@ -145,9 +145,8 @@ void CManager::Uninit(void)
 	CResourceModel::Release();
 
 	// テクスチャのアンロード
-	CNumber::Unload();        // ナンバー
 	CPause::Unload();         // ポーズ
-
+	CPlayer::Unload();
 	if (m_pSound != NULL)
 	{
 		// 終了処理

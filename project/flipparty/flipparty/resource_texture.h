@@ -31,6 +31,7 @@ public:
 		TEXTURE_PARTICLE_BOX,    // パーティクル*箱
 		TEXTURE_PARTICLE_STAR,   // パーティクル*星
 		TEXTURE_PARTICLE_CIRCLE, // パーティクル*円
+		TEXTURE_NUMBER,          // ナンバー
 		TEXTURE_MAX        // テクスチャ数
 	}TEXTURE_TYPE;
 	

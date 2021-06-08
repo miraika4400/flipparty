@@ -35,8 +35,6 @@ class CCourse;
 //マクロ定義
 //*****************************
 #define MAX_PLAYER_NUM 1                               // プレイヤーの最大数
-#define MAX_NPC_NUM 7                                  // NPCの最大数
-#define MAX_CHARACTER_NUM MAX_PLAYER_NUM + MAX_NPC_NUM // キャラクターの最大数(プレイヤー最大数 + NPC最大数)
 
 //*****************************
 //クラス定義

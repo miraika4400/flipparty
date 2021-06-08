@@ -11,16 +11,12 @@
 #include "number.h"
 #include "manager.h"
 #include "renderer.h"
+#include "resource_texture.h"
 
 //**********************************
 // マクロ定義
 //**********************************
-#define NUMBER_TEXTURE_PATH "./data/Textures/number001.png" // テクスチャのパス
 
-//**********************************
-// 静的メンバ変数宣言
-//**********************************
-LPDIRECT3DTEXTURE9 CNumber::m_pTexture = NULL;
 
 //==================================
 // コンストラクタ
@@ -52,31 +48,6 @@ CNumber * CNumber::Create(const int nNum, const D3DXVECTOR3 pos, const D3DXVECTO
 	pNumber->SetNumber(nNum);
 
 	return pNumber;
-}
-
-//==================================
-// ロード
-//==================================
-HRESULT CNumber::Load(void)
-{
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-	// テクスチャの生成
-	D3DXCreateTextureFromFile(pDevice, NUMBER_TEXTURE_PATH, &m_pTexture);
-
-	return S_OK;
-}
-
-//==================================
-// アンロード
-//==================================
-void CNumber::Unload(void)
-{
-	if (m_pTexture != NULL)
-	{
-		m_pTexture->Release();
-		m_pTexture = NULL;
-	}
 }
 
 //==================================
@@ -151,11 +122,8 @@ void CNumber::Draw(void)
 	//頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
-	if (m_pTexture != NULL)
-	{
-		//テクスチャの設定
-		pDevice->SetTexture(0, m_pTexture);
-	}
+	//テクスチャの設定
+	pDevice->SetTexture(0, CResourceTexture::GetTexture(CResourceTexture::TEXTURE_NUMBER));
 
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, NUM_POLYGON);

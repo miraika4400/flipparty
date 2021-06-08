@@ -156,6 +156,7 @@
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="debug_log.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="flipper.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="joypad.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="number.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="pause.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
@@ -191,6 +193,7 @@
     <ClInclude Include="collision.h" />
     <ClInclude Include="debug_log.h" />
     <ClInclude Include="fade.h" />
+    <ClInclude Include="flipper.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />
@@ -206,6 +209,7 @@
     <ClInclude Include="number.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="pause.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource_model.h" />

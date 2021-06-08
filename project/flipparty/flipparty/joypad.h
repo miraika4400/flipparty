@@ -37,9 +37,9 @@ public:
 	void Uninit(void);                            // 終了
 	void Update(void);                            // 更新
 
-	bool GetJoystickPress(int nKey, int nId);     // プレス情報の取得
-	bool GetJoystickTrigger(int nKey, int nId);   // トリガー情報の取得
-	bool GetJoystickRelease(int nKey, int nId);   // リリース情報の取得
+	bool GetJoystickPress(int nKey, int nId = 0);     // プレス情報の取得
+	bool GetJoystickTrigger(int nKey, int nId = 0);   // トリガー情報の取得
+	bool GetJoystickRelease(int nKey, int nId = 0);   // リリース情報の取得
 
 	static BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext); // ジョイパッドの列挙
 	static BOOL CALLBACK EnumAxesCallback(const DIDEVICEOBJECTINSTANCE *pdidoi, VOID *pContext);      // ジョイパッドの値の設定

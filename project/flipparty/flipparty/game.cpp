@@ -20,6 +20,7 @@
 #include "particle.h"
 #include "time.h"
 #include "joypad.h"
+#include "player.h"
 
 //=============================
 // É}ÉNÉçíËã`
@@ -93,7 +94,7 @@ HRESULT CGame::Init(void)
 		m_pCamera = CCamera::Create();
 	}
 
-	CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), CResourceModel::MODEL_TEST);
+	CPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
 	return S_OK;
 }
 
