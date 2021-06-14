@@ -14,16 +14,16 @@ NUM_MODEL = 11
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/Models/pengin00/00_body_shita.x	# [0]下半身
-MODEL_FILENAME = data/Models/pengin00/01_body_ue.x		# [1]上半身
-MODEL_FILENAME = data/Models/pengin00/02_head.x	# [2]頭部
-MODEL_FILENAME = data/Models/pengin00/03_face.x	# [3]顔
+MODEL_FILENAME = data/Models/pengin00/00_body_bottom.x	# [0]下半身
+MODEL_FILENAME = data/Models/pengin00/01_body_top.x		# [1]上半身
+MODEL_FILENAME = data/Models/pengin00/02_head.x			# [2]頭部
+MODEL_FILENAME = data/Models/pengin00/03_face.x			# [3]顔
 MODEL_FILENAME = data/Models/pengin00/04_hand_L.x		# [4]左手
 MODEL_FILENAME = data/Models/pengin00/05_hand_R.x		# [5]右手
-MODEL_FILENAME = data/Models/pengin00/06_beak_0.x	# [6]上嘴
-MODEL_FILENAME = data/Models/pengin00/07_beak_1.x	# [7]下嘴
-MODEL_FILENAME = data/Models/pengin00/08_tail.x		# [8]尻尾
-MODEL_FILENAME = data/Models/pengin00/09_leg_L.x	# [9]左足
+MODEL_FILENAME = data/Models/pengin00/06_mouth_top.x	# [6]上嘴
+MODEL_FILENAME = data/Models/pengin00/07_mouth_bottom.x	# [7]下嘴
+MODEL_FILENAME = data/Models/pengin00/08_tail.x			# [8]尻尾
+MODEL_FILENAME = data/Models/pengin00/09_leg_L.x		# [9]左足
 MODEL_FILENAME = data/Models/pengin00/10_leg_R.x		# [10]右足
 
 #------------------------------------------------------------------------------
