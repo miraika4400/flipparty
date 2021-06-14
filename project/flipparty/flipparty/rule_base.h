@@ -1,11 +1,11 @@
 //=============================================================================
 //
-// lightヘッダ[light.h]
+// rule_baseヘッダ[rule_base.h]
 // Author :増澤 未来
 //
 //=============================================================================
-#ifndef _LIGHT_H_
-#define _LIGHT_H_
+#ifndef _RULE_BASE_H_
+#define _RULE_BASE_H_
 
 //*****************************
 //インクルード
@@ -15,35 +15,33 @@
 //*****************************
 // マクロ定義
 //*****************************
-#define LIGHT_DIR  D3DXVECTOR3(0.4f, -0.5f, 0.5f)// ライトの方向
 
 //*****************************
 // 前方宣言
 //*****************************
 
-
 //*****************************
 // クラス定義
 //*****************************
-// ライトクラス
-class CLight
+// ルール基礎クラス
+class CRuleBase
 {
 public:
 	//============
 	//メンバ関数
 	//============
-	CLight();
-	~CLight();
+	CRuleBase();
+	virtual ~CRuleBase();
 
-	HRESULT Init(void); // 初期化
-	void Uninit(void);  // 終了
-	void Update(void);  // 更新
+	virtual HRESULT Init(void) = 0; // 初期化
+	virtual void Uninit(void) = 0;  // 終了
+	virtual void Update(void) = 0;  // 更新
 
 private:
 	//============
 	// メンバ変数
 	//============
-	D3DLIGHT9 m_Light;	// ライト
+
 };
 
 

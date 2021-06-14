@@ -19,20 +19,11 @@
 //******************************
 // マクロ定義
 //******************************
-#define CAMERA_DISTANCE 850.0f                               // カメラと対象の距離
-#define CAMERA_VIEW_MAX 100000.0f                            // カメラの描画距離(遠)
+#define CAMERA_DISTANCE 400.0f                               // カメラと対象の距離
+#define CAMERA_VIEW_MAX 1000.0f                            // カメラの描画距離(遠)
 #define CAMERA_VIEW_MIN 10.0f                                // カメラの描画距離(近)
 #define CAMERA_FOV_BASE D3DXToRadian(45.0f)                  // 視野角
-#define CAMERA_FOV_RATE 0.05f                                // 視野角変化時の係数
-#define CAMERA_MOVE_SPEED_MAX 0.04f                          // カメラ操作感度最大値
-#define DAMERA_THETA_RATE 0.05f                              // カメラのシータ調整時の係数
 #define CAMERA_THETA_BASE D3DXToRadian(75.0f)                // カメラのファイ(高さ)の基本角度
-#define DAMERA_PHI_RATE 0.01f                                // カメラのファイ(高さ)調整時の係数
-#define THETA_DIFFERENCE D3DXToRadian(60)                    // シータとシータの目標値の差の最大
-
-// CPUに追従替えるに切り替えるマクロ
-#define CPU_CAMERA
-//#undef  CPU_CAMERA
 
 //******************************
 // 静的メンバ変数宣言

@@ -83,6 +83,22 @@ void CModelHierarchy::LoadModels(char * pPath, CResourceModel::Model *model,int 
 				&model[nCnt].nNumMat,
 				&model[nCnt].pMesh);
 
+			// テクスチャ読み込み
+			if (model[nCnt].nNumMat != 0)
+			{
+				D3DXMATERIAL*pMat = (D3DXMATERIAL*)model[nCnt].pBuffMat->GetBufferPointer();
+				for (int nCntMat = 0; nCntMat < (int)model[nCnt].nNumMat; nCntMat++)
+				{
+					if (pMat[nCntMat].pTextureFilename != NULL)
+					{
+						char cPath[128] = {};
+						sprintf(cPath, "./data/Textures/%s", pMat[nCntMat].pTextureFilename);
+						// テクスチャの生成
+						D3DXCreateTextureFromFile(pDevice, cPath, &model[nCnt].apTexture[nCntMat]);
+					}
+				}
+			}
+
 			// 次の文字を読み込む
 			fscanf(pFile, "%s", chChar);
 		}

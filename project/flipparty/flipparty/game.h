@@ -30,6 +30,7 @@ class CCpuPoint;
 class CCheckPoint;
 class CItemPoint;
 class CCourse;
+class CRuleBase;
 
 //*****************************
 //マクロ定義
@@ -71,7 +72,7 @@ private:
 	//*****************************
 	static CCamera*m_pCamera;            // カメラ
 	static CLight*m_pLight;                               // ライトポインタ
-
+	static CRuleBase *m_pGameRule;   // ルールクラス
 };
 
 #endif

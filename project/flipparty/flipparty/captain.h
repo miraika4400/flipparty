@@ -1,13 +1,13 @@
 //=============================================================================
 //
-// playerヘッダ [player.h]
+// captainヘッダ [captain.h]
 // Author : 増澤 未来
 //
 //=============================================================================
 
 //二重インクルード防止
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+#ifndef _CAPTAIN_H_
+#define _CAPTAIN_H_
 
 //*****************************
 // インクルード
@@ -28,15 +28,15 @@
 // クラス定義
 //*****************************
 
-// プレイヤークラス
-class CPlayer : public CModelHierarchy
+// キャプテン(見本ペンギン)クラス
+class CCaptain : public CModelHierarchy
 {
 public:
 
 	//メンバ関数
-	CPlayer();
-	~CPlayer();
-	static CPlayer *Create(D3DXVECTOR3 pos, int nPlayerNum);
+	CCaptain();
+	~CCaptain();
+	static CCaptain *Create(D3DXVECTOR3 pos);
 	static HRESULT Load(void);
 	static void Unload(void);
 
@@ -50,7 +50,6 @@ private:
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
 	static int m_nPartsNum;
-	int m_nPlayerNum;          // プレイヤー番号
 
 };
 

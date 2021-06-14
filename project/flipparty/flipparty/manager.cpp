@@ -30,6 +30,7 @@
 #include "resource_texture.h"
 #include "resource_model.h"
 #include "player.h"
+#include "Captain.h"
 
 //=============================
 // 静的メンバ変数宣言
@@ -124,8 +125,9 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	CResourceModel::Create();
 
 	// テクスチャ・モデルの読み込み
-	CPause::Load();         // ポーズ
-	CPlayer::Load();
+	CPause::Load();    // ポーズ
+	CPlayer::Load();   // プレイヤー
+	CCaptain::Load();  // キャプテン
 
 	// ポーズ状態の時
 	return S_OK;
@@ -145,8 +147,10 @@ void CManager::Uninit(void)
 	CResourceModel::Release();
 
 	// テクスチャのアンロード
-	CPause::Unload();         // ポーズ
-	CPlayer::Unload();
+	CPause::Unload();    // ポーズ
+	CPlayer::Unload();   // プレイヤー
+	CCaptain::Unload();  // キャプテン
+
 	if (m_pSound != NULL)
 	{
 		// 終了処理
@@ -225,16 +229,12 @@ void CManager::Update(void)
 		m_pInputMouse->Update();
 	}
 
-	
-
 	// レンダラークラスの更新処理
 	if (m_pRenderer != NULL)
 	{
-
 		if (m_mode == MODE_GAME)
 		{// モードゲームのときポーズ画面の処理
 
-			
 			if (m_pInputKeyboard->GetKeyTrigger(DIK_TAB) || m_pJoypad->GetJoystickTrigger(11, 0))
 			{// TAB
 
@@ -266,7 +266,6 @@ void CManager::Update(void)
 				}
 			}
 		}
-
 		else
 		{
 			m_pRenderer->Update();

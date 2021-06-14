@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////
 //
-//    particleクラスの処理[particle.cpp]
+//    captainクラスの処理[captain.cpp]
 //    Author:増澤 未来
 //
 ////////////////////////////////////////////////////
@@ -8,7 +8,7 @@
 //******************************
 // インクルード
 //******************************
-#include "player.h"
+#include "captain.h"
 #include "manager.h"
 #include "renderer.h"
 #include "keyboard.h"
@@ -20,58 +20,56 @@
 //*****************************
 // マクロ定義
 //*****************************
-#define HIERARCHY_TEXT_PATH1 "./data/Texts/hierarchy/pengin00.txt"    //階層構造テキストのパス
+#define HIERARCHY_TEXT_PATH "./data/Texts/hierarchy/Player1.txt"    //階層構造テキストのパス
 
 //*****************************
 // 静的メンバ変数宣言
 //*****************************
-CResourceModel::Model CPlayer::m_model[MAX_PARTS_NUM] = {};
-int CPlayer::m_nPartsNum = 0;
+CResourceModel::Model CCaptain::m_model[MAX_PARTS_NUM] = {};
+int CCaptain::m_nPartsNum = 0;
 
 //******************************
 // コンストラクタ
 //******************************
-CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
+CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_PLAYER)
 {
 	// 変数のクリア
-	m_nPlayerNum = 0;                  // プレイヤー番号
 }
 
 //******************************
 // デストラクタ
 //******************************
-CPlayer::~CPlayer()
+CCaptain::~CCaptain()
 {
 }
 
 //******************************
 // クリエイト
 //******************************
-CPlayer * CPlayer::Create(D3DXVECTOR3 pos, int nPlayerNum)
+CCaptain * CCaptain::Create(D3DXVECTOR3 pos)
 {
 	// メモリの確保
-	CPlayer *pPlayer;
-	pPlayer = new CPlayer;
-	pPlayer->m_nPlayerNum = nPlayerNum;
-	
+	CCaptain *pCaptain;
+	pCaptain = new CCaptain;
+
 	// 初期化
-	pPlayer->Init();
+	pCaptain->Init();
 
 	// 各値の代入・セット
-	pPlayer->SetPos(pos);
-	pPlayer->SetPriority(OBJTYPE_PLAYER); // オブジェクトタイプ
+	pCaptain->SetPos(pos);
+	pCaptain->SetPriority(OBJTYPE_PLAYER); // オブジェクトタイプ
 
-	return pPlayer;
+	return pCaptain;
 }
 
 //******************************
 // テクスチャのロード
 //******************************
-HRESULT CPlayer::Load(void)
+HRESULT CCaptain::Load(void)
 {
 
 	// モデルの読み込み
-	LoadModels(HIERARCHY_TEXT_PATH1, &m_model[0], &m_nPartsNum);
+	LoadModels(HIERARCHY_TEXT_PATH, &m_model[0], &m_nPartsNum);
 
 	return S_OK;
 }
@@ -79,7 +77,7 @@ HRESULT CPlayer::Load(void)
 //******************************
 // テクスチャのアンロード
 //******************************
-void CPlayer::Unload(void)
+void CCaptain::Unload(void)
 {
 
 	for (int nCnt = 0; nCnt < m_nPartsNum; nCnt++)
@@ -103,9 +101,9 @@ void CPlayer::Unload(void)
 //******************************
 // 初期化処理
 //******************************
-HRESULT CPlayer::Init(void)
+HRESULT CCaptain::Init(void)
 {
-	if (FAILED(CModelHierarchy::Init(m_nPartsNum, &m_model[0], HIERARCHY_TEXT_PATH1)))
+	if (FAILED(CModelHierarchy::Init(m_nPartsNum, &m_model[0], HIERARCHY_TEXT_PATH)))
 	{
 		return E_FAIL;
 	}
@@ -116,7 +114,7 @@ HRESULT CPlayer::Init(void)
 //******************************
 // 終了処理
 //******************************
-void CPlayer::Uninit(void)
+void CCaptain::Uninit(void)
 {
 	CModelHierarchy::Uninit();
 }
@@ -124,14 +122,14 @@ void CPlayer::Uninit(void)
 //******************************
 // 更新処理
 //******************************
-void CPlayer::Update(void)
+void CCaptain::Update(void)
 {
 }
 
 //******************************
 // 描画処理
 //******************************
-void CPlayer::Draw(void)
+void CCaptain::Draw(void)
 {
 	CModelHierarchy::Draw();
 }

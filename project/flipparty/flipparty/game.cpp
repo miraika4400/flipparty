@@ -21,6 +21,8 @@
 #include "time.h"
 #include "joypad.h"
 #include "player.h"
+#include "captain.h"
+#include "rule_base.h"
 
 //=============================
 // マクロ定義
@@ -35,8 +37,9 @@
 //=============================
 // 静的メンバ変数宣言
 //=============================
-CCamera *CGame::m_pCamera = {};           // カメラクラスポインタ
-CLight  *CGame::m_pLight = NULL;                           // ライトクラスポインタ
+CCamera *CGame::m_pCamera = {};       // カメラクラスポインタ
+CLight  *CGame::m_pLight = NULL;      // ライトクラスポインタ
+CRuleBase   *CGame::m_pGameRule = NULL;   // ルールクラス
 
 //=============================
 // コンストラクタ
@@ -44,7 +47,6 @@ CLight  *CGame::m_pLight = NULL;                           // ライトクラスポイン
 CGame::CGame()
 {
 	// 変数のクリア
-
 }
 
 //=============================
@@ -94,7 +96,20 @@ HRESULT CGame::Init(void)
 		m_pCamera = CCamera::Create();
 	}
 
+	// ルールクラスの初期化
+	if (m_pGameRule != NULL)
+	{
+		m_pGameRule->Uninit();
+		m_pGameRule = NULL;
+	}
+
+
+#ifdef _DEBUG
 	CPlayer::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0);
+	//CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), CResourceModel::MODEL_TEST);
+	
+#endif
+	
 	return S_OK;
 }
 
@@ -107,6 +122,7 @@ void CGame::Uninit(void)
 	if (m_pCamera != NULL)
 	{
 		m_pCamera->Uninit();
+		m_pCamera = NULL;
 	}
 	
 	// ライト
@@ -115,6 +131,14 @@ void CGame::Uninit(void)
 		m_pLight->Uninit();
 		delete m_pLight;
 		m_pLight = NULL;
+	}
+
+	// ルールクラスの破棄
+	if (m_pGameRule != NULL)
+	{
+		m_pGameRule->Uninit();
+		delete m_pGameRule;
+		m_pGameRule = NULL;
 	}
 
 	// 開放処理

@@ -153,6 +153,7 @@
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="captain.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="debug_log.cpp" />
     <ClCompile Include="fade.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="bg.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="captain.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="debug_log.h" />
     <ClInclude Include="fade.h" />
@@ -214,6 +216,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource_model.h" />
     <ClInclude Include="result.h" />
+    <ClInclude Include="rule_base.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="scene2d.h" />
     <ClInclude Include="scene3d.h" />
