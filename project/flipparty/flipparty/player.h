@@ -23,6 +23,7 @@
 //*****************************
 // 前方宣言
 //*****************************
+class CFlipper;
 
 //*****************************
 // クラス定義
@@ -51,7 +52,7 @@ private:
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
 	static int m_nPartsNum;
 	int m_nPlayerNum;          // プレイヤー番号
-
+	CFlipper * m_pFlieer;
 };
 
 #endif#pragma once

@@ -11,7 +11,6 @@
 #include "renderer.h"
 #include "scene.h"
 #include "manager.h"
-#include "camera.h"
 #include "game.h"
 #include "fade.h"
 #include "pause.h"

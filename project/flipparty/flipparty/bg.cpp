@@ -12,16 +12,15 @@
 #include "manager.h"
 #include "renderer.h"
 #include "scene3d.h"
-#include "camera.h"
 #include "game.h"
 #include "resource_model.h"
 
 //*****************************
 // マクロ定義
 //*****************************
-#define MODEL_PATH "./data/Models/bg.x" // モデルのパス
 #define SIZE       D3DXVECTOR3(110.0f,110.0f ,110.0f) // サイズ
 #define ADD_ROT D3DXVECTOR3(0.0f,0.0005f,0.0f)         // ゆっくり回す
+
 //*****************************
 // 静的メンバ変数宣言
 //*****************************
@@ -66,7 +65,7 @@ HRESULT CBg::Init(void)
 	}
 
 	// モデル割り当て
-	BindModel(CResourceModel::GetModel(CResourceModel::MODEL_GENERAL_SPHERE));
+	BindModel(CResourceModel::GetModel(CResourceModel::MODEL_BG));
 
 	// サイズの設定
 	SetSize(SIZE);

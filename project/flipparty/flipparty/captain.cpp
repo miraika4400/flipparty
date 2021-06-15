@@ -13,7 +13,6 @@
 #include "renderer.h"
 #include "keyboard.h"
 #include "joypad.h"
-#include "camera.h"
 #include "game.h"
 
 

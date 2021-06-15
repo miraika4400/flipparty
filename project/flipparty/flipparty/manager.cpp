@@ -20,7 +20,6 @@
 #include "number.h"
 #include "score.h" 
 #include "mouse.h"
-#include "camera.h"
 #include "fade.h"
 #include "particle.h"
 #include "tutorial.h"

@@ -13,9 +13,8 @@
 #include "renderer.h"
 #include "keyboard.h"
 #include "joypad.h"
-#include "camera.h"
 #include "game.h"
-
+#include "flipper.h"
 
 //*****************************
 // マクロ定義
@@ -34,6 +33,7 @@ int CPlayer::m_nPartsNum = 0;
 CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
 {
 	// 変数のクリア
+	m_pFlieer = NULL;
 	m_nPlayerNum = 0;                  // プレイヤー番号
 }
 
@@ -110,6 +110,7 @@ HRESULT CPlayer::Init(void)
 		return E_FAIL;
 	}
 
+	m_pFlieer = CFlipper::Create();
 	return S_OK;
 }
 
@@ -119,6 +120,13 @@ HRESULT CPlayer::Init(void)
 void CPlayer::Uninit(void)
 {
 	CModelHierarchy::Uninit();
+
+	// フリッパークラスの終了処理
+	if (m_pFlieer != NULL)
+	{
+		m_pFlieer->Uninit();
+		m_pFlieer = NULL;
+	}
 }
 
 //******************************
@@ -126,6 +134,26 @@ void CPlayer::Uninit(void)
 //******************************
 void CPlayer::Update(void)
 {
+	CResourceModel::Model * pModelData = GetModelData();
+	
+	if (CManager::GetKeyboard()->GetKeyPress(DIK_UP))
+	{
+		pModelData[5].rot.z -= D3DXToRadian(2.0f);
+	}
+	else if (CManager::GetKeyboard()->GetKeyPress(DIK_DOWN))
+	{
+		pModelData[5].rot.z += D3DXToRadian(2.0f);
+	}
+
+	if (CManager::GetKeyboard()->GetKeyPress(DIK_W))
+	{
+		pModelData[4].rot.z += D3DXToRadian(2.0f);
+	}
+	else if (CManager::GetKeyboard()->GetKeyPress(DIK_S))
+	{
+		pModelData[4].rot.z -= D3DXToRadian(2.0f);
+	}
+	
 }
 
 //******************************

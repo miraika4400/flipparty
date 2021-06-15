@@ -13,7 +13,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "game.h"
-#include "camera.h"
+#include "camera_base.h"
 #include "light.h"
 #include "resource_model.h"
 
