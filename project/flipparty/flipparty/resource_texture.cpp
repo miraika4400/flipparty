@@ -28,7 +28,11 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/particle001.png",  // パーティクル*箱
 	"./data/Textures/particle000.png",  // パーティクル*星
 	"./data/Textures/particle004.png",  // パーティクル*円
-	"./data/Textures/number001.png",    // ナンバー
+	"./data/Textures/number.png",       // ナンバー
+	"./data/Textures/debug_left.png",   // 左
+	"./data/Textures/debug_right.png",  // 右
+	"./data/Textures/debug_up.png",     // 上
+	"./data/Textures/debug_down.png",   // 下
 
 };
 

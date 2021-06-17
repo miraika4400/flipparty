@@ -32,6 +32,10 @@ public:
 		TEXTURE_PARTICLE_STAR,   // パーティクル*星
 		TEXTURE_PARTICLE_CIRCLE, // パーティクル*円
 		TEXTURE_NUMBER,          // ナンバー
+		TEXTURE_LEFT,            // 左矢印
+		TEXTURE_RIGHT,           // 右矢印
+		TEXTURE_UP,              // 上矢印
+		TEXTURE_DOWN,            // 下矢印
 		TEXTURE_MAX        // テクスチャ数
 	}TEXTURE_TYPE;
 	

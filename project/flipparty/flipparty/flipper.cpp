@@ -50,8 +50,8 @@ CFlipper * CFlipper::Create(void)
 HRESULT CFlipper::Init(void)
 {
 	// ä¯èÛë‘ÇÃèâä˙âª
-	m_flagState[FLAG_TYPE_LEFT] = FLAG_STATE_NONE;
-	m_flagState[FLAG_TYPE_RIGHT] = FLAG_STATE_NONE;
+	m_flagState[FLIPPER_TYPE_LEFT] = FLIPPER_STATE_NONE;
+	m_flagState[FLIPPER_TYPE_RIGHT] = FLIPPER_STATE_NONE;
 
 	return S_OK;
 }

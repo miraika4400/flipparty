@@ -37,6 +37,10 @@ int					g_nCountFPS = 0;			// FPSカウンタ
 //=============================================================================
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+#ifdef _DEBUG
+	// メモリリーク見つける君
+	::_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
+#endif
 	// 乱数の初期化
 	srand((unsigned)time(NULL));
 

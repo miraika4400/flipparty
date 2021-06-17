@@ -25,6 +25,10 @@
 //*****************************
 class CFlipper;
 
+#ifdef _DEBUG
+class CPolygon;
+#endif // _DEBUG
+
 //*****************************
 // クラス定義
 //*****************************
@@ -47,12 +51,21 @@ public:
 	void Draw(void);
 
 private:
+	void ControllFlipper(void);    // 羽の操作
+	void ManageFlipperAngle(void); // 羽の角度管理
 
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
 	static int m_nPartsNum;
 	int m_nPlayerNum;          // プレイヤー番号
-	CFlipper * m_pFlieer;
+	CFlipper * m_pFlieer;      // フリッパークラス
+	float m_fFlipperDist[2];   // フリッパーの角度目標値
+
+#ifdef _DEBUG
+	// デバッグ用変数
+	CPolygon * m_pPolygon[2];// ポリゴンクラスのポインタ
+#endif // _DEBUG
+
 };
 
 #endif#pragma once

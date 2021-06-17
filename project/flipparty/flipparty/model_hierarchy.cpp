@@ -286,6 +286,8 @@ void CModelHierarchy::Draw(void)
 		}
 		//保持していたマテリアルを戻す
 		pDevice->SetMaterial(&matDef);
+		// テクスチャの初期化
+		pDevice->SetTexture(0, 0);
 	}
 }
 
