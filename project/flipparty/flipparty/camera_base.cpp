@@ -19,7 +19,7 @@
 //******************************
 // マクロ定義
 //******************************
-#define CAMERA_INIT_POS D3DXVECTOR3(0.0f,0.0f,0.0f)
+#define CAMERA_INIT_POS D3DXVECTOR3(0.0f,0.0f,400.0f)
 #define CAMERA_VIEW_MAX 100000.0f                            // カメラの描画距離(遠)
 #define CAMERA_VIEW_MIN 10.0f                                // カメラの描画距離(近)
 #define CAMERA_FOV_BASE D3DXToRadian(45.0f)                  // 視野角
@@ -102,19 +102,18 @@ void CCamera::SetCamera(void)
 	D3DXMATRIXA16 matWorld;
 
 	//ビューマトリックスの初期化
-	D3DXMatrixIdentity(&this->m_mtxView);
+	D3DXMatrixIdentity(&m_mtxView);
 	//ビューマトリックスの作成
-	D3DXMatrixLookAtLH(&this->m_mtxView, &this->m_posV, &this->m_posR, &this->m_vecU);
+	D3DXMatrixLookAtLH(&m_mtxView, &m_posV, &m_posR, &m_vecU);
 	//ビューマトリックスの設定
-	pDevice->SetTransform(D3DTS_VIEW, &this->m_mtxView);
+	pDevice->SetTransform(D3DTS_VIEW, &m_mtxView);
 
 	//プロジェクトマトリックスの初期化
-	D3DXMatrixIdentity(&this->m_mtxProjection);
+	D3DXMatrixIdentity(&m_mtxProjection);
 
-	D3DXMatrixPerspectiveFovLH(&this->m_mtxProjection,
+	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
 		m_fFov, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, CAMERA_VIEW_MIN, CAMERA_VIEW_MAX);
 	
 	//プロジェクションマトリックスの設定
-	pDevice->SetTransform(D3DTS_PROJECTION, &this->m_mtxProjection);
-	pDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), 1.0f, 0);
+	pDevice->SetTransform(D3DTS_PROJECTION, &m_mtxProjection);
 }

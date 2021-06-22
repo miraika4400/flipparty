@@ -30,8 +30,8 @@ public:
 	//============
 	//ƒƒ“ƒoŠÖ”
 	//============
-	CRuleBase();
-	virtual ~CRuleBase();
+	CRuleBase() {};
+	virtual ~CRuleBase() {};
 
 	virtual HRESULT Init(void) = 0; // ‰Šú‰»
 	virtual void Uninit(void) = 0;  // I—¹

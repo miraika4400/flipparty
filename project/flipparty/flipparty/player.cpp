@@ -17,19 +17,23 @@
 #include "flipper.h"
 #include "polygon.h"
 #include "resource_texture.h"
+#include "billboard.h"
 
 //*****************************
 // マクロ定義
 //*****************************
-#define HIERARCHY_TEXT_PATH1 "./data/Texts/hierarchy/pengin00.txt"    //階層構造テキストのパス
-#define RIGHT_FLIPPER_PARTS_NUM 5 // 右羽のパーツ番号
-#define LEFT_FLIPPER_PARTS_NUM  4 // 左羽のパーツ番号
-#define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-60.0f)
-#define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)
-#define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP
-#define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN
-#define FLIPPER_RATE 0.07f // 羽を動かすときの係数
-#define FLIPPER_JUDGE D3DXToRadian(20.0f) // 上がっているか下がっているか判定の基準値
+#define HIERARCHY_TEXT_PATH1 "./data/Texts/hierarchy/pengin00.txt"   // 階層構造テキストのパス
+#define RIGHT_FLIPPER_PARTS_NUM 5                                    // 右羽のパーツ番号
+#define LEFT_FLIPPER_PARTS_NUM  4                                    // 左羽のパーツ番号
+#define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-60.0f)           // 右羽を上げたときの角度
+#define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)            // 右羽を下げたときの角度
+#define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
+#define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
+#define FLIPPER_RATE 0.07f                                           // 羽を動かすときの係数
+#define FLIPPER_JUDGE D3DXToRadian(20.0f)                            // 上がっているか下がっているか判定の基準値
+#define PLAYER_NUMBER_ICON_HEIGHT 85.0f                              // プレイヤー番号アイコンの高さ
+#define PLAYER_NUMBER_ICON_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)       // プレイヤー番号アイコンのサイズ
+#define PLAYER_NUMBER_ICON_POS  D3DXVECTOR3(GetPos().x, GetPos().y + PLAYER_NUMBER_ICON_HEIGHT, GetPos().z) // プレイヤー番号アイコンの位置
 
 //*****************************
 // 静的メンバ変数宣言
@@ -46,6 +50,8 @@ CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
 	m_pFlieer = NULL;
 	m_nPlayerNum = 0;                  // プレイヤー番号
 	ZeroMemory(&m_fFlipperDist, sizeof(m_fFlipperDist)); // 羽の角度 目標値
+	m_pPlayerNumIcon = NULL; // プレイヤー番号アイコン
+	m_bMove = false;         // 動けるかどうかのフラグ
 
 #ifdef _DEBUG
 	// デバッグ用変数
@@ -85,7 +91,6 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, int nPlayerNum)
 //******************************
 HRESULT CPlayer::Load(void)
 {
-
 	// モデルの読み込み
 	LoadModels(HIERARCHY_TEXT_PATH1, &m_model[0], &m_nPartsNum);
 
@@ -97,7 +102,6 @@ HRESULT CPlayer::Load(void)
 //******************************
 void CPlayer::Unload(void)
 {
-
 	for (int nCnt = 0; nCnt < m_nPartsNum; nCnt++)
 	{
 		//メッシュの破棄
@@ -132,9 +136,36 @@ HRESULT CPlayer::Init(void)
 	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = 0.0f;
 	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = 0.0f;
 
+	// プレイヤーアイコンの設定
+	m_pPlayerNumIcon = CBillboard::Create(PLAYER_NUMBER_ICON_POS, PLAYER_NUMBER_ICON_SIZE);
+	
+	// アイコンテクスチャの設定
+	if (m_pPlayerNumIcon != NULL)
+	{
+		switch (m_nPlayerNum)
+		{
+		case 0:
+			m_pPlayerNumIcon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_ICON_1P));
+			break;
+		case 1:
+			m_pPlayerNumIcon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_ICON_2P));
+			break;
+		case 2:
+			m_pPlayerNumIcon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_ICON_3P));
+			break;
+		case 3:
+			m_pPlayerNumIcon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_ICON_4P));
+			break;
+		default:
+			break;
+		}
+	}
 
+	// 動けるフラグの初期化
+	m_bMove = false;
 
 #ifdef _DEBUG
+	m_bMove = true;
 	// デバッグ用
 	m_pPolygon[CFlipper::FLIPPER_TYPE_LEFT] = CPolygon::Create(D3DXVECTOR3(50.0f, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));// ポリゴンクラスのポインタ
 	m_pPolygon[CFlipper::FLIPPER_TYPE_RIGHT] = CPolygon::Create(D3DXVECTOR3(SCREEN_WIDTH - 50.0f, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
@@ -156,6 +187,14 @@ void CPlayer::Uninit(void)
 		m_pFlieer = NULL;
 	}
 
+	// アイコンの解放
+	if (m_pPlayerNumIcon != NULL)
+	{
+		m_pPlayerNumIcon->Uninit();
+		delete m_pPlayerNumIcon;
+		m_pPlayerNumIcon = NULL;
+	}
+
 #ifdef _DEBUG
 	for (int nCntPolygon = 0; nCntPolygon < 2; nCntPolygon++)
 	{
@@ -174,8 +213,17 @@ void CPlayer::Uninit(void)
 //******************************
 void CPlayer::Update(void)
 {
-	// 羽を動かす
-	ControllFlipper();
+	if (m_bMove)
+	{
+		// 羽を動かす
+		ControllFlipper();
+	}
+
+	// プレイヤー番号アイコンの位置の設定
+	if (m_pPlayerNumIcon != NULL)
+	{
+		m_pPlayerNumIcon->SetPos(PLAYER_NUMBER_ICON_POS);
+	}
 
 #ifdef _DEBUG
 
@@ -216,6 +264,11 @@ void CPlayer::Draw(void)
 {
 	CModelHierarchy::Draw();
 
+	if (m_pPlayerNumIcon != NULL)
+	{
+		m_pPlayerNumIcon->Draw();
+	}
+
 #ifdef _DEBUG
 	m_pPolygon[CFlipper::FLIPPER_TYPE_LEFT]->Draw();
 	m_pPolygon[CFlipper::FLIPPER_TYPE_RIGHT]->Draw();
@@ -227,7 +280,6 @@ void CPlayer::Draw(void)
 //******************************
 void CPlayer::ControllFlipper(void)
 {
-
 
 #ifdef _DEBUG
 	// キーボード操作

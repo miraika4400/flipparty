@@ -33,7 +33,13 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/debug_right.png",  // 右
 	"./data/Textures/debug_up.png",     // 上
 	"./data/Textures/debug_down.png",   // 下
-
+	"./data/Textures/1p_ui.png",        // 1pアイコン
+	"./data/Textures/2p_ui.png",        // 2pアイコン
+	"./data/Textures/3p_ui.png",        // 3pアイコン
+	"./data/Textures/4p_ui.png",        // 4pアイコン
+	"./data/Textures/select2.png",      // 人数選択UI2人
+	"./data/Textures/select3.png",      // 人数選択UI3人
+	"./data/Textures/select4.png",      // 人数選択UI4人
 };
 
 //===================================

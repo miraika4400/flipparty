@@ -20,11 +20,11 @@
 //*****************************
 
 // ビルボードクラス
-class CBillboard : public CScene
+class CBillboard
 {
 public:
 	// メンバ関数
-	CBillboard(int nPliority = OBJTYPE_NONE);
+	CBillboard();
 	~CBillboard();
 	static CBillboard *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size);
 	HRESULT Init(void);

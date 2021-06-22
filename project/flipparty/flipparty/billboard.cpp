@@ -22,7 +22,7 @@
 //===================================
 // コンストラクタ
 //===================================
-CBillboard::CBillboard(int nPriority) :CScene(nPriority)
+CBillboard::CBillboard()
 {
 	m_pTexture = NULL;
 	m_pVtxBuff = NULL;
@@ -123,8 +123,6 @@ void CBillboard::Uninit(void)
 		m_pVtxBuff->Release();
 		m_pVtxBuff = NULL;
 	}
-
-	Release();
 }
 
 //===================================

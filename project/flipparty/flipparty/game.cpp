@@ -14,6 +14,7 @@
 #include "score.h" 
 #include "mouse.h"
 #include "camera_tps.h"
+#include "camera_flygame.h"
 #include "light.h"
 #include "fade.h"
 #include "keyboard.h"
@@ -73,9 +74,6 @@ CGame * CGame::Create(void)
 //=============================
 HRESULT CGame::Init(void)
 {
-	// カーソルを消す
-	ShowCursor(FALSE);
-
 	// ポーズの初期化
 	CManager::SetActivePause(false);
 
@@ -90,12 +88,6 @@ HRESULT CGame::Init(void)
 		}
 	}
 
-	// カメラクラスの生成
-	if (m_pCamera == NULL)
-	{
-		m_pCamera = CTpsCamera::Create();
-	}
-
 	// ルールクラスの初期化
 	if (m_pGameRule != NULL)
 	{
@@ -103,10 +95,27 @@ HRESULT CGame::Init(void)
 		m_pGameRule = NULL;
 	}
 
+	// ルールクラスの生成
+	///////////////////////////////////////////////////////////////
+
+	// 背景の生成
 	CBg::Create();
+
 #ifdef _DEBUG
+
+	///////////////////////////////////////////////////////////////
+	// 各ルールクラスで生成する者たちの仮生成
+	
+	// カメラクラスの生成
+	SetCamera(CTpsCamera::Create());
+
+	// プレイヤーの生成
 	CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
+
 	//CModel::Create(D3DXVECTOR3(0.0f, 35.0f, -20.0f), CResourceModel::MODEL_GENERAL_SPHERE,D3DXVECTOR3(10.0f,10.0f,10.0f));
+	
+	//
+	///////////////////////////////////////////////////////////////
 	
 #endif
 	
@@ -145,7 +154,6 @@ void CGame::Uninit(void)
 	Release();
 }
 
-
 //=============================
 // 更新処理
 //=============================
@@ -156,6 +164,12 @@ void CGame::Update(void)
 	if (m_pCamera != NULL)
 	{
 		m_pCamera->Update();
+	}
+
+	// ルールクラスの更新処理
+	if (m_pGameRule != NULL)
+	{
+		m_pGameRule->Update();
 	}
 
 #ifdef _DEBUG
@@ -179,5 +193,21 @@ void CGame::Draw(void)
 	{
 		m_pCamera->SetCamera();
 	}
+}
+
+//=============================
+// カメラクラスのセット処理
+//=============================
+void CGame::SetCamera(CCamera * pCamera)
+{
+	// カメラクラスの解放処理
+	if (m_pCamera != NULL)
+	{
+		m_pCamera->Uninit();
+		m_pCamera = NULL;
+	}
+
+	// セット
+	m_pCamera = pCamera;
 }
 

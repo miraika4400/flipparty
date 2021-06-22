@@ -154,9 +154,11 @@
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="camera_base.cpp" />
+    <ClCompile Include="camera_flygame.cpp" />
     <ClCompile Include="camera_tps.cpp" />
     <ClCompile Include="captain.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="count_selection.cpp" />
     <ClCompile Include="debug_log.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="flipper.cpp" />
@@ -194,9 +196,11 @@
     <ClInclude Include="bg.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="camera_base.h" />
+    <ClInclude Include="camera_flygame.h" />
     <ClInclude Include="camera_tps.h" />
     <ClInclude Include="captain.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="count_selection.h" />
     <ClInclude Include="debug_log.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="flipper.h" />
