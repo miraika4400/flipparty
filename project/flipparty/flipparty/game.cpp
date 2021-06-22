@@ -14,6 +14,7 @@
 #include "score.h" 
 #include "mouse.h"
 #include "camera_tps.h"
+#include "camera_flygame.h"
 #include "light.h"
 #include "fade.h"
 #include "keyboard.h"
@@ -73,9 +74,6 @@ CGame * CGame::Create(void)
 //=============================
 HRESULT CGame::Init(void)
 {
-	// カーソルを消す
-	ShowCursor(FALSE);
-
 	// ポーズの初期化
 	CManager::SetActivePause(false);
 
@@ -93,7 +91,7 @@ HRESULT CGame::Init(void)
 	// カメラクラスの生成
 	if (m_pCamera == NULL)
 	{
-		m_pCamera = CTpsCamera::Create();
+		m_pCamera = CFlyGameCamera::Create();
 	}
 
 	// ルールクラスの初期化

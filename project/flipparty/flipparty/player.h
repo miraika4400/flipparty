@@ -24,7 +24,7 @@
 // 前方宣言
 //*****************************
 class CFlipper;
-
+class CBillboard;
 #ifdef _DEBUG
 class CPolygon;
 #endif // _DEBUG
@@ -56,10 +56,11 @@ private:
 
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
-	static int m_nPartsNum;
-	int m_nPlayerNum;          // プレイヤー番号
-	CFlipper * m_pFlieer;      // フリッパークラス
-	float m_fFlipperDist[2];   // フリッパーの角度目標値
+	static int m_nPartsNum;        // モデルパーツ数
+	int m_nPlayerNum;              // プレイヤー番号
+	CFlipper * m_pFlieer;          // フリッパークラス
+	float m_fFlipperDist[2];       // フリッパーの角度目標値
+	CBillboard * m_pPlayerNumIcon; // プレイヤー番号のアイコン
 
 #ifdef _DEBUG
 	// デバッグ用変数

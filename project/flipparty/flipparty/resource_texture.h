@@ -36,6 +36,13 @@ public:
 		TEXTURE_RIGHT,           // 右矢印
 		TEXTURE_UP,              // 上矢印
 		TEXTURE_DOWN,            // 下矢印
+		TEXTURE_ICON_1P,         // 1pアイコン
+		TEXTURE_ICON_2P,         // 2pアイコン
+		TEXTURE_ICON_3P,         // 3pアイコン
+		TEXTURE_ICON_4P,         // 4pアイコン
+		TEXTURE_COUNT_SELECT_2,  // 人数選択UI2人
+		TEXTURE_COUNT_SELECT_3,  // 人数選択UI3人
+		TEXTURE_COUNT_SELECT_4,  // 人数選択UI4人
 		TEXTURE_MAX        // テクスチャ数
 	}TEXTURE_TYPE;
 	

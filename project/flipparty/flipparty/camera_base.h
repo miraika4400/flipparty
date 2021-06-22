@@ -50,9 +50,9 @@ protected:
 	//============
 	D3DXVECTOR3 m_posV;          // カメラの座標
 	D3DXVECTOR3 m_posR;          // 注視点
+	D3DXVECTOR3 m_vecU;          // 上方向ベクトル
 private:
 
-	D3DXVECTOR3 m_vecU;          // 上方向ベクトル
 	D3DXMATRIX  m_mtxProjection; // プロジェクションマトリックス
 	D3DXMATRIX  m_mtxView;       // ビューマトリックス
 	float m_fFov;                // 視野角

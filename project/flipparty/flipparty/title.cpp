@@ -19,6 +19,7 @@
 #include "fade.h"
 #include "sound.h"
 #include "resource_texture.h"
+#include "count_selection.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -69,6 +70,8 @@ HRESULT CTitle::Init(void)
 
 	m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_TITLE));
 	
+	// 人数選択クラスの生成
+	CCountSelect::Create();
 	return S_OK;
 }
 
@@ -101,13 +104,13 @@ void CTitle::Update(void)
 	// ポリゴンの更新処理
 	m_pPolygon->Update();
 
-	if( CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN) || 
-		CManager::GetMouse()->GetMouseTrigger(0) || 
-		CManager::GetJoypad()->GetJoystickTrigger(3, 0)||
-		CManager::GetJoypad()->GetJoystickTrigger(11, 0))
-	{
-		CManager::GetFade()->SetFade(CManager::MODE_TUTORIAL);
-	}
+	//if( CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN) || 
+	//	CManager::GetMouse()->GetMouseTrigger(0) || 
+	//	CManager::GetJoypad()->GetJoystickTrigger(3, 0)||
+	//	CManager::GetJoypad()->GetJoystickTrigger(11, 0))
+	//{
+	//	CManager::GetFade()->SetFade(CManager::MODE_TUTORIAL);
+	//}
 }
 
 

@@ -59,7 +59,6 @@ CParticle * CParticle::Create(const D3DXVECTOR3 pos, const D3DXVECTOR3 move, con
 	pParticle->SetSize(size);                // サイズ
 	pParticle->m_nLife = nLife;              // 寿命
 	pParticle->SetColor(col);                // カラー
-	pParticle->SetPriority(OBJTYPE_PARTICLE); // オブジェクトタイプ
 	pParticle->SetAngle((float)(rand() % 360));       // 回転角度をランダム
 	pParticle->SetAddMode(true);             // 加算合成
 	return pParticle;
