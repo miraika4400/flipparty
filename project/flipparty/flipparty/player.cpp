@@ -212,11 +212,12 @@ void CPlayer::Update(void)
 	// 羽を動かす
 	ControllFlipper();
 
-
+	// プレイヤー番号アイコンの位置の設定
 	if (m_pPlayerNumIcon != NULL)
 	{
 		m_pPlayerNumIcon->SetPos(PLAYER_NUMBER_ICON_POS);
 	}
+
 #ifdef _DEBUG
 
 	for (int nCntPolygon = 0; nCntPolygon < 2; nCntPolygon++)
@@ -260,6 +261,7 @@ void CPlayer::Draw(void)
 	{
 		m_pPlayerNumIcon->Draw();
 	}
+
 #ifdef _DEBUG
 	m_pPolygon[CFlipper::FLIPPER_TYPE_LEFT]->Draw();
 	m_pPolygon[CFlipper::FLIPPER_TYPE_RIGHT]->Draw();
