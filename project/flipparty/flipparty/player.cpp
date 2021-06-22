@@ -51,6 +51,8 @@ CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
 	m_nPlayerNum = 0;                  // プレイヤー番号
 	ZeroMemory(&m_fFlipperDist, sizeof(m_fFlipperDist)); // 羽の角度 目標値
 	m_pPlayerNumIcon = NULL; // プレイヤー番号アイコン
+	m_bMove = false;         // 動けるかどうかのフラグ
+
 #ifdef _DEBUG
 	// デバッグ用変数
 	ZeroMemory(&m_pPolygon, sizeof(m_pPolygon));// ポリゴンクラスのポインタ
@@ -89,7 +91,6 @@ CPlayer * CPlayer::Create(D3DXVECTOR3 pos, int nPlayerNum)
 //******************************
 HRESULT CPlayer::Load(void)
 {
-
 	// モデルの読み込み
 	LoadModels(HIERARCHY_TEXT_PATH1, &m_model[0], &m_nPartsNum);
 
@@ -101,7 +102,6 @@ HRESULT CPlayer::Load(void)
 //******************************
 void CPlayer::Unload(void)
 {
-
 	for (int nCnt = 0; nCnt < m_nPartsNum; nCnt++)
 	{
 		//メッシュの破棄
@@ -161,7 +161,11 @@ HRESULT CPlayer::Init(void)
 		}
 	}
 
+	// 動けるフラグの初期化
+	m_bMove = false;
+
 #ifdef _DEBUG
+	m_bMove = true;
 	// デバッグ用
 	m_pPolygon[CFlipper::FLIPPER_TYPE_LEFT] = CPolygon::Create(D3DXVECTOR3(50.0f, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));// ポリゴンクラスのポインタ
 	m_pPolygon[CFlipper::FLIPPER_TYPE_RIGHT] = CPolygon::Create(D3DXVECTOR3(SCREEN_WIDTH - 50.0f, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
@@ -209,8 +213,11 @@ void CPlayer::Uninit(void)
 //******************************
 void CPlayer::Update(void)
 {
-	// 羽を動かす
-	ControllFlipper();
+	if (m_bMove)
+	{
+		// 羽を動かす
+		ControllFlipper();
+	}
 
 	// プレイヤー番号アイコンの位置の設定
 	if (m_pPlayerNumIcon != NULL)

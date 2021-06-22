@@ -50,6 +50,10 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	// ムーブフラグのセット・取得
+	void SetMoveFlag(bool bMove) { m_bMove = true; }
+	bool GetMoveFlag(void) { return m_bMove; }
+
 private:
 	void ControllFlipper(void);    // 羽の操作
 	void ManageFlipperAngle(void); // 羽の角度管理
@@ -61,6 +65,7 @@ private:
 	CFlipper * m_pFlieer;          // フリッパークラス
 	float m_fFlipperDist[2];       // フリッパーの角度目標値
 	CBillboard * m_pPlayerNumIcon; // プレイヤー番号のアイコン
+	bool m_bMove;                  // 動けるかどうかのフラグ
 
 #ifdef _DEBUG
 	// デバッグ用変数
