@@ -102,16 +102,20 @@ HRESULT CGame::Init(void)
 	CBg::Create();
 
 #ifdef _DEBUG
+
+	///////////////////////////////////////////////////////////////
+	// 各ルールクラスで生成する者たちの仮生成
+	
 	// カメラクラスの生成
-	if (m_pCamera == NULL)
-	{
-		m_pCamera = CFlyGameCamera::Create();
-	}
+	SetCamera(CTpsCamera::Create());
 
 	// プレイヤーの生成
 	CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
 
 	//CModel::Create(D3DXVECTOR3(0.0f, 35.0f, -20.0f), CResourceModel::MODEL_GENERAL_SPHERE,D3DXVECTOR3(10.0f,10.0f,10.0f));
+	
+	//
+	///////////////////////////////////////////////////////////////
 	
 #endif
 	
@@ -189,5 +193,21 @@ void CGame::Draw(void)
 	{
 		m_pCamera->SetCamera();
 	}
+}
+
+//=============================
+// カメラクラスのセット処理
+//=============================
+void CGame::SetCamera(CCamera * pCamera)
+{
+	// カメラクラスの解放処理
+	if (m_pCamera != NULL)
+	{
+		m_pCamera->Uninit();
+		m_pCamera = NULL;
+	}
+
+	// セット
+	m_pCamera = pCamera;
 }
 

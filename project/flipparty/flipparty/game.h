@@ -63,8 +63,8 @@ public:
 	void Draw(void);    // 描画
 
 	// 取得処理
-	static CCamera     *GetCamera(void) { return m_pCamera; }       // カメラポインタ
-
+	static CCamera *GetCamera(void) { return m_pCamera; } // カメラポインタ
+	static void SetCamera(CCamera * pCamera);             // カメラクラスのセット処理
 private:
 
 	//*****************************
