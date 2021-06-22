@@ -95,6 +95,9 @@ HRESULT CGame::Init(void)
 		m_pGameRule = NULL;
 	}
 
+	// ルールクラスの生成
+	///////////////////////////////////////////////////////////////
+
 	// 背景の生成
 	CBg::Create();
 
@@ -147,7 +150,6 @@ void CGame::Uninit(void)
 	Release();
 }
 
-
 //=============================
 // 更新処理
 //=============================
@@ -158,6 +160,12 @@ void CGame::Update(void)
 	if (m_pCamera != NULL)
 	{
 		m_pCamera->Update();
+	}
+
+	// ルールクラスの更新処理
+	if (m_pGameRule != NULL)
+	{
+		m_pGameRule->Update();
 	}
 
 #ifdef _DEBUG
