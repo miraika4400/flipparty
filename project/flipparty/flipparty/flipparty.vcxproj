@@ -95,6 +95,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,6 +177,7 @@
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
+    <ClCompile Include="remember_rule.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
     <ClCompile Include="result.cpp" />
@@ -215,6 +217,7 @@
     <ClInclude Include="pause.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
+    <ClInclude Include="remember_game\remember_rule.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource_model.h" />
     <ClInclude Include="result.h" />

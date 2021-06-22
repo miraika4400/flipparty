@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="remember_game">
+      <UniqueIdentifier>{25ffb2db-9bd1-4498-a545-f0c41b08081a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tutorial.cpp">
@@ -125,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="camera_base.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="remember_rule.cpp">
+      <Filter>remember_game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="camera_base.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="remember_game\remember_rule.h">
+      <Filter>remember_game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
