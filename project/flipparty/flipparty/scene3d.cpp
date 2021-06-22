@@ -139,8 +139,7 @@ void CScene3d::Draw(void)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 	D3DXMATRIX mtxRot, mtxTrans, mtxScail;//行列計算用マトリクス
 
-	
-										  // 加算モードの時
+	// 加算モードの時
 	if (m_bAddMode)
 	{
 		// 加算合成

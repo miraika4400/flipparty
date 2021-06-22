@@ -88,12 +88,6 @@ HRESULT CGame::Init(void)
 		}
 	}
 
-	// カメラクラスの生成
-	if (m_pCamera == NULL)
-	{
-		m_pCamera = CFlyGameCamera::Create();
-	}
-
 	// ルールクラスの初期化
 	if (m_pGameRule != NULL)
 	{
@@ -101,9 +95,19 @@ HRESULT CGame::Init(void)
 		m_pGameRule = NULL;
 	}
 
+	// 背景の生成
 	CBg::Create();
+
 #ifdef _DEBUG
+	// カメラクラスの生成
+	if (m_pCamera == NULL)
+	{
+		m_pCamera = CFlyGameCamera::Create();
+	}
+
+	// プレイヤーの生成
 	CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
+
 	//CModel::Create(D3DXVECTOR3(0.0f, 35.0f, -20.0f), CResourceModel::MODEL_GENERAL_SPHERE,D3DXVECTOR3(10.0f,10.0f,10.0f));
 	
 #endif

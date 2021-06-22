@@ -254,6 +254,7 @@ void CManager::Update(void)
 					delete m_pPause;
 					m_pPause = NULL;
 				}
+
 				m_pRenderer->Update();
 			}
 			else
