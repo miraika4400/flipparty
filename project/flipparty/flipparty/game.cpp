@@ -99,7 +99,7 @@ HRESULT CGame::Init(void)
 	// ルールクラスの生成
 	if (m_pGameRule == NULL)
 	{
-		//m_pGameRule = CRuleFly::Create();
+		m_pGameRule = CRuleFly::Create();
 	}
 
 	// 背景の生成
@@ -107,17 +107,17 @@ HRESULT CGame::Init(void)
 
 #ifdef _DEBUG
 
-	///////////////////////////////////////////////////////////////
-	// 各ルールクラスで生成する者たちの仮生成
-	
-	// カメラクラスの生成
-	SetCamera(CTpsCamera::Create());
-	
-	// プレイヤーの生成
-	CPlayer::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT, 0.0f), 0);
-	
+	/////////////////////////////////////////////////////////////////
+	//// 各ルールクラスで生成する者たちの仮生成
 	//
-	///////////////////////////////////////////////////////////////
+	//// カメラクラスの生成
+	//SetCamera(CTpsCamera::Create());
+	//
+	//// プレイヤーの生成
+	//CPlayer::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT, 0.0f), 0);
+	//
+	////
+	/////////////////////////////////////////////////////////////////
 	
 #endif
 	

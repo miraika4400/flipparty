@@ -47,7 +47,8 @@ int CPlayer::m_nPartsNum = 0;
 CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
 {
 	// 変数のクリア
-	m_pFlieer = NULL;
+	m_pFlipper = NULL;
+	m_pFlipperMoveState = NULL;
 	m_nPlayerNum = 0;                  // プレイヤー番号
 	ZeroMemory(&m_fFlipperDist, sizeof(m_fFlipperDist)); // 羽の角度 目標値
 	m_pPlayerNumIcon = NULL; // プレイヤー番号アイコン
@@ -132,7 +133,8 @@ HRESULT CPlayer::Init(void)
 	}
 
 	// フリッパークラスの生成
-	m_pFlieer = CFlipper::Create();
+	m_pFlipper = CFlipper::Create();
+	m_pFlipperMoveState = CFlipper::Create();
 
 	// 羽の目標角度の初期化
 	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = 0.0f;
@@ -184,12 +186,19 @@ void CPlayer::Uninit(void)
 	CModelHierarchy::Uninit();
 
 	// フリッパークラスの終了処理
-	if (m_pFlieer != NULL)
+	if (m_pFlipper != NULL)
 	{
-		m_pFlieer->Uninit();
-		m_pFlieer = NULL;
+		m_pFlipper->Uninit();
+		m_pFlipper = NULL;
 	}
 
+	// フリッパー移動状態終了処理
+	if (m_pFlipperMoveState != NULL)
+	{
+		m_pFlipperMoveState->Uninit();
+		m_pFlipperMoveState = NULL;
+	}
+	
 	// アイコンの解放
 	if (m_pPlayerNumIcon != NULL)
 	{
@@ -221,6 +230,12 @@ void CPlayer::Update(void)
 		// 羽を動かす
 		ControllFlipper();
 	}
+	else
+	{
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT , CFlipper::FLIPPER_STATE_NONE);
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT  , CFlipper::FLIPPER_STATE_NONE);
+	}
 
 	// プレイヤー番号アイコンの位置の設定
 	if (m_pPlayerNumIcon != NULL)
@@ -232,7 +247,7 @@ void CPlayer::Update(void)
 
 	for (int nCntPolygon = 0; nCntPolygon < 2; nCntPolygon++)
 	{
-		CFlipper::FLIPPER_STATE flipperState = m_pFlieer->GetState((CFlipper::FLIPPER_TYPE)nCntPolygon);
+		CFlipper::FLIPPER_STATE flipperState = m_pFlipper->GetState((CFlipper::FLIPPER_TYPE)nCntPolygon);
 
 		switch (flipperState)
 		{
@@ -286,46 +301,70 @@ void CPlayer::ControllFlipper(void)
 
 #ifdef _DEBUG
 	// キーボード操作
-	// 左羽を操作
+	// 右羽を操作
 	if (CManager::GetKeyboard()->GetKeyPress(DIK_UP))
 	{// 上げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (CManager::GetKeyboard()->GetKeyPress(DIK_DOWN))
 	{// 下げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 	}
 
-	// 右羽を操作
+	// 左羽を操作
 	if (CManager::GetKeyboard()->GetKeyPress(DIK_W))
 	{// 上げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (CManager::GetKeyboard()->GetKeyPress(DIK_S))
 	{// 下げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
 #endif // _DEBUG
 	// コントローラー操作
 	
-	// 左羽を操作
+	// 右羽を操作
 	if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lRz <= -10)
 	{// 上げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lRz >= 10)
 	{// 下げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 	}
 
-	// 右羽を操作
+	// 左羽を操作
 	if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lY <= -10)
 	{// 上げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lY >= 10)
 	{// 下げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
 
 	// 羽の角度の管理
@@ -348,28 +387,28 @@ void CPlayer::ManageFlipperAngle(void)
 	// 右羽の上がっているか下がっているかの判定
 	if (pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z <= RIGHT_FLIPPER_DIST_ANGLE_UP + FLIPPER_JUDGE)
 	{// 上がっているとき
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+		m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z >= RIGHT_FLIPPER_DIST_ANGLE_DOWN - FLIPPER_JUDGE)
 	{// 下がっているとき
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+		m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 	}
 	else
 	{// 中間
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPER_STATE_NONE);
+		m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPER_STATE_NONE);
 	}
 
 	// 右羽の上がっているか下がっているかの判定
 	if (pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z >= LEFT_FLIPPER_DIST_ANGLE_UP - FLIPPER_JUDGE)
 	{// 上がっているとき
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+		m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z <= LEFT_FLIPPER_DIST_ANGLE_DOWN + FLIPPER_JUDGE)
 	{// 下がっているとき
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+		m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
 	else
 	{// 中間
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPER_STATE_NONE);
+		m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPER_STATE_NONE);
 	}
 }
