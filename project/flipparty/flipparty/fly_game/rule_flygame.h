@@ -1,50 +1,50 @@
 //=============================================================================
 //
-// lightヘッダ[light.h]
+// rule_flyヘッダ[rule_fly.h]
 // Author :増澤 未来
 //
 //=============================================================================
-#ifndef _LIGHT_H_
-#define _LIGHT_H_
+#ifndef _RULE_FLY_GAME_H_
+#define _RULE_FLY_GAME_H_
 
 //*****************************
 //インクルード
 //*****************************
 #include "main.h"
+#include "rule_base.h"
 
 //*****************************
 // マクロ定義
 //*****************************
-#define LIGHT_DIR_BASE  D3DXVECTOR3(0.3f, -0.8f,-0.2f)// ライトの方向
 
 //*****************************
 // 前方宣言
 //*****************************
 
-
 //*****************************
 // クラス定義
 //*****************************
-// ライトクラス
-class CLight
+// フライゲームルールクラス
+class CRuleFly :public CRuleBase
 {
 public:
 	//============
 	//メンバ関数
 	//============
-	CLight();
-	~CLight();
+	CRuleFly();
+	~CRuleFly();
 
 	HRESULT Init(void); // 初期化
 	void Uninit(void);  // 終了
 	void Update(void);  // 更新
 
-	void SetDir(D3DXVECTOR3 vecDir); // 向きのセット
+	static CRuleFly *Create(void); // クラス生成
+
 private:
 	//============
 	// メンバ変数
 	//============
-	D3DLIGHT9 m_Light;	// ライト
+
 };
 
 

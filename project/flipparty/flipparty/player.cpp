@@ -52,6 +52,7 @@ CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
 	ZeroMemory(&m_fFlipperDist, sizeof(m_fFlipperDist)); // 羽の角度 目標値
 	m_pPlayerNumIcon = NULL; // プレイヤー番号アイコン
 	m_bMove = false;         // 動けるかどうかのフラグ
+	m_nRank = 0;
 
 #ifdef _DEBUG
 	// デバッグ用変数

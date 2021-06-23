@@ -24,6 +24,7 @@
 #include "player.h"
 #include "captain.h"
 #include "rule_base.h"
+#include "rule_flygame.h"
 
 //=============================
 // マクロ定義
@@ -96,7 +97,10 @@ HRESULT CGame::Init(void)
 	}
 
 	// ルールクラスの生成
-	///////////////////////////////////////////////////////////////
+	if (m_pGameRule == NULL)
+	{
+		//m_pGameRule = CRuleFly::Create();
+	}
 
 	// 背景の生成
 	CBg::Create();
@@ -108,11 +112,9 @@ HRESULT CGame::Init(void)
 	
 	// カメラクラスの生成
 	SetCamera(CTpsCamera::Create());
-
+	
 	// プレイヤーの生成
-	CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
-
-	//CModel::Create(D3DXVECTOR3(0.0f, 35.0f, -20.0f), CResourceModel::MODEL_GENERAL_SPHERE,D3DXVECTOR3(10.0f,10.0f,10.0f));
+	CPlayer::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT, 0.0f), 0);
 	
 	//
 	///////////////////////////////////////////////////////////////

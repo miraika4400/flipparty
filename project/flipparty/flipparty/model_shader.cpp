@@ -163,7 +163,7 @@ void CModelShader::Draw(void)
 				m_shader.pEffect->SetMatrix("WorldViewProj", &mat);                                                // プロジェクション
 				m_shader.pEffect->SetMatrix("World", &model.mtxWorld);                                                    // ワールド
 				m_shader.pEffect->SetFloatArray("SpecularColor", (float*)&D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f), 4); // スペキュラカラー
-				m_shader.pEffect->SetFloatArray("LightDirection", LIGHT_DIR, 3);                                   // ライトディレクション
+				m_shader.pEffect->SetFloatArray("LightDirection", LIGHT_DIR_BASE, 3);                                   // ライトディレクション
 				m_shader.pEffect->SetTexture("CubeTex", m_shader.pCubeTex);                                        // キューブテクスチャ
 
 				// パス数分描画処理のループ

@@ -16,6 +16,9 @@
     <Filter Include="remember_game">
       <UniqueIdentifier>{25ffb2db-9bd1-4498-a545-f0c41b08081a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fly_game">
+      <UniqueIdentifier>{29d0d2ce-fd3c-4542-af27-880a490b5526}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tutorial.cpp">
@@ -132,11 +135,14 @@
     <ClCompile Include="count_selection.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="camera_flygame.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="remember_rule.cpp">
       <Filter>remember_game</Filter>
+    </ClCompile>
+    <ClCompile Include="fly_game\camera_flygame.cpp">
+      <Filter>fly_game</Filter>
+    </ClCompile>
+    <ClCompile Include="fly_game\rule_flygame.cpp">
+      <Filter>fly_game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,7 +267,10 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="camera_flygame.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>fly_game</Filter>
+    </ClInclude>
+    <ClInclude Include="fly_game\rule_flygame.h">
+      <Filter>fly_game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

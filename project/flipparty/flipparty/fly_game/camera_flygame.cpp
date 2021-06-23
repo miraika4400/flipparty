@@ -19,7 +19,7 @@
 //******************************
 // マクロ定義
 //******************************
-#define CAMERA_POS D3DXVECTOR3(0.0f,0.0f,500.0f)
+#define CAMERA_POS D3DXVECTOR3(0.0f,0.0f, 500.0f)
 
 //******************************
 // 静的メンバ変数宣言
@@ -62,6 +62,7 @@ HRESULT CFlyGameCamera::Init(void)
 	// 位置の設定
 	m_posV = CAMERA_POS;
 
+	m_posR = D3DXVECTOR3(0.0f, 150.0f, 0.0f);
 	return S_OK;
 }
 

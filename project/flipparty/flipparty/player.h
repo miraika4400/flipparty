@@ -19,6 +19,7 @@
 //*****************************
 // マクロ定義
 //*****************************
+#define PLAYER_CENTER_HEIGHT 35.0f
 
 //*****************************
 // 前方宣言
@@ -38,7 +39,9 @@ class CPlayer : public CModelHierarchy
 {
 public:
 
-	//メンバ関数
+	// 列挙
+
+	// メンバ関数
 	CPlayer();
 	~CPlayer();
 	static CPlayer *Create(D3DXVECTOR3 pos, int nPlayerNum);
@@ -51,8 +54,11 @@ public:
 	void Draw(void);
 
 	// ムーブフラグのセット・取得
-	void SetMoveFlag(bool bMove) { m_bMove = true; }
+	void SetMoveFlag(bool bMove) { m_bMove = bMove; }
 	bool GetMoveFlag(void) { return m_bMove; }
+	// 順位のセット・取得
+	void SetRank(int nRank) { m_nRank = nRank; }
+	int GetRank(void) { return m_nRank; }
 
 private:
 	void ControllFlipper(void);    // 羽の操作
@@ -66,6 +72,7 @@ private:
 	float m_fFlipperDist[2];       // フリッパーの角度目標値
 	CBillboard * m_pPlayerNumIcon; // プレイヤー番号のアイコン
 	bool m_bMove;                  // 動けるかどうかのフラグ
+	int m_nRank;                   // 順位
 
 #ifdef _DEBUG
 	// デバッグ用変数
