@@ -135,7 +135,7 @@
     <ClCompile Include="camera_flygame.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="remember_rule.cpp">
+    <ClCompile Include="remember_game\remember_rule.cpp">
       <Filter>remember_game</Filter>
     </ClCompile>
   </ItemGroup>
