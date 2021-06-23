@@ -130,6 +130,7 @@ HRESULT CPlayer::Init(void)
 		return E_FAIL;
 	}
 
+	// フリッパークラスの生成
 	m_pFlieer = CFlipper::Create();
 
 	// 羽の目標角度の初期化
@@ -142,6 +143,7 @@ HRESULT CPlayer::Init(void)
 	// アイコンテクスチャの設定
 	if (m_pPlayerNumIcon != NULL)
 	{
+		// テクスチャ分岐
 		switch (m_nPlayerNum)
 		{
 		case 0:
@@ -214,7 +216,7 @@ void CPlayer::Uninit(void)
 void CPlayer::Update(void)
 {
 	if (m_bMove)
-	{
+	{// フラグがtrueの時
 		// 羽を動かす
 		ControllFlipper();
 	}
