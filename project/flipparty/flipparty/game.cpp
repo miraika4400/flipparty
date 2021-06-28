@@ -24,6 +24,7 @@
 #include "player.h"
 #include "captain.h"
 #include "rule_base.h"
+#include "remember_rule.h"
 
 //=============================
 // マクロ定義
@@ -97,7 +98,8 @@ HRESULT CGame::Init(void)
 
 	// ルールクラスの生成
 	///////////////////////////////////////////////////////////////
-
+    
+    m_pGameRule = CRememjber_rule::Create();
 	// 背景の生成
 	CBg::Create();
 
@@ -210,4 +212,3 @@ void CGame::SetCamera(CCamera * pCamera)
 	// セット
 	m_pCamera = pCamera;
 }
-

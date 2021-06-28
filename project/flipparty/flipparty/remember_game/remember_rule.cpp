@@ -10,35 +10,40 @@
 #include "manager.h"
 #include "joypad.h"
 #include "remember_rule.h"
+#include "keyboard.h"
 
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
-Crememjber_rule* Crememjber_rule::m_pinstace = nullptr;// インスタンスへのポインタ
+CRememjber_rule* CRememjber_rule::m_pinstace = nullptr;// インスタンスへのポインタ
 
 //=============================================================================
-// [Crememjber_rule]コンストラクタ
+// [CRememjber_rule]コンストラクタ
 //=============================================================================
-Crememjber_rule::Crememjber_rule()
+CRememjber_rule::CRememjber_rule()
 {
-    m_nTurn = 1;
+    m_nTurn = 0;            // ターン数初期化
+    m_nTurnPlayer = 0;      // 度のプレイヤーのターンか
+    m_nNumInput = 0;        //  プレイヤーが入力された回数
 }
 
 //=============================================================================
-// [~Crememjber_rule]デストラクタ
+// [~CRememjber_rule]デストラクタ
 //=============================================================================
-Crememjber_rule::~Crememjber_rule()
+CRememjber_rule::~CRememjber_rule()
 {
+
 }
 
 //=============================================================================
 // [Create]インスタンス生成
 //=============================================================================
-Crememjber_rule * Crememjber_rule::Create(void)
+CRememjber_rule * CRememjber_rule::Create(void)
 {
     if (!m_pinstace)
     {
-        m_pinstace = new Crememjber_rule;
+        m_pinstace = new CRememjber_rule;
+        m_pinstace->Init();
     }
     return m_pinstace;
 }
@@ -46,39 +51,92 @@ Crememjber_rule * Crememjber_rule::Create(void)
 //=============================================================================
 // [Init]初期化処理
 //=============================================================================
-HRESULT Crememjber_rule::Init(void)
+HRESULT CRememjber_rule::Init(void)
 {
-    m_nTurn = 1;// ゲーム開始時1ターンからスタート
+    m_nTurn = 0;            // ターン数初期化
+    m_nTurnPlayer = 0;      // 度のプレイヤーのターンか
+    m_nNumInput = 0;        //  プレイヤーが入力された回数
+
     return S_OK;
 }
 
 //=============================================================================
 // [Uninit]終了処理
 //=============================================================================
-void Crememjber_rule::Uninit(void)
+void CRememjber_rule::Uninit(void)
 {
+
 }
 
 //=============================================================================
 // [Uninit]更新処理
 //=============================================================================
-void Crememjber_rule::Update(void)
+void CRememjber_rule::Update(void)
 {
-    // ターン数分入力
-    for (int nCnt = 0; nCnt < m_nTurn; nCnt++)
-    {
-    //プレイヤーの入力内容を比較用データに保存
-        if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lRz <= -10)
-        {
-        }
-    }
+    // プレイヤーの入力
+    InputPlayer();
 
-        m_nTurn++;// ターン数を増やす
+    // 入力された数がターン数と同じになった
+    if (m_nNumInput == m_nTurn + 1)
+    {
+        Comparison();   // 比較
+    }
 }
 
 //=============================================================================
 // [Draw]描画処理
 //=============================================================================
-void Crememjber_rule::Draw(void)
+void CRememjber_rule::Draw(void)
 {
+
+}
+
+//=============================================================================
+// [InputPlayer]プレイヤーの入力
+//=============================================================================
+void CRememjber_rule::InputPlayer(void)
+{
+    // ターン数分入力
+    for (int nCnt = 0; nCnt < m_nTurn + 1; nCnt++)
+    {
+        //プレイヤーの入力内容を比較用データに保存
+        // 右
+        if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lRz <= -10 ||
+            CManager::GetKeyboard()->GetKeyPress(DIK_UP))
+        {
+            PlayerInput[nCnt] = CFlipper::FLIPPER_TYPE_RIGHT;
+            m_nNumInput++;
+        }
+        // 左
+        else if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 ||
+            CManager::GetKeyboard()->GetKeyPress(DIK_W))
+        {
+            PlayerInput[nCnt] = CFlipper::FLIPPER_TYPE_LEFT;
+            m_nNumInput++;
+        }
+    }
+
+    // プレイヤーの最後の入力を見本に追加
+    if (m_nNumInput == m_nTurn + 1)
+    {
+        FlipperData[m_nTurn] = PlayerInput[m_nTurn];
+    }
+}
+
+//=============================================================================
+// [Comparison]入力されたデータの比較
+//=============================================================================
+void CRememjber_rule::Comparison(void)
+{
+    for (int nCnt = 0; nCnt < m_nTurn + 1; nCnt++)
+    {
+        if (FlipperData[nCnt] != PlayerInput[nCnt])
+        {
+            // 外れた場合の処理
+            CManager::SetMode(CManager::MODE_TITLE);
+        }
+    }
+
+    m_nTurn++;// ターン数を増やす
+    m_nNumInput = 0;// 入力回数をリセット
 }

@@ -59,7 +59,7 @@ private:
 	void SelectUi(void);      // UIの選択処理
 	void ManageUiColor(void); // UIカラーの管理
 	
-							  //============
+	//============
 	// メンバ変数
 	//============
 	static int m_nPlayerNum;                // ゲームに参加しているプレイヤーの人数
