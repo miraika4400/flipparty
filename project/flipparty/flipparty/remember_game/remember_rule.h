@@ -20,14 +20,19 @@
 #define MAX_FLIPPER_DATA (10)// 見本データの最大数
 
 //*****************************************************************************
+// 前方宣言
+//*****************************************************************************
+class CPolygon;
+
+//*****************************************************************************
 // クラス定義
 //*****************************************************************************
 class CRememjber_rule : public CRuleBase
 {
     static CRememjber_rule* m_pinstace;// インスタンスへのポインタ
+    CRememjber_rule();
 
 public:
-    CRememjber_rule();
     ~CRememjber_rule();
 
     static CRememjber_rule* Create(void);
@@ -50,6 +55,13 @@ private:
     int m_nNumInput;            // 入力された回数
     int m_nTurn;                // 現在のターン数
     int m_nTurnPlayer;          // 現在自分の番のプレイヤー番号
+
+    bool m_IsinputEnd;// プレイヤーの入力が終了しているか
+
+#ifdef _DEBUG
+    // デバッグ用変数
+    CPolygon *m_pPolygon;// ポリゴンクラスのポインタ
+#endif // _DEBUG
 
 };
 

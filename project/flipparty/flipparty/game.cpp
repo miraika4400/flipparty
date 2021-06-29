@@ -190,11 +190,16 @@ void CGame::Update(void)
 //=============================
 void CGame::Draw(void)
 {
-	// カメラのセット
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->SetCamera();
-	}
+    if (m_pGameRule != NULL)
+    {
+        m_pGameRule->Draw();
+    }
+
+    // カメラのセット
+    if (m_pCamera != NULL)
+    {
+        m_pCamera->SetCamera();
+    }
 }
 
 //=============================

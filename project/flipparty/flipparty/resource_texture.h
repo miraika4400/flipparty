@@ -43,6 +43,8 @@ public:
 		TEXTURE_COUNT_SELECT_2,  // 人数選択UI2人
 		TEXTURE_COUNT_SELECT_3,  // 人数選択UI3人
 		TEXTURE_COUNT_SELECT_4,  // 人数選択UI4人
+        TEXTURE_UI_UP,           // UI「あげて」
+        TEXTURE_UI_DOWN,         // UI「さげて」
 		TEXTURE_MAX        // テクスチャ数
 	}TEXTURE_TYPE;
 	
