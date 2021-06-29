@@ -160,7 +160,7 @@ void CRememjber_rule::Comparison(void)
         if (FlipperData[nCnt] != PlayerInput[nCnt])
         {
             // ŠO‚ê‚½ê‡‚Ìˆ—
-            m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_COUNT_SELECT_2));
+            m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
         }
     }
     m_IsinputEnd = false;

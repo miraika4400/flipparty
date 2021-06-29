@@ -45,6 +45,8 @@ public:
 		TEXTURE_COUNT_SELECT_4,  // 人数選択UI4人
         TEXTURE_UI_UP,           // UI「あげて」
         TEXTURE_UI_DOWN,         // UI「さげて」
+        TEXTURE_UI_MARU,         // UI「〇」
+        TEXTURE_UI_BATU,         // UI「×」
 		TEXTURE_MAX        // テクスチャ数
 	}TEXTURE_TYPE;
 	
