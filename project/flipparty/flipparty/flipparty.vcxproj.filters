@@ -102,9 +102,6 @@
     <ClCompile Include="light.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="model_shader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -143,6 +140,18 @@
     </ClCompile>
     <ClCompile Include="fly_game\rule_flygame.cpp">
       <Filter>fly_game</Filter>
+    </ClCompile>
+    <ClCompile Include="fly_game\player_flygame.cpp">
+      <Filter>fly_game</Filter>
+    </ClCompile>
+    <ClCompile Include="timelimit.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="mini_result.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="resource_shader.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +236,6 @@
     <ClInclude Include="light.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="model_shader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -271,6 +277,18 @@
     </ClInclude>
     <ClInclude Include="fly_game\rule_flygame.h">
       <Filter>fly_game</Filter>
+    </ClInclude>
+    <ClInclude Include="fly_game\player_flygame.h">
+      <Filter>fly_game</Filter>
+    </ClInclude>
+    <ClInclude Include="timelimit.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="mini_result.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_shader.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

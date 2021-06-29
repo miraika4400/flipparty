@@ -1,62 +1,61 @@
 //=============================================================================
 //
-// model_shaderヘッダ [model_shader.h]
+// time_limitヘッダ [time_limit.h]
 // Author : 増澤 未来
 //
 //=============================================================================
 
 //二重インクルード防止
-#ifndef _MODEL_SHADER_H_
-#define _MODEL_SHADER_H_
+#ifndef _TIME_H_
+#define _TIME_H_
 
 //*****************************
-// インクルード
+//インクルード
 //*****************************
 #include "main.h"
-#include "model.h"
+#include "scene.h"
 
 //*****************************
-// マクロ定義
+//前方宣言
 //*****************************
+class CNumber;
 
 //*****************************
-// 前方宣言
+//マクロ定義
 //*****************************
+#define MAX_TIME_NUM 2 // タイムに必要なナンバーの数
 
 //*****************************
-// クラス定義
+//クラス定義
 //*****************************
 
-// キャラクタークラス
-class CModelShader : public CModel
+//タイムクラス
+class CTimeLimit : public CScene
 {
 public:
-	//==========================
-	// 列挙
-	//==========================
-
-
-	//==========================
+	//============
 	// メンバ関数
-	//==========================
-	CModelShader(int nPliority = OBJTYPE_NONE);
-	~CModelShader();
+	//============
+	CTimeLimit();
+	~CTimeLimit();
+
+	//static
+	static CTimeLimit *Create(int nLimitTime); // クラス生成
 
 	HRESULT Init(void); // 初期化
 	void Uninit(void);  // 終了
 	void Update(void);  // 更新
 	void Draw(void);    // 描画
 
-	// セッター・ゲッター
-	// シェーダー構造体
-	void SetShader(Shader shader) { m_shader = shader; }
-	Shader GetShader(void) { return m_shader; }
-
+	// 制限時間の取得
+	int GetTimeLimit(void) { return m_nLimitTime; }
 private:
-
-	//==========================
+	//============
 	// メンバ変数
-	//==========================
-	Shader m_shader;    // シェーダー構造体
+	//============
+	int m_nLimitTime;                  // 制限時間
+	CNumber* m_apNumber[MAX_TIME_NUM]; // タイム描画用のポリゴン
+	int m_nCntTime;                    // 時間カウント用
 };
+
 #endif

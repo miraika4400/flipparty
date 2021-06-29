@@ -18,28 +18,40 @@
 #include "polygon.h"
 #include "resource_texture.h"
 #include "billboard.h"
+#include "motion.h"
+#include "resource_shader.h"
+#include "camera_base.h"
+#include "light.h"
 
 //*****************************
 // マクロ定義
 //*****************************
 #define HIERARCHY_TEXT_PATH1 "./data/Texts/hierarchy/pengin00.txt"   // 階層構造テキストのパス
-#define RIGHT_FLIPPER_PARTS_NUM 5                                    // 右羽のパーツ番号
-#define LEFT_FLIPPER_PARTS_NUM  4                                    // 左羽のパーツ番号
 #define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-60.0f)           // 右羽を上げたときの角度
 #define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)            // 右羽を下げたときの角度
 #define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
 #define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
-#define FLIPPER_RATE 0.07f                                           // 羽を動かすときの係数
+#define FLIPPER_RATE 0.1f                                            // 羽を動かすときの係数
 #define FLIPPER_JUDGE D3DXToRadian(20.0f)                            // 上がっているか下がっているか判定の基準値
 #define PLAYER_NUMBER_ICON_HEIGHT 85.0f                              // プレイヤー番号アイコンの高さ
-#define PLAYER_NUMBER_ICON_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)       // プレイヤー番号アイコンのサイズ
+#define PLAYER_NUMBER_ICON_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)        // プレイヤー番号アイコンのサイズ
 #define PLAYER_NUMBER_ICON_POS  D3DXVECTOR3(GetPos().x, GetPos().y + PLAYER_NUMBER_ICON_HEIGHT, GetPos().z) // プレイヤー番号アイコンの位置
+#define FACE_PARTS_NUMBER 3  // 表情パーツのパーツ番号
+#define FACE_PATTERN 3       // 表情パターン数
+#define FACE_TEX_V (1.0f/(float)FACE_PATTERN) * (float)m_facePattern
 
 //*****************************
 // 静的メンバ変数宣言
 //*****************************
 CResourceModel::Model CPlayer::m_model[MAX_PARTS_NUM] = {};
 int CPlayer::m_nPartsNum = 0;
+char CPlayer::m_achAnimPath[MOTION_MAX][64]
+{
+	{  "./data/Texts/motion/miniresult_1.txt" },    // 待機アニメーション
+	{  "./data/Texts/motion/miniresult_2.txt" },	   // 歩きアニメーション
+	{  "./data/Texts/motion/miniresult_3.txt" },   // 鳴き声アニメーション
+	{  "./data/Texts/motion/miniresult_4.txt" },   // パンチアニメーション
+};
 
 //******************************
 // コンストラクタ
@@ -54,6 +66,8 @@ CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
 	m_pPlayerNumIcon = NULL; // プレイヤー番号アイコン
 	m_bMove = false;         // 動けるかどうかのフラグ
 	m_nRank = 0;
+	m_pActiveMotion = NULL;
+	m_facePattern = FACE_PATTERN_NORMAL;
 
 #ifdef _DEBUG
 	// デバッグ用変数
@@ -169,6 +183,12 @@ HRESULT CPlayer::Init(void)
 	// 動けるフラグの初期化
 	m_bMove = false;
 
+	// アニメーションの生成
+	for (int nCntAnim = 0; nCntAnim < MOTION_MAX; nCntAnim++)
+	{
+		m_apMotion[nCntAnim] = CMotion::Create(GetPartsNum(), m_achAnimPath[nCntAnim], GetModelData());
+	}
+
 #ifdef _DEBUG
 	m_bMove = true;
 	// デバッグ用
@@ -281,7 +301,7 @@ void CPlayer::Update(void)
 void CPlayer::Draw(void)
 {
 	CModelHierarchy::Draw();
-
+	
 	if (m_pPlayerNumIcon != NULL)
 	{
 		m_pPlayerNumIcon->Draw();
@@ -291,6 +311,138 @@ void CPlayer::Draw(void)
 	m_pPolygon[CFlipper::FLIPPER_TYPE_LEFT]->Draw();
 	m_pPolygon[CFlipper::FLIPPER_TYPE_RIGHT]->Draw();
 #endif // _DEBU
+}
+
+//******************************
+// モーションのセット処理
+//******************************
+void CPlayer::SetMotion(MOTION_TYPE type)
+{
+	// 現在アクティブのモーションの停止
+	if (m_pActiveMotion != NULL)
+	{
+		if (m_apMotion[type] == m_pActiveMotion)
+		{
+			m_pActiveMotion->SetActiveMotion(false);
+			m_pActiveMotion = NULL;
+		}
+	}
+
+	// モーションの再生
+	if (m_apMotion[type] != NULL)
+	{
+		if (!m_apMotion[type]->GetActiveMotion())
+		{
+			m_apMotion[type]->SetActiveMotion(true);
+			m_pActiveMotion = m_apMotion[type];
+		}
+	}
+}
+
+//******************************
+// モデルの描画処理
+//******************************
+void CPlayer::DrawModel(void)
+{
+	//デバイス情報の取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	D3DMATERIAL9 matDef;	//現在のマテリアル保持用
+	D3DXMATERIAL*pMat;	//マテリアルデータへのポインタ
+
+	CResourceModel::Model *pModelData = GetModelData();
+
+	for (int nCntParts = 0; nCntParts < GetPartsNum(); nCntParts++)
+	{
+		//ワールドマトリックスの設定
+		pDevice->SetTransform(D3DTS_WORLD, &pModelData[nCntParts].mtxWorld);
+
+		//現在のマテリアルを取得する
+		pDevice->GetMaterial(&matDef);
+
+		// シェーダー情報の取得
+		CResourceShader::Shader shader = CResourceShader::GetShader(CResourceShader::SHADER_PLAYER);
+
+		if (shader.pEffect != NULL)
+		{
+
+			// シェーダーに情報を渡す
+			D3DXMATRIX mat;
+			D3DXMatrixIdentity(&mat);
+			mat = pModelData[nCntParts].mtxWorld * (*CGame::GetCamera()->GetViewMtx())* (*CGame::GetCamera()->GetProjectionMtx());
+			// ワールドプロジェクション
+			shader.pEffect->SetMatrix("WorldViewProj", &mat);
+			// ワールド座標
+			shader.pEffect->SetMatrix("World", &pModelData[nCntParts].mtxWorld);
+			// ライトディレクション
+			D3DXVECTOR3 lightDir = CGame::GetLight()->GetDir();
+			shader.pEffect->SetFloatArray("LightDirection", (float*)&D3DXVECTOR3(lightDir.x, -lightDir.y, -lightDir.z), 3);
+			// 視点位置
+			D3DXVECTOR3 eye = CGame::GetCamera()->GetPos();
+			shader.pEffect->SetFloatArray("Eye", (float*)&eye, 3);
+			// スペキュラカラー
+			shader.pEffect->SetFloatArray("SpecularColor", (float*)&D3DXVECTOR4(1, 1, 1, 1), 4);
+
+			// フェイスパターン
+			if (nCntParts != FACE_PARTS_NUMBER)
+			{
+				shader.pEffect->SetFloat("fTexV", 0.0f);
+			}
+			else
+			{
+				float f = FACE_TEX_V;
+				shader.pEffect->SetFloat("fTexV", FACE_TEX_V );
+			}
+
+			//マテリアルデータへのポインタを取得
+			pMat = (D3DXMATERIAL*)pModelData[nCntParts].pBuffMat->GetBufferPointer();
+
+
+			// パス数の取得
+			UINT numPass = 0;
+			shader.pEffect->Begin(&numPass, 0);
+			// シェーダパスの終了
+			shader.pEffect->EndPass();
+
+			// パス数分描画処理のループ
+			for (int nCntEffect = 0; nCntEffect < (int)numPass; nCntEffect++)
+			{
+				for (int nCntMat = 0; nCntMat < (int)pModelData[nCntParts].nNumMat; nCntMat++)
+				{
+					//マテリアルのアンビエントにディフューズカラーを設定
+					pMat[nCntMat].MatD3D.Ambient = pMat[nCntMat].MatD3D.Diffuse;
+
+					//マテリアルの設定
+					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+					// テクスチャ
+					pDevice->SetTexture(0, pModelData[nCntParts].apTexture[nCntMat]);
+
+					// テクスチャをシェーダーに送る
+					shader.pEffect->SetTexture("Tex", pModelData[nCntParts].apTexture[nCntMat]);
+					// テクスチャをシェーダーに送る
+					shader.pEffect->SetTexture("ToonTex", CResourceTexture::GetTexture(CResourceTexture::TEXTURE_TOONSHADOW));
+					// 色
+					shader.pEffect->SetFloatArray("DiffuseColor", (float*)&pMat[nCntMat].MatD3D.Diffuse, 4);
+					// シェーダパスの描画開始
+					shader.pEffect->BeginPass(nCntEffect);
+					//モデルパーツの描画
+					pModelData[nCntParts].pMesh->DrawSubset(nCntMat);
+					// シェーダパスの終了
+					shader.pEffect->EndPass();
+
+
+					pMat[nCntMat] = pModelData[nCntParts].defMat[nCntMat];
+				}
+			}
+			shader.pEffect->End();
+		}
+		
+		//保持していたマテリアルを戻す
+		pDevice->SetMaterial(&matDef);
+		// テクスチャの初期化
+		pDevice->SetTexture(0, 0);
+	}
+
 }
 
 //******************************

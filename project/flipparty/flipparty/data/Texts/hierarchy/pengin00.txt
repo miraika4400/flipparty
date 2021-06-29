@@ -98,14 +98,14 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 9					# 左足
 		PARENT = 0					# (親)下半身
-		POS = 11.0 -28.0 0.0
+		POS = 11.0 -28.0 -3.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 10					# 右足
 		PARENT = 0					# (親)下半身
-		POS = -11.0 -28.0 0.0
+		POS = -11.0 -28.0 -3.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 END_CHARACTERSET

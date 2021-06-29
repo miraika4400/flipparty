@@ -36,10 +36,10 @@ public:
 
 	HRESULT Init(void); // 純関数用
 	HRESULT Init(int nNumParts, CResourceModel::Model *model, char*pPath); // 初期化
-	void Uninit(void);                                         // 終了
+	void Uninit(void);                                             // 終了
 	void Update(void);                                             // 更新
-	void Draw(void);                                               // 描画 
-
+	void Draw(void);                                       // 描画 
+	
 	// 各変数の取得・セット
 
 	// モデルデータ
@@ -57,7 +57,11 @@ public:
 	// 回転
 	void SetRot(const D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void)const { return m_rot; }
+
 private:
+	virtual void SetWorldmtx(void); // ワールドマトリックスの設定
+	virtual void DrawModel(void);   // モデル描画処理
+
 	//============
 	// メンバ変数
 	//============
@@ -65,7 +69,6 @@ private:
 	D3DXVECTOR3 m_pos;                         // 座標
 	D3DXVECTOR3 m_rot;                         // 回転
 	D3DXVECTOR3 m_size;                        // サイズ
-	D3DXMATERIAL m_defMat[MAX_PARTS_NUM][128]; // マテリアル保管用
 	int m_nNumParts;                           // パーツ数
 };
 #endif 

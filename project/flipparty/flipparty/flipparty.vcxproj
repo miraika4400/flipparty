@@ -163,6 +163,7 @@
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="flipper.cpp" />
     <ClCompile Include="fly_game\camera_flygame.cpp" />
+    <ClCompile Include="fly_game\player_flygame.cpp" />
     <ClCompile Include="fly_game\rule_flygame.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
@@ -171,9 +172,9 @@
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
+    <ClCompile Include="mini_result.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="model_hierarchy.cpp" />
-    <ClCompile Include="model_shader.cpp" />
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="number.cpp" />
@@ -184,6 +185,7 @@
     <ClCompile Include="remember_rule.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
+    <ClCompile Include="resource_shader.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="scene2d.cpp" />
@@ -191,6 +193,7 @@
     <ClCompile Include="score.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="resource_texture.cpp" />
+    <ClCompile Include="timelimit.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="tutorial.cpp" />
   </ItemGroup>
@@ -206,6 +209,7 @@
     <ClInclude Include="debug_log.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="flipper.h" />
+    <ClInclude Include="fly_game\player_flygame.h" />
     <ClInclude Include="fly_game\rule_flygame.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
@@ -214,9 +218,9 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="mini_result.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="model_hierarchy.h" />
-    <ClInclude Include="model_shader.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="number.h" />
@@ -227,6 +231,7 @@
     <ClInclude Include="remember_game\remember_rule.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource_model.h" />
+    <ClInclude Include="resource_shader.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="rule_base.h" />
     <ClInclude Include="scene.h" />
@@ -235,6 +240,7 @@
     <ClInclude Include="score.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="resource_texture.h" />
+    <ClInclude Include="timelimit.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="tutorial.h" />
   </ItemGroup>

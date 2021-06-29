@@ -15,7 +15,6 @@ CModelHierarchy::CModelHierarchy(int nPriority) :CScene(nPriority)
 {
 	// 変数のクリア
 	memset(&m_model, 0, sizeof(m_model));
-	memset(&m_defMat, 0, sizeof(m_defMat));
 	m_nNumParts = 0;
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -87,8 +86,10 @@ void CModelHierarchy::LoadModels(char * pPath, CResourceModel::Model *model,int 
 			if (model[nCnt].nNumMat != 0)
 			{
 				D3DXMATERIAL*pMat = (D3DXMATERIAL*)model[nCnt].pBuffMat->GetBufferPointer();
+
 				for (int nCntMat = 0; nCntMat < (int)model[nCnt].nNumMat; nCntMat++)
 				{
+					model[nCnt].defMat[nCntMat] = pMat[nCntMat];
 					if (pMat[nCntMat].pTextureFilename != NULL)
 					{
 						char cPath[128] = {};
@@ -180,7 +181,7 @@ HRESULT CModelHierarchy::Init(int nNumParts, CResourceModel::Model * model, char
 
 		for (int nCntMat = 0; nCntMat < (int)m_model[nCnt].nNumMat; nCntMat++)
 		{
-			m_defMat[nCnt][nCntMat] = ((D3DXMATERIAL*)m_model[nCnt].pBuffMat->GetBufferPointer())[nCntMat];
+			m_model[nCnt].defMat[nCntMat] = ((D3DXMATERIAL*)m_model[nCnt].pBuffMat->GetBufferPointer())[nCntMat];
 
 		}
 	}
@@ -209,12 +210,33 @@ void CModelHierarchy::Update(void)
 //=============================================================================
 void CModelHierarchy::Draw(void)
 {
+	// 座標、サイズ、回転の設定
+	SetWorldmtx();
+	// モデルの描画処理
+	DrawModel();
+}
+
+//=============================================================================
+//モデルデータのセット
+//=============================================================================
+void CModelHierarchy::SetModelData(CResourceModel::Model *pModel)
+{
+	for (int nCnt = 0; nCnt < m_nNumParts; nCnt++)
+	{
+		m_model[nCnt].pos = pModel[nCnt].pos;
+		m_model[nCnt].rot = pModel[nCnt].rot;
+	}
+}
+
+//=============================================================================
+//ワールドマトリックスの設定
+//=============================================================================
+void CModelHierarchy::SetWorldmtx(void)
+{
 	//デバイス情報の取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
+	// 回転、位置、サイズ行列
 	D3DXMATRIX mtxRot, mtxTrans, mtxScail;
-	D3DMATERIAL9 matDef;	//現在のマテリアル保持用
-	D3DXMATERIAL*pMat;	//マテリアルデータへのポインタ
 
 	for (int nCntParts = 0; nCntParts < m_nNumParts; nCntParts++)
 	{
@@ -224,9 +246,6 @@ void CModelHierarchy::Draw(void)
 
 		if (m_model[nCntParts].nParent == -1)
 		{// 自分が一番の親のとき
-
-		 /*m_model[nCntParts].pos = m_pos + m_model[nCntParts].pos;
-		 m_model[nCntParts].rot = m_rot + m_model[nCntParts].rot;*/
 
 		 //向きを反映
 			D3DXMatrixRotationYawPitchRoll(&mtxRot, m_model[nCntParts].rot.y, m_model[nCntParts].rot.x, m_model[nCntParts].rot.z);
@@ -259,7 +278,22 @@ void CModelHierarchy::Draw(void)
 			// 親のワールドマトリックスを掛け合わせる
 			D3DXMatrixMultiply(&m_model[nCntParts].mtxWorld, &m_model[nCntParts].mtxWorld, &m_model[m_model[nCntParts].nParent].mtxWorld);
 		}
+	}
+}
 
+//=============================================================================
+//モデルの描画処理
+//=============================================================================
+void CModelHierarchy::DrawModel(void)
+{
+	//デバイス情報の取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	D3DMATERIAL9 matDef;	//現在のマテリアル保持用
+	D3DXMATERIAL*pMat;	//マテリアルデータへのポインタ
+
+	for (int nCntParts = 0; nCntParts < m_nNumParts; nCntParts++)
+	{
 		//ワールドマトリックスの設定
 		pDevice->SetTransform(D3DTS_WORLD, &m_model[nCntParts].mtxWorld);
 
@@ -282,20 +316,12 @@ void CModelHierarchy::Draw(void)
 			//モデルパーツの描画
 			m_model[nCntParts].pMesh->DrawSubset(nCntMat);
 
-			pMat[nCntMat] = m_defMat[nCntParts][nCntMat];
+			pMat[nCntMat] = m_model[nCntParts].defMat[nCntMat];
 		}
+
 		//保持していたマテリアルを戻す
 		pDevice->SetMaterial(&matDef);
 		// テクスチャの初期化
 		pDevice->SetTexture(0, 0);
-	}
-}
-
-void CModelHierarchy::SetModelData(CResourceModel::Model *pModel)
-{
-	for (int nCnt = 0; nCnt < m_nNumParts; nCnt++)
-	{
-		m_model[nCnt].pos = pModel[nCnt].pos;
-		m_model[nCnt].rot = pModel[nCnt].rot;
 	}
 }
