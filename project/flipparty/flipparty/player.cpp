@@ -48,9 +48,9 @@ int CPlayer::m_nPartsNum = 0;
 char CPlayer::m_achAnimPath[MOTION_MAX][64]
 {
 	{  "./data/Texts/motion/miniresult_1.txt" },    // 待機アニメーション
-	{  "./data/Texts/motion/miniresult_2.txt" },	   // 歩きアニメーション
-	{  "./data/Texts/motion/miniresult_3.txt" },   // 鳴き声アニメーション
-	{  "./data/Texts/motion/miniresult_4.txt" },   // パンチアニメーション
+	{  "./data/Texts/motion/miniresult_2.txt" },    // 歩きアニメーション
+	{  "./data/Texts/motion/miniresult_3.txt" },    // 鳴き声アニメーション
+	{  "./data/Texts/motion/miniresult_4.txt" },    // パンチアニメーション
 };
 
 //******************************
@@ -265,7 +265,7 @@ void CPlayer::Update(void)
 
 #ifdef _DEBUG
 
-	for (int nCntPolygon = 0; nCntPolygon < 2; nCntPolygon++)
+	for (int nCntPolygon = 0; nCntPolygon < FLIPPER_NUM; nCntPolygon++)
 	{
 		CFlipper::FLIPPER_STATE flipperState = m_pFlipper->GetState((CFlipper::FLIPPER_TYPE)nCntPolygon);
 
@@ -365,23 +365,8 @@ void CPlayer::DrawModel(void)
 
 		if (shader.pEffect != NULL)
 		{
-
-			// シェーダーに情報を渡す
-			D3DXMATRIX mat;
-			D3DXMatrixIdentity(&mat);
-			mat = pModelData[nCntParts].mtxWorld * (*CGame::GetCamera()->GetViewMtx())* (*CGame::GetCamera()->GetProjectionMtx());
-			// ワールドプロジェクション
-			shader.pEffect->SetMatrix("WorldViewProj", &mat);
-			// ワールド座標
-			shader.pEffect->SetMatrix("World", &pModelData[nCntParts].mtxWorld);
-			// ライトディレクション
-			D3DXVECTOR3 lightDir = CGame::GetLight()->GetDir();
-			shader.pEffect->SetFloatArray("LightDirection", (float*)&D3DXVECTOR3(lightDir.x, -lightDir.y, -lightDir.z), 3);
-			// 視点位置
-			D3DXVECTOR3 eye = CGame::GetCamera()->GetPos();
-			shader.pEffect->SetFloatArray("Eye", (float*)&eye, 3);
-			// スペキュラカラー
-			shader.pEffect->SetFloatArray("SpecularColor", (float*)&D3DXVECTOR4(1, 1, 1, 1), 4);
+			// シェーダープログラムに値を送る
+			SetShaderVariable(shader.pEffect, &pModelData[nCntParts]);
 
 			// フェイスパターン
 			if (nCntParts != FACE_PARTS_NUMBER)
@@ -390,19 +375,15 @@ void CPlayer::DrawModel(void)
 			}
 			else
 			{
-				float f = FACE_TEX_V;
 				shader.pEffect->SetFloat("fTexV", FACE_TEX_V );
 			}
 
 			//マテリアルデータへのポインタを取得
 			pMat = (D3DXMATERIAL*)pModelData[nCntParts].pBuffMat->GetBufferPointer();
 
-
 			// パス数の取得
 			UINT numPass = 0;
 			shader.pEffect->Begin(&numPass, 0);
-			// シェーダパスの終了
-			shader.pEffect->EndPass();
 
 			// パス数分描画処理のループ
 			for (int nCntEffect = 0; nCntEffect < (int)numPass; nCntEffect++)
@@ -442,7 +423,6 @@ void CPlayer::DrawModel(void)
 		// テクスチャの初期化
 		pDevice->SetTexture(0, 0);
 	}
-
 }
 
 //******************************
@@ -562,5 +542,30 @@ void CPlayer::ManageFlipperAngle(void)
 	else
 	{// 中間
 		m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPER_STATE_NONE);
+	}
+}
+
+
+//******************************
+// シェーダープログラムに値を送る
+//******************************
+void CPlayer::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pModelData)
+{
+	if (pEffect != NULL)
+	{
+		// シェーダーに情報を渡す
+		D3DXMATRIX mat;
+		D3DXMatrixIdentity(&mat);
+		mat = pModelData->mtxWorld * (*CGame::GetCamera()->GetViewMtx())* (*CGame::GetCamera()->GetProjectionMtx());
+		// ワールドプロジェクション
+		pEffect->SetMatrix("WorldViewProj", &mat);
+		// ワールド座標
+		pEffect->SetMatrix("World", &pModelData->mtxWorld);
+		// ライトディレクション
+		D3DXVECTOR3 lightDir = CGame::GetLight()->GetDir();
+		pEffect->SetFloatArray("LightDirection", (float*)&D3DXVECTOR3(lightDir.x, -lightDir.y, -lightDir.z), 3);
+		// 視点位置
+		D3DXVECTOR3 eye = CGame::GetCamera()->GetPos();
+		pEffect->SetFloatArray("Eye", (float*)&eye, 3);
 	}
 }

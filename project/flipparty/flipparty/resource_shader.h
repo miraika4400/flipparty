@@ -40,7 +40,6 @@ public:
 	{
 		LPD3DXEFFECT pEffect;                             // エフェクトファイル
 		char achTechniqueName[MAX_TEHNIQUENAME_LENGTH];   // HLSLテクニックネーム
-		LPDIRECT3DCUBETEXTURE9 pCubeTex;                  // キューブテクスチャポインタ
 	}Shader;
 
 	// メンバ関数

@@ -3,7 +3,6 @@ float4x4 World :WORLD;
 float3   LightDirection;
 float4   DiffuseColor;
 float3   Eye;
-float4   SpecularColor;
 float    fTexV;
 
 struct VS_OUTPUT {
@@ -11,7 +10,6 @@ struct VS_OUTPUT {
 	float2 TexCoord :TEXCOORD;      // テクスチャ座標
 	float2 ToonTexCoord :TEXCOORD1;      // テクスチャ座標
 	float4 Color    :COLOR;         // カラー
-	float4 Specular :COLOR1;        // スペキュラー
 };
 
 /* テクスチャのサンプラ― */
@@ -65,11 +63,11 @@ VS_OUTPUT VS(float3 Position : POSITION, float2 TexCoord : TEXCOORD, float4 Diff
 	float LightPower = dot(N, LightDirection);
 	LightPower = max(0, LightPower);
 
+	// トゥーンシェーダ―UV
 	Out.ToonTexCoord = float2(LightPower, 0.5f);
+	// カラーの設定
 	Out.Color = DiffuseColor;
 	
-	Out.Specular = SpecularColor * dot(N, H);
-	Out.Specular = pow(Out.Specular,4);
 	return Out;
 }
 
@@ -80,7 +78,7 @@ float4 PS(VS_OUTPUT In) :COLOR
 {
 	float2 TexCoord = In.TexCoord;
 	TexCoord.y += fTexV;
-	float4 fOut = tex2D(Sampler, TexCoord) * tex2D(ToonSampler, In.ToonTexCoord) * In.Color ;
+	float4 fOut = tex2D(Sampler, TexCoord) * tex2D(ToonSampler, In.ToonTexCoord) * In.Color;
 	fOut.a = 1.0f;
 	return fOut;
 }
