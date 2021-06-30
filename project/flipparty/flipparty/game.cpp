@@ -25,6 +25,7 @@
 #include "captain.h"
 #include "rule_base.h"
 #include "rule_flygame.h"
+#include "remember_rule.h"
 
 //=============================
 // マクロ定義
@@ -101,7 +102,8 @@ HRESULT CGame::Init(void)
 	{
 		m_pGameRule = CRuleFly::Create();
 	}
-
+    
+    m_pGameRule = CRememjber_rule::Create();
 	// 背景の生成
 	CBg::Create();
 
@@ -190,11 +192,16 @@ void CGame::Update(void)
 //=============================
 void CGame::Draw(void)
 {
-	// カメラのセット
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->SetCamera();
-	}
+    if (m_pGameRule != NULL)
+    {
+        m_pGameRule->Draw();
+    }
+
+    // カメラのセット
+    if (m_pCamera != NULL)
+    {
+        m_pCamera->SetCamera();
+    }
 }
 
 //=============================
@@ -212,4 +219,3 @@ void CGame::SetCamera(CCamera * pCamera)
 	// セット
 	m_pCamera = pCamera;
 }
-

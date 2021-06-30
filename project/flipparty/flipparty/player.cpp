@@ -135,7 +135,6 @@ void CPlayer::Unload(void)
 	}
 }
 
-
 //******************************
 // ‰Šú‰»ˆ—
 //******************************
@@ -310,7 +309,7 @@ void CPlayer::Draw(void)
 #ifdef _DEBUG
 	m_pPolygon[CFlipper::FLIPPER_TYPE_LEFT]->Draw();
 	m_pPolygon[CFlipper::FLIPPER_TYPE_RIGHT]->Draw();
-#endif // _DEBU
+#endif // _DEBUG
 }
 
 //******************************

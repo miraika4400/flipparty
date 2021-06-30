@@ -182,7 +182,7 @@
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
-    <ClCompile Include="remember_rule.cpp" />
+    <ClCompile Include="remember_game\remember_rule.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
     <ClCompile Include="resource_shader.cpp" />

@@ -12,25 +12,56 @@
 // インクルードファイル
 //*****************************************************************************
 #include"rule_base.h"
+#include "flipper.h"
+
+//*****************************************************************************
+// マクロ定義
+//*****************************************************************************
+#define MAX_FLIPPER_DATA (10)// 見本データの最大数
+
+//*****************************************************************************
+// 前方宣言
+//*****************************************************************************
+class CPolygon;
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class Crememjber_rule : public CRuleBase
+class CRememjber_rule : public CRuleBase
 {
-    static Crememjber_rule* m_pinstace;// インスタンスへのポインタ
+    static CRememjber_rule* m_pinstace;// インスタンスへのポインタ
+    CRememjber_rule();
 
 public:
-    Crememjber_rule();
-    ~Crememjber_rule();
+    ~CRememjber_rule();
+
+    static CRememjber_rule* Create(void);
 
     HRESULT Init(void);
     void Uninit(void);
     void Update(void);
     void Draw(void);
 
+    void InputPlayer(void);// プレイヤーの入力
+    void Comparison(void);// 比較
+
+    // Get関数
+    CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
+
 private:
     // 見本の保存用
+    CFlipper::FLIPPER_TYPE FlipperData[MAX_FLIPPER_DATA];// 見本データ
+    CFlipper::FLIPPER_TYPE PlayerInput[MAX_FLIPPER_DATA];// プレイヤーの入力内容
+    int m_nNumInput;            // 入力された回数
+    int m_nTurn;                // 現在のターン数
+    int m_nTurnPlayer;          // 現在自分の番のプレイヤー番号
+
+    bool m_IsinputEnd;// プレイヤーの入力が終了しているか
+
+#ifdef _DEBUG
+    // デバッグ用変数
+    CPolygon *m_pPolygon;// ポリゴンクラスのポインタ
+#endif // _DEBUG
 
 };
 

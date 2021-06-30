@@ -132,7 +132,7 @@
     <ClCompile Include="count_selection.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="remember_rule.cpp">
+    <ClCompile Include="remember_game\remember_rule.cpp">
       <Filter>remember_game</Filter>
     </ClCompile>
     <ClCompile Include="fly_game\camera_flygame.cpp">
