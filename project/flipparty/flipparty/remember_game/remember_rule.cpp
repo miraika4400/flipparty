@@ -96,7 +96,7 @@ HRESULT CRememjber_rule::Init(void)
      }
 
     // UIの生成
-     for (int nCnt = 0; nCnt < MAX_FLIPPER_DATA; nCnt++)
+     for (int nCnt = 0; nCnt < MAX_TARN; nCnt++)
      {
          float posX = 100 + ((float)(nCnt)*PLAYER_SPACE) / 2;// 位置の調整
          m_apAnswer[nCnt] = CPolygon::Create(D3DXVECTOR3(posX, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
@@ -142,6 +142,8 @@ void CRememjber_rule::Update(void)
     }
 
     // リザルト遷移
+    if (m_nTurn== MAX_TARN)
+        CManager::SetMode(CManager::MODE_TITLE);
 
 }
 
@@ -154,7 +156,7 @@ void CRememjber_rule::Draw(void)
     m_pPolygon->Draw();
 #endif // _DEBU
 
-    for (int nCnt = 0; nCnt < MAX_FLIPPER_DATA; nCnt++)
+    for (int nCnt = 0; nCnt < MAX_TARN; nCnt++)
     {
         m_apAnswer[nCnt]->Draw();
     }
