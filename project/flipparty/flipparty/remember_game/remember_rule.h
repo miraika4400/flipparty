@@ -17,12 +17,14 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MAX_FLIPPER_DATA (10)// 見本データの最大数
+#define MAX_FLIPPER_DATA (10)// 見本データの上限
 
 //*****************************************************************************
 // 前方宣言
 //*****************************************************************************
 class CPolygon;
+class CPlayer;
+class CCamera;
 
 //*****************************************************************************
 // クラス定義
@@ -52,11 +54,17 @@ private:
     // 見本の保存用
     CFlipper::FLIPPER_TYPE FlipperData[MAX_FLIPPER_DATA];// 見本データ
     CFlipper::FLIPPER_TYPE PlayerInput[MAX_FLIPPER_DATA];// プレイヤーの入力内容
+
+    CPlayer *m_pPlayer[4];     // プレイヤーへのポインタ
+    CCamera *m_pCamera;// カメラへのポインタ
+
     int m_nNumInput;            // 入力された回数
     int m_nTurn;                // 現在のターン数
     int m_nTurnPlayer;          // 現在自分の番のプレイヤー番号
 
     bool m_IsinputEnd;// プレイヤーの入力が終了しているか
+
+    CPolygon *m_apAnswer[MAX_FLIPPER_DATA];// 答えの表示用ポリゴン
 
 #ifdef _DEBUG
     // デバッグ用変数

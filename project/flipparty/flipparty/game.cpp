@@ -107,12 +107,12 @@ HRESULT CGame::Init(void)
 
 	///////////////////////////////////////////////////////////////
 	// 各ルールクラスで生成する者たちの仮生成
-	
-	// カメラクラスの生成
-	SetCamera(CTpsCamera::Create());
+	//
+	////// カメラクラスの生成
+	//SetCamera(CTpsCamera::Create());
 
-	// プレイヤーの生成
-	CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
+	//// プレイヤーの生成
+	//CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
 
 	//CModel::Create(D3DXVECTOR3(0.0f, 35.0f, -20.0f), CResourceModel::MODEL_GENERAL_SPHERE,D3DXVECTOR3(10.0f,10.0f,10.0f));
 	

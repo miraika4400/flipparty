@@ -53,7 +53,7 @@ public:
 	void Update(void);  // 更新
 	void Draw(void);    // 描画
 
-	int GetPlayerNum(void) { return m_nPlayerNum; }// プレイヤー人数の取得処理
+	static int GetPlayerNum(void) { return m_nPlayerNum; }// プレイヤー人数の取得処理
 
 private:
 	void SelectUi(void);      // UIの選択処理

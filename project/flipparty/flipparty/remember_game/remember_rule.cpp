@@ -13,6 +13,14 @@
 #include "polygon.h"
 #include "remember_rule.h"
 #include "resource_texture.h"
+#include "count_selection.h"
+#include "player.h"
+#include "camera_tps.h"
+
+//*****************************************************************************
+// マクロ定義
+//*****************************************************************************
+#define PLAYER_SPACE 150.0f //　プレイヤー位置の間隔
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -59,16 +67,41 @@ CRememjber_rule * CRememjber_rule::Create(void)
 //=============================================================================
 HRESULT CRememjber_rule::Init(void)
 {
+    //-----------------------------
     // メンバ変数の初期化
+    //-----------------------------
     m_nTurn = 0;            // ターン数初期化
     m_nTurnPlayer = 0;      // 度のプレイヤーのターンか
     m_nNumInput = 0;        // プレイヤーが入力した回数
     m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
-
     ZeroMemory(&FlipperData, sizeof(FlipperData));      // 見本データの配列
     ZeroMemory(&PlayerInput, sizeof(PlayerInput));      // プレイヤーの入力情報
+    ZeroMemory(&m_apAnswer, sizeof(m_apAnswer));        // 回答のポリゴン表示
 
-    m_pPolygon = CPolygon::Create(D3DXVECTOR3(500.0f, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
+    //-----------------------------
+    // 各オブジェクト生成
+    //-----------------------------
+    // カメラの生成
+     CGame::SetCamera(CTpsCamera::Create());
+
+    // プレイヤーの人数取得
+     int nPlayerNum = CCountSelect::GetPlayerNum();
+
+     // プレイヤーの人数分プレイヤー生成
+     for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
+     {
+         float posX = 0 + ((float)(nPlayerNum - 1)*PLAYER_SPACE) / 2;// 位置の調整
+         // プレイヤーの生成
+         CPlayer::Create(D3DXVECTOR3(posX, -35.0f, 0.0f), 0);
+     }
+
+    // UIの生成
+     for (int nCnt = 0; nCnt < MAX_FLIPPER_DATA; nCnt++)
+     {
+         float posX = 100 + ((float)(nCnt)*PLAYER_SPACE) / 2;// 位置の調整
+         m_apAnswer[nCnt] = CPolygon::Create(D3DXVECTOR3(posX, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
+     }
+    m_pPolygon = CPolygon::Create(D3DXVECTOR3(500.0f, 100.0f, 0.0f), D3DXVECTOR3(32.0f, 32.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
     m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_UP));
     return S_OK;
 }
@@ -78,6 +111,9 @@ HRESULT CRememjber_rule::Init(void)
 //=============================================================================
 void CRememjber_rule::Uninit(void)
 {
+    //-----------------------------
+    // 各オブジェクトの解放
+    //-----------------------------
     // ポリゴンの解放
 #ifdef _DEBUG
         if (m_pPolygon != NULL)
@@ -102,8 +138,11 @@ void CRememjber_rule::Update(void)
     // 入力された数がターン数と同じになった
     if (m_IsinputEnd)
     {
-        Comparison();   // 比較
+        Comparison();   // 入力内容の比較
     }
+
+    // リザルト遷移
+
 }
 
 //=============================================================================
@@ -114,6 +153,11 @@ void CRememjber_rule::Draw(void)
 #ifdef _DEBUG
     m_pPolygon->Draw();
 #endif // _DEBU
+
+    for (int nCnt = 0; nCnt < MAX_FLIPPER_DATA; nCnt++)
+    {
+        m_apAnswer[nCnt]->Draw();
+    }
 }
 
 //=============================================================================
@@ -121,16 +165,18 @@ void CRememjber_rule::Draw(void)
 //=============================================================================
 void CRememjber_rule::InputPlayer(void)
 {
+    // テクスチャの設定
     m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_UP));
+
     //プレイヤーの入力内容を比較用データに保存
-    // 右
+    // 右を押したとき
     if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lRz <= -10 ||
         CManager::GetKeyboard()->GetKeyTrigger(DIK_UP))
     {
         PlayerInput[m_nNumInput] = CFlipper::FLIPPER_TYPE_RIGHT;
         m_nNumInput++;
     }
-    // 左
+    // 左を押したとき
     else if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 ||
         CManager::GetKeyboard()->GetKeyTrigger(DIK_W))
     {
@@ -142,10 +188,10 @@ void CRememjber_rule::InputPlayer(void)
     if (m_nNumInput == m_nTurn + 1)
     {
         m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_UP));
-        FlipperData[m_nTurn] = PlayerInput[m_nTurn];// プレイヤーの入力を見本データに保存
-        m_IsinputEnd = true;    // プレイヤーの入力完了フラグオン
-        m_nTurn++;              // ターン数を増やす
-        m_nNumInput = 0;        // 入力回数をリセット
+        FlipperData[m_nTurn] = PlayerInput[m_nTurn];    // プレイヤーの入力を見本データに保存
+        m_IsinputEnd = true;                            // プレイヤーの入力完了フラグオン
+        m_nTurn++;                                      // ターン数を増やす
+        m_nNumInput = 0;                                // 入力回数をリセット
     }
 }
 
@@ -154,14 +200,23 @@ void CRememjber_rule::InputPlayer(void)
 //=============================================================================
 void CRememjber_rule::Comparison(void)
 {
+    // プレイヤーの入力フラグをオフにする
+    m_IsinputEnd = false;
+
+    // テクスチャの設定
     m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_DOWN));
+
     for (int nCnt = 0; nCnt < m_nTurn; nCnt++)
     {
         if (FlipperData[nCnt] != PlayerInput[nCnt])
         {
-            // 外れた場合の処理
-            m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
+            // 外れた場合×を表示
+            m_apAnswer[nCnt]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
+        }
+        else
+        {
+            m_apAnswer[nCnt]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_MARU));
         }
     }
-    m_IsinputEnd = false;
+
 }
