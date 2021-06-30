@@ -182,6 +182,7 @@
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
+    <ClCompile Include="rank_ui.cpp" />
     <ClCompile Include="remember_game\remember_rule.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="pause.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
+    <ClInclude Include="rank_ui.h" />
     <ClInclude Include="remember_game\remember_rule.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource_model.h" />

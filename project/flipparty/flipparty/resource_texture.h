@@ -48,6 +48,7 @@ public:
         TEXTURE_UI_DOWN,         // UI「さげて」
         TEXTURE_UI_MARU,         // UI「〇」
         TEXTURE_UI_BATU,         // UI「×」
+		TEXTURE_UI_RANK,         // UI「順位」
 		TEXTURE_MAX        // テクスチャ数
 	}TEXTURE_TYPE;
 	

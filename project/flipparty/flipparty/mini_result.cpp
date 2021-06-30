@@ -35,6 +35,7 @@
 #define BLACKOUT_COLOR D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f)
 #define BLACKOUT_POS   D3DXVECTOR3(0.0f, 0.0f, 50.0f)
 #define LIGHT_DIR     
+#define PLAYER_RESULT_WORST_ROT_X D3DXToRadian(70.0f) // 最下位の時の回転軸のXの値
 
 //=============================
 // コンストラクタ
@@ -121,7 +122,7 @@ HRESULT CMiniResult::Init(void)
 		{// 最下位
 			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_4);
 			// 角度の調整
-			pResultPlayer->SetRot(D3DXVECTOR3(D3DXToRadian(70.0f), fRotY, 0.0f));
+			pResultPlayer->SetRot(D3DXVECTOR3(PLAYER_RESULT_WORST_ROT_X, fRotY, 0.0f));
 			// 表情の設定
 			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
 		}
@@ -139,7 +140,7 @@ HRESULT CMiniResult::Init(void)
 		// 位置をずらす
 		posX -= PLAYER_SPACE;
 
-		pPlayer = (CPlayer *)pPlayer->GetNext();
+		pPlayer = (CPlayer*)pPlayer->GetNext();
 	}
 
 	return S_OK;
@@ -174,5 +175,4 @@ void CMiniResult::Draw(void)
 	// カメラクラスの生成
 	CGame::SetCamera(pCamera);
 	pCamera->SetCamera();
-
 }
