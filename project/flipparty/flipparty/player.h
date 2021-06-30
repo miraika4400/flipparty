@@ -47,10 +47,12 @@ public:
 	//モーション
 	typedef enum
 	{
-		MOTION_MINIRESULT_1 = 0, // ミニリザルト1位
-		MOTION_MINIRESULT_2,	 // ミニリザルト2位
-		MOTION_MINIRESULT_3,	 // ミニリザルト3位
-		MOTION_MINIRESULT_4,	 // ミニリザルト最下位
+		MOTION_IDOL = 0,     // アイドル
+		MOTION_MINIRESULT_1, // ミニリザルト1位
+		MOTION_MINIRESULT_2, // ミニリザルト2位
+		MOTION_MINIRESULT_3, // ミニリザルト3位
+		MOTION_MINIRESULT_4, // ミニリザルト最下位
+		MOTION_FLY,          // アイドル
 		MOTION_MAX
 	}MOTION_TYPE;
 

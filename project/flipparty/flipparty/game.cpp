@@ -102,8 +102,7 @@ HRESULT CGame::Init(void)
 	{
 		m_pGameRule = CRuleFly::Create();
 	}
-    
-    m_pGameRule = CRememjber_rule::Create();
+
 	// îwåiÇÃê∂ê¨
 	CBg::Create();
 

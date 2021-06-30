@@ -47,10 +47,13 @@ CResourceModel::Model CPlayer::m_model[MAX_PARTS_NUM] = {};
 int CPlayer::m_nPartsNum = 0;
 char CPlayer::m_achAnimPath[MOTION_MAX][64]
 {
-	{  "./data/Texts/motion/miniresult_1.txt" },    // 待機アニメーション
-	{  "./data/Texts/motion/miniresult_2.txt" },    // 歩きアニメーション
-	{  "./data/Texts/motion/miniresult_3.txt" },    // 鳴き声アニメーション
-	{  "./data/Texts/motion/miniresult_4.txt" },    // パンチアニメーション
+	{ "./data/Texts/motion/idol.txt" },          // 待機アニメーション
+	{ "./data/Texts/motion/miniresult_1.txt" }, // 一位アニメーション
+	{ "./data/Texts/motion/miniresult_2.txt" }, // 二位アニメーション
+	{ "./data/Texts/motion/miniresult_3.txt" }, // 三位アニメーション
+	{ "./data/Texts/motion/miniresult_4.txt" }, // 最下位アニメーション
+	{ "./data/Texts/motion/fly.txt" },          // flyアニメーション
+	
 };
 
 //******************************
@@ -188,6 +191,8 @@ HRESULT CPlayer::Init(void)
 		m_apMotion[nCntAnim] = CMotion::Create(GetPartsNum(), m_achAnimPath[nCntAnim], GetModelData());
 	}
 
+	SetMotion(MOTION_IDOL);
+
 #ifdef _DEBUG
 	m_bMove = true;
 	// デバッグ用
@@ -320,7 +325,7 @@ void CPlayer::SetMotion(MOTION_TYPE type)
 	// 現在アクティブのモーションの停止
 	if (m_pActiveMotion != NULL)
 	{
-		if (m_apMotion[type] == m_pActiveMotion)
+		if (m_apMotion[type] != m_pActiveMotion)
 		{
 			m_pActiveMotion->SetActiveMotion(false);
 			m_pActiveMotion = NULL;

@@ -121,7 +121,7 @@ HRESULT CMiniResult::Init(void)
 		{// 最下位
 			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_4);
 			// 角度の調整
-			pResultPlayer->SetRot(D3DXVECTOR3(D3DXToRadian(90.0f), fRotY, 0.0f));
+			pResultPlayer->SetRot(D3DXVECTOR3(D3DXToRadian(70.0f), fRotY, 0.0f));
 			// 表情の設定
 			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
 		}
@@ -130,7 +130,7 @@ HRESULT CMiniResult::Init(void)
 			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_2);
 		}
 		else if (pPlayer->GetRank() == 2)
-		{// 最下位
+		{// 三位
 			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_3);
 			// 表情の設定
 			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
