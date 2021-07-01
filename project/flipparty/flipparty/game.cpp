@@ -110,8 +110,9 @@ HRESULT CGame::Init(void)
 	SetCamera(CTpsCamera::Create());
 
 	// ÉvÉåÉCÉÑÅ[ÇÃê∂ê¨
-	CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
+	//CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
 
+	CCaptain::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f));
 	//CModel::Create(D3DXVECTOR3(0.0f, 35.0f, -20.0f), CResourceModel::MODEL_GENERAL_SPHERE,D3DXVECTOR3(10.0f,10.0f,10.0f));
 	
 	//
