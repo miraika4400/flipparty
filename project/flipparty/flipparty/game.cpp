@@ -100,7 +100,7 @@ HRESULT CGame::Init(void)
 	// ƒ‹[ƒ‹ƒNƒ‰ƒX‚Ì¶¬
 	if (m_pGameRule == NULL)
 	{
-		m_pGameRule = CRuleFly::Create();
+		m_pGameRule = CRememjber_rule::Create();
 	}
 
 	// ”wŒi‚Ì¶¬
