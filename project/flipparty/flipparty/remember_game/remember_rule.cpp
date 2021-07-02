@@ -16,6 +16,7 @@
 #include "count_selection.h"
 #include "player.h"
 #include "camera_tps.h"
+#include "mini_result.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -33,6 +34,8 @@ CRememjber_rule* CRememjber_rule::m_pinstace = nullptr;// インスタンスへのポイン
 //=============================================================================
 CRememjber_rule::CRememjber_rule()
 {
+    m_nNumPlayer = 0;       // プレイヤーの人数
+    m_nLossPlayer = 0;      // 脱落したプレイヤーの人数
     m_nTurn = 0;            // ターン数初期化
     m_nTurnPlayer = 0;      // どのプレイヤーのターンか
     m_nNumInput = 0;        //  プレイヤーが入力した回数
@@ -72,8 +75,9 @@ HRESULT CRememjber_rule::Init(void)
     //-----------------------------
     // メンバ変数の初期化
     //-----------------------------
+    m_nLossPlayer = 0;      // 脱落したプレイヤーの人数
     m_nTurn = 0;            // ターン数初期化
-    m_nTurnPlayer = 1;      // 度のプレイヤーのターンか
+    m_nTurnPlayer = 1;      // どのプレイヤーのターンか
     m_nNumInput = 0;        // プレイヤーが入力した回数
     m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
     m_nInputCount = 0;
@@ -88,10 +92,10 @@ HRESULT CRememjber_rule::Init(void)
      CGame::SetCamera(CTpsCamera::Create());
 
     // プレイヤーの人数取得
-     int nPlayerNum = CCountSelect::GetPlayerNum();
+     m_nNumPlayer = CCountSelect::GetPlayerNum();
 
      // プレイヤーの人数分プレイヤー生成
-     for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
+     for (int nCntPlayer = 0; nCntPlayer < m_nNumPlayer; nCntPlayer++)
      {
          float posX = 0 + ((float)(nCntPlayer)*PLAYER_SPACE) / 2;// 位置の調整
          // プレイヤーの生成
@@ -183,7 +187,6 @@ void CRememjber_rule::InputPlayer(void)
         // プレイヤーの入力できるまでのカウントを減らす
         m_nInputCount--;
         return;
-
     }
 
     // テクスチャの設定
@@ -216,7 +219,7 @@ void CRememjber_rule::InputPlayer(void)
         m_nTurn++;                                      // ターン数を増やす
         m_nNumInput = 0;                                // 入力回数をリセット
         // プレイヤーのターン変更
-        m_nTurnPlayer= (m_nTurn+1) % 4;
+        m_nTurnPlayer= (m_nTurn+1) % m_nNumPlayer;
     }
 }
 
@@ -231,12 +234,17 @@ void CRememjber_rule::Comparison(void)
     // テクスチャの設定
     m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_DOWN));
 
+    // データの比較
     for (int nCnt = 0; nCnt < m_nTurn; nCnt++)
     {
         if (FlipperData[nCnt] != PlayerInput[nCnt])
         {
             // 外れた場合×を表示
             m_apAnswer[nCnt]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
+
+            // ミスしたプレイヤーの順位をつける
+            Ranking();
+
         }
         else
         {
@@ -244,4 +252,18 @@ void CRememjber_rule::Comparison(void)
         }
     }
 
+}
+
+//=============================================================================
+// [Ranking]順位の設定
+//=============================================================================
+void CRememjber_rule::Ranking(void)
+{
+    m_nLossPlayer++;// 脱落したプレイヤーの人数をカウント
+
+    // プレイヤーが最後の1人になったらリザルト生成
+    if (m_nNumPlayer - m_nLossPlayer == 1)
+    {
+        CMiniResult::Create();
+    }
 }

@@ -46,6 +46,8 @@ public:
 
     void InputPlayer(void);// プレイヤーの入力
     void Comparison(void);// 比較
+    void Ranking(void);     // 順位の設定
+
 
     // Get関数
     CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
@@ -57,7 +59,8 @@ private:
 
     CPlayer *m_pPlayer[4];     // プレイヤーへのポインタ
     CCamera *m_pCamera;// カメラへのポインタ
-
+    int m_nNumPlayer;           // プレイヤーの人数
+    int m_nLossPlayer;          // 脱落したプレイヤーの人数
     int m_nNumInput;            // 入力された回数
     int m_nTurn;                // 現在のターン数
     int m_nTurnPlayer;          // 現在自分の番のプレイヤー番号
