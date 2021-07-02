@@ -18,24 +18,13 @@
 //=============================
 // 前方宣言
 //=============================
-class CRenderer;
-class CInputKeyboard;
-class CInputJoypad;
-class CInputMouse;
-class CSound;
 class CCamera;
 class CLight;
-class CCharacter;
-class CCpuPoint;
-class CCheckPoint;
-class CItemPoint;
-class CCourse;
 class CRuleBase;
-
+class CRuleManager;
 //*****************************
 //マクロ定義
 //*****************************
-#define MAX_PLAYER_NUM 1                               // プレイヤーの最大数
 
 //*****************************
 //クラス定義
@@ -73,8 +62,9 @@ private:
 	// メンバ変数
 	//*****************************
 	static CCamera*m_pCamera;            // カメラ
-	static CLight*m_pLight;                               // ライトポインタ
-	static CRuleBase *m_pGameRule;   // ルールクラス
+	static CLight*m_pLight;              // ライトポインタ
+	static CRuleBase *m_pGameRule;       // ルールクラス
+	static CRuleManager* m_pRuleManager; // ルールマネージャー
 };
 
 #endif

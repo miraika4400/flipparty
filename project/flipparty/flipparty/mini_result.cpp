@@ -22,6 +22,7 @@
 #include "camera_base.h"
 #include "count_selection.h"
 #include "player.h"
+#include "rank_ui.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -34,8 +35,8 @@
 #define BLACKOUT_SIZE  D3DXVECTOR3(10000.0f, 10000.0f, 0.0f)
 #define BLACKOUT_COLOR D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f)
 #define BLACKOUT_POS   D3DXVECTOR3(0.0f, 0.0f, 50.0f)
-#define LIGHT_DIR     
 #define PLAYER_RESULT_WORST_ROT_X D3DXToRadian(70.0f) // 最下位の時の回転軸のXの値
+#define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
 
 //=============================
 // コンストラクタ
@@ -68,6 +69,12 @@ CMiniResult * CMiniResult::Create(void)
 //=============================
 HRESULT CMiniResult::Init(void)
 {
+	// カメラの切り替え
+	CCamera * pCamera = CCamera::Create();
+	// カメラクラスの生成
+	CGame::SetCamera(pCamera);
+	pCamera->SetCamera();
+
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
@@ -84,9 +91,7 @@ HRESULT CMiniResult::Init(void)
 
 	// 最下位の順位
 	int nWorstRank = pPlayer->GetRank();
-
-	// 生成位置X軸の調整
-	float posX = 0 + ((float)(nPlayNum - 1) * PLAYER_SPACE) / 2;
+	
 	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
 	{
 		// 最下位の順位
@@ -94,9 +99,19 @@ HRESULT CMiniResult::Init(void)
 		{
 			nWorstRank = pPlayer->GetRank();
 		}
+		pPlayer = (CPlayer*)pPlayer->GetNext();
+	}
 
+	// プレイヤー情報の初期化
+	pPlayer = (CPlayer *)CScene::GetTop(CScene::OBJTYPE_PLAYER);
+
+	// 生成位置X軸の調整
+	float posX = 0 + ((float)(nPlayNum - 1) * PLAYER_SPACE) / 2;
+	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
+	{
 		// プレイヤー生成位置
 		D3DXVECTOR3 createPlayerPos = D3DXVECTOR3(posX, -PLAYER_CENTER_HEIGHT, 100.0f);
+
 		// プレイヤーの生成
 		CPlayer * pResultPlayer = CPlayer::Create(createPlayerPos, nCntPlayer);
 		// オブジェクトタイプ
@@ -136,6 +151,9 @@ HRESULT CMiniResult::Init(void)
 			// 表情の設定
 			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
 		}
+
+		// ランクUIの生成
+		CRankUI::Create(D3DXVECTOR3(createPlayerPos.x, createPlayerPos.y + RANK_UI_HEGHT, createPlayerPos.z), pPlayer->GetRank());
 
 		// 位置をずらす
 		posX -= PLAYER_SPACE;

@@ -17,12 +17,13 @@
 #include "timelimit.h"
 #include "camera_tps.h"
 #include "mini_result.h"
+#include "bg.h"
 
 //******************************
 // マクロ定義
 //******************************
 #define PLAYER_SPACE 150.0f //　プレイヤー位置の間隔
-#define PLAY_TIME 5       // 制限時間
+#define PLAY_TIME 5         // 制限時間
 
 //******************************
 // 静的メンバ変数宣言
@@ -61,6 +62,9 @@ CRuleFly * CRuleFly::Create(void)
 //******************************
 HRESULT CRuleFly::Init(void)
 {
+	// 背景の生成
+	CBg::Create();
+
 	// カメラクラスの生成
 	CGame::SetCamera(CFlyGameCamera::Create());
 
@@ -97,6 +101,7 @@ void CRuleFly::Uninit(void)
 //******************************
 void CRuleFly::Update(void)
 {
+
 	// 制限時間が0以下の時
 	if (m_pTimeLimit->GetTimeLimit() <= 0)
 	{
