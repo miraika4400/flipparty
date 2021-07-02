@@ -181,6 +181,7 @@
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="player_remember.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="rank_ui.cpp" />
     <ClCompile Include="remember_game\remember_rule.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="particle.h" />
     <ClInclude Include="pause.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="player_remember.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="rank_ui.h" />
     <ClInclude Include="remember_game\remember_rule.h" />

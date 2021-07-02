@@ -16,11 +16,13 @@
 #include "count_selection.h"
 #include "player.h"
 #include "camera_tps.h"
+#include "mini_result.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define PLAYER_SPACE 150.0f //　プレイヤー位置の間隔
+#define PLAYER_SPACE (150.0f) //　プレイヤー位置の間隔
+#define INPUT_COUNT (5)        // 入力してから再入力できるまでの待ち時間
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -32,9 +34,12 @@ CRememjber_rule* CRememjber_rule::m_pinstace = nullptr;// インスタンスへのポイン
 //=============================================================================
 CRememjber_rule::CRememjber_rule()
 {
+    m_nNumPlayer = 0;       // プレイヤーの人数
+    m_nLossPlayer = 0;      // 脱落したプレイヤーの人数
     m_nTurn = 0;            // ターン数初期化
-    m_nTurnPlayer = 0;      // 度のプレイヤーのターンか
+    m_nTurnPlayer = 0;      // どのプレイヤーのターンか
     m_nNumInput = 0;        //  プレイヤーが入力した回数
+    m_nInputCount = 0;
     m_pPolygon = nullptr;   // ポリゴンへのポインタ
     m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
     ZeroMemory(&FlipperData, sizeof(FlipperData));      // 見本データの配列
@@ -70,10 +75,12 @@ HRESULT CRememjber_rule::Init(void)
     //-----------------------------
     // メンバ変数の初期化
     //-----------------------------
+    m_nLossPlayer = 0;      // 脱落したプレイヤーの人数
     m_nTurn = 0;            // ターン数初期化
-    m_nTurnPlayer = 0;      // 度のプレイヤーのターンか
+    m_nTurnPlayer = 1;      // どのプレイヤーのターンか
     m_nNumInput = 0;        // プレイヤーが入力した回数
     m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
+    m_nInputCount = 0;
     ZeroMemory(&FlipperData, sizeof(FlipperData));      // 見本データの配列
     ZeroMemory(&PlayerInput, sizeof(PlayerInput));      // プレイヤーの入力情報
     ZeroMemory(&m_apAnswer, sizeof(m_apAnswer));        // 回答のポリゴン表示
@@ -85,21 +92,21 @@ HRESULT CRememjber_rule::Init(void)
      CGame::SetCamera(CTpsCamera::Create());
 
     // プレイヤーの人数取得
-     int nPlayerNum = CCountSelect::GetPlayerNum();
+     m_nNumPlayer = CCountSelect::GetPlayerNum();
 
      // プレイヤーの人数分プレイヤー生成
-     for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
+     for (int nCntPlayer = 0; nCntPlayer < m_nNumPlayer; nCntPlayer++)
      {
-         float posX = 0 + ((float)(nPlayerNum - 1)*PLAYER_SPACE) / 2;// 位置の調整
+         float posX = 0 + ((float)(nCntPlayer)*PLAYER_SPACE) / 2;// 位置の調整
          // プレイヤーの生成
-         CPlayer::Create(D3DXVECTOR3(posX, -35.0f, 0.0f), 0);
+         CPlayer::Create(D3DXVECTOR3(posX, -35.0f, 0.0f), nCntPlayer);
      }
 
     // UIの生成
-     for (int nCnt = 0; nCnt < MAX_TARN; nCnt++)
+     for (int nCntUI = 0; nCntUI < MAX_TARN; nCntUI++)
      {
-         float posX = 100 + ((float)(nCnt)*PLAYER_SPACE) / 2;// 位置の調整
-         m_apAnswer[nCnt] = CPolygon::Create(D3DXVECTOR3(posX, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
+         float posX = 100 + ((float)(nCntUI) * PLAYER_SPACE) / 2;// 位置の調整
+         m_apAnswer[nCntUI] = CPolygon::Create(D3DXVECTOR3(posX, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
      }
     m_pPolygon = CPolygon::Create(D3DXVECTOR3(500.0f, 100.0f, 0.0f), D3DXVECTOR3(32.0f, 32.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
     m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_UP));
@@ -124,6 +131,14 @@ void CRememjber_rule::Uninit(void)
         }
 #endif // _DEBUG
 
+        // ポリゴンの解放
+        for (int nCnt = 0; nCnt < MAX_TARN; nCnt++)
+        {
+            m_apAnswer[nCnt]->Uninit();
+            delete m_apAnswer[nCnt];
+            m_apAnswer[nCnt] = nullptr;
+        }
+
         m_pinstace = nullptr;
 }
 
@@ -144,7 +159,6 @@ void CRememjber_rule::Update(void)
     // リザルト遷移
     if (m_nTurn== MAX_TARN)
         CManager::SetMode(CManager::MODE_TITLE);
-
 }
 
 //=============================================================================
@@ -167,6 +181,14 @@ void CRememjber_rule::Draw(void)
 //=============================================================================
 void CRememjber_rule::InputPlayer(void)
 {
+    // 入力待ち時間が残っているときは処理を行わない
+    if (m_nInputCount > 0)
+    {
+        // プレイヤーの入力できるまでのカウントを減らす
+        m_nInputCount--;
+        return;
+    }
+
     // テクスチャの設定
     m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_UP));
 
@@ -177,6 +199,7 @@ void CRememjber_rule::InputPlayer(void)
     {
         PlayerInput[m_nNumInput] = CFlipper::FLIPPER_TYPE_RIGHT;
         m_nNumInput++;
+        m_nInputCount = INPUT_COUNT;
     }
     // 左を押したとき
     else if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 ||
@@ -184,6 +207,7 @@ void CRememjber_rule::InputPlayer(void)
     {
         PlayerInput[m_nNumInput] = CFlipper::FLIPPER_TYPE_LEFT;
         m_nNumInput++;
+        m_nInputCount = INPUT_COUNT;
     }
 
 // プレイヤーの最後の入力を見本に追加
@@ -194,6 +218,8 @@ void CRememjber_rule::InputPlayer(void)
         m_IsinputEnd = true;                            // プレイヤーの入力完了フラグオン
         m_nTurn++;                                      // ターン数を増やす
         m_nNumInput = 0;                                // 入力回数をリセット
+        // プレイヤーのターン変更
+        m_nTurnPlayer= (m_nTurn+1) % m_nNumPlayer;
     }
 }
 
@@ -208,12 +234,17 @@ void CRememjber_rule::Comparison(void)
     // テクスチャの設定
     m_pPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_DOWN));
 
+    // データの比較
     for (int nCnt = 0; nCnt < m_nTurn; nCnt++)
     {
         if (FlipperData[nCnt] != PlayerInput[nCnt])
         {
             // 外れた場合×を表示
             m_apAnswer[nCnt]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
+
+            // ミスしたプレイヤーの順位をつける
+            Ranking();
+
         }
         else
         {
@@ -221,4 +252,18 @@ void CRememjber_rule::Comparison(void)
         }
     }
 
+}
+
+//=============================================================================
+// [Ranking]順位の設定
+//=============================================================================
+void CRememjber_rule::Ranking(void)
+{
+    m_nLossPlayer++;// 脱落したプレイヤーの人数をカウント
+
+    // プレイヤーが最後の1人になったらリザルト生成
+    if (m_nNumPlayer - m_nLossPlayer == 1)
+    {
+        CMiniResult::Create();
+    }
 }
