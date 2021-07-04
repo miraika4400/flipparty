@@ -9,7 +9,6 @@
 // インクルード
 //=============================
 #include "game.h"
-#include "bg.h"
 #include "number.h"
 #include "score.h" 
 #include "mouse.h"
@@ -26,6 +25,7 @@
 #include "rule_base.h"
 #include "rule_flygame.h"
 #include "remember_rule.h"
+#include "rule_manager.h"
 
 //=============================
 // マクロ定義
@@ -43,7 +43,7 @@
 CCamera *CGame::m_pCamera = {};       // カメラクラスポインタ
 CLight  *CGame::m_pLight = NULL;      // ライトクラスポインタ
 CRuleBase   *CGame::m_pGameRule = NULL;   // ルールクラス
-
+CRuleManager* CGame::m_pRuleManager = NULL;
 //=============================
 // コンストラクタ
 //=============================
@@ -98,13 +98,16 @@ HRESULT CGame::Init(void)
 	}
 
 	// ルールクラスの生成
-	if (m_pGameRule == NULL)
+	if (m_pRuleManager == NULL)
 	{
-		m_pGameRule = CRememjber_rule::Create();
+		m_pRuleManager = CRuleManager::Create();
+		m_pRuleManager->SetRule(CRuleManager::RULE_FLY);
 	}
-
-	// 背景の生成
-	CBg::Create();
+	//// ルールクラスの生成
+	//if (m_pGameRule == NULL)
+	//{
+	//	m_pGameRule = CRuleFly::Create();
+	//}
 
 #ifdef _DEBUG
 
@@ -180,6 +183,28 @@ void CGame::Update(void)
 	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_F1))
 	{
 		CManager::GetFade()->SetFade(CManager::MODE_RESULT);
+	}
+
+	// デバッグ用ルール遷移コマンド
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_2))
+	{
+		ReConnection();
+		m_pRuleManager->ReConnection();
+		ReleaseAll();
+
+		SetPriority(OBJTYPE_NONE);
+		m_pRuleManager->SetPriority(OBJTYPE_SYSTEM);
+		m_pRuleManager->SetRule(CRuleManager::RULE_FLY);
+	}
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_3))
+	{
+		ReConnection();
+		m_pRuleManager->ReConnection();
+		ReleaseAll();
+
+		SetPriority(OBJTYPE_NONE);
+		m_pRuleManager->SetPriority(OBJTYPE_SYSTEM);
+		m_pRuleManager->SetRule(CRuleManager::RULE_REMENBER);
 	}
 
 #endif // _DEBUG

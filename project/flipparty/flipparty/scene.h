@@ -51,7 +51,7 @@ public:
 		OBJTYPE_COLLISION,     // コリジョン
 		OBJTYPE_MINIRESULT,    // ミニゲームリザルト
 		OBJTYPE_SYSTEM,        // システム
-		OBJTYPE_MAX,        // タイプの最大数
+		OBJTYPE_MAX,           // タイプの最大数
 	}OBJTYPE;
 
 	//============
@@ -79,10 +79,11 @@ public:
 	virtual void Update(void) = 0;  // 更新
 	virtual void Draw(void) = 0;    // 描画
 
+	void ReConnection(void); // リスト構造から自身を消してつなぎなおす
 protected:
 	void Release(void);      // 解放処理
 private:
-	void ReConnection(void); // リスト構造から自身を消してつなぎなおす
+	
 
 	//============
 	// メンバ変数

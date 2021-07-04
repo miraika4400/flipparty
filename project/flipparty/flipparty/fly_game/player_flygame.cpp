@@ -114,6 +114,7 @@ void CFlyGamePlayer::Fly(CFlipper::FLIPPER_STATE stateNow, CFlipper::FLIPPER_STA
 		// ‚‚³‚Éƒvƒ‰ƒX
 		m_fHeightDist += FLY_HEIGHT;
 
+		SetMotion(MOTION_FLY);
 	}
 
 	// À•W‚Ìæ“¾
