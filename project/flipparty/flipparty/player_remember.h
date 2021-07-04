@@ -23,14 +23,19 @@ public:
     CPlayerRemember();
     ~CPlayerRemember();
 
-    static CPlayerRemember* Create(void);
+    static CPlayerRemember* Create(D3DXVECTOR3 pos, int nPlayerNum);
     HRESULT Init(void);
     void Uninit(void);
     void Update(void);
     void Draw(void);
 
+    // Setä÷êî
+    void SetIsLoss(bool IsLoss) { m_IsLoss = IsLoss; }
+
+    // Getä÷êî
+    bool GetIsLoss(void) { return m_IsLoss;}      // íEóéÇµÇΩÇ©Ç«Ç§Ç©
 private:
-    bool IsLoss;        // íEóéÇµÇΩÇ©Ç«Ç§Ç©
+    bool m_IsLoss;        // íEóéÇµÇΩÇ©Ç«Ç§Ç©
 };
 
 
