@@ -81,56 +81,6 @@ CModel * CModel::Create(D3DXVECTOR3 pos, CResourceModel::MODEL_TYPE modelType, D
 	return pModel;
 }
 
-////******************************
-//// テクスチャのロード
-////******************************
-//HRESULT CModel::Load(void)
-//{
-//	// デバイスの取得
-//	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-//
-//	// モデル生成
-//	// 球
-//	D3DXCreateSphere(pDevice, GENERAL_SPHERE_RADIUS, 5, 5, &m_aGeneralModel[GENERAL_MODEL_SPHERE].pMesh, &m_aGeneralModel[GENERAL_MODEL_SPHERE].pBuffMat);
-//	// 箱
-//	D3DXCreateBox(pDevice, GENERAL_BOX_SIZE.x, GENERAL_BOX_SIZE.y, GENERAL_BOX_SIZE.z, &m_aGeneralModel[GENERAL_MODEL_BOX].pMesh, &m_aGeneralModel[GENERAL_MODEL_BOX].pBuffMat);
-//	// 円錐
-//	D3DXCreateCylinder(pDevice, 1, GENERAL_CONE_RADIUS, GENERAL_CONE_LENGTH, 5, 3, &m_aGeneralModel[GENERAL_MODEL_CONE].pMesh, &m_aGeneralModel[GENERAL_MODEL_CONE].pBuffMat);
-//
-//	// 色の設定
-//	for (int nCnt = 0; nCnt < GENERAL_MODEL_MAX; nCnt++)
-//	{
-//		D3DXMATERIAL* mat = (D3DXMATERIAL*)m_aGeneralModel[nCnt].pBuffMat->GetBufferPointer();
-//		mat->MatD3D.Ambient  = D3DXCOLOR(0.5f, 0.5f, 1.0f, 1.0f);
-//		mat->MatD3D.Diffuse  = D3DXCOLOR(0.5f, 0.5f, 1.0f, 1.0f);
-//		mat->MatD3D.Specular = D3DXCOLOR(0.5f, 0.5f, 1.0f, 1.0f);
-//		mat->MatD3D.Emissive = D3DXCOLOR(0.5f, 0.5f, 1.0f, 1.0f);
-//	}
-//	return S_OK;
-//}
-//
-////******************************
-//// テクスチャのアンロード
-////******************************
-//void CModel::Unload(void)
-//{
-//	// 解放処理
-//	for (int nCnt = 0; nCnt < GENERAL_MODEL_MAX; nCnt++)
-//	{
-//		if (m_aGeneralModel[nCnt].pBuffMat != NULL)
-//		{
-//			m_aGeneralModel[nCnt].pBuffMat->Release();
-//			m_aGeneralModel[nCnt].pBuffMat = NULL;
-//		}
-//
-//		if (m_aGeneralModel[nCnt].pMesh != NULL)
-//		{
-//			m_aGeneralModel[nCnt].pMesh->Release();
-//			m_aGeneralModel[nCnt].pMesh = NULL;
-//		}
-//	}
-//}
-
 //=============================================================================
 //モデルクラスの初期化処理
 //=============================================================================
@@ -169,57 +119,11 @@ void CModel::Update(void)
 //=============================================================================
 void CModel::Draw(void)
 {
-	//デバイス情報の取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	// ワールドマトリックスの設定
+	SetWorldmtx();
 
-	D3DMATERIAL9 matDef; //現在のマテリアル保持用
-	D3DXMATERIAL*pMat;   //マテリアルデータへのポインタ
-
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&m_model.mtxWorld);
-
-	// サイズを反映
-	D3DXMatrixScaling(&m_mtxScail, m_model.size.x, m_model.size.y, m_model.size.z);
-	D3DXMatrixMultiply(&m_model.mtxWorld, &m_model.mtxWorld, &m_mtxScail);
-
-	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&m_mtxRot, m_model.rot.y, m_model.rot.x, m_model.rot.z);
-	D3DXMatrixMultiply(&m_model.mtxWorld, &m_model.mtxWorld, &m_mtxRot);
-
-	// 位置を反映
-	D3DXMatrixTranslation(&m_mtxTrans, m_model.pos.x, m_model.pos.y, m_model.pos.z);
-	D3DXMatrixMultiply(&m_model.mtxWorld, &m_model.mtxWorld, &m_mtxTrans);
-
-	//ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &m_model.mtxWorld);
-
-	//現在のマテリアルを取得する
-	pDevice->GetMaterial(&matDef);
-
-	if (m_model.pBuffMat != NULL)
-	{
-		//マテリアルデータへのポインタを取得
-		pMat = (D3DXMATERIAL*)m_model.pBuffMat->GetBufferPointer();
-
-		for (int nCntMat = 0; nCntMat < (int)m_model.nNumMat; nCntMat++)
-		{
-			//マテリアルのアンビエントにディフューズカラーを設定
-			pMat[nCntMat].MatD3D.Ambient = pMat[nCntMat].MatD3D.Diffuse;
-
-			//マテリアルの設定
-			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-			// テクスチャ
-			pDevice->SetTexture(0, m_model.apTexture[nCntMat]);
-			//モデルパーツの描画
-			m_model.pMesh->DrawSubset(nCntMat);
-
-			pMat[nCntMat] = m_model.defMat[nCntMat];
-		}
-	}
-	//保持していたマテリアルを戻す
-	pDevice->SetMaterial(&matDef);
-	// テクスチャ情報の初期化
-	pDevice->SetTexture(0, 0);
+	// モデル描画
+	DrawModel();
 }
 
 //=============================================================================
@@ -309,4 +213,69 @@ void CModel::SetxWorldMatrix(D3DXMATRIX mtxWorld)
 CResourceModel::Model * CModel::GetModelData(void)
 {
 	return &m_model;
+}
+
+
+//=============================================================================
+//ワールドマトリックスの設定
+//=============================================================================
+void CModel::SetWorldmtx(void)
+{
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&m_model.mtxWorld);
+
+	// サイズを反映
+	D3DXMatrixScaling(&m_mtxScail, m_model.size.x, m_model.size.y, m_model.size.z);
+	D3DXMatrixMultiply(&m_model.mtxWorld, &m_model.mtxWorld, &m_mtxScail);
+
+	// 向きを反映
+	D3DXMatrixRotationYawPitchRoll(&m_mtxRot, m_model.rot.y, m_model.rot.x, m_model.rot.z);
+	D3DXMatrixMultiply(&m_model.mtxWorld, &m_model.mtxWorld, &m_mtxRot);
+
+	// 位置を反映
+	D3DXMatrixTranslation(&m_mtxTrans, m_model.pos.x, m_model.pos.y, m_model.pos.z);
+	D3DXMatrixMultiply(&m_model.mtxWorld, &m_model.mtxWorld, &m_mtxTrans);
+}
+
+//=============================================================================
+//モデルの描画処理
+//=============================================================================
+void CModel::DrawModel(void)
+{
+	//デバイス情報の取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	D3DMATERIAL9 matDef; //現在のマテリアル保持用
+	D3DXMATERIAL*pMat;   //マテリアルデータへのポインタ
+
+	//ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &m_model.mtxWorld);
+
+	//現在のマテリアルを取得する
+	pDevice->GetMaterial(&matDef);
+
+	if (m_model.pBuffMat != NULL)
+	{
+		//マテリアルデータへのポインタを取得
+		pMat = (D3DXMATERIAL*)m_model.pBuffMat->GetBufferPointer();
+
+		for (int nCntMat = 0; nCntMat < (int)m_model.nNumMat; nCntMat++)
+		{
+			//マテリアルのアンビエントにディフューズカラーを設定
+			pMat[nCntMat].MatD3D.Ambient = pMat[nCntMat].MatD3D.Diffuse;
+
+			//マテリアルの設定
+			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+			// テクスチャ
+			pDevice->SetTexture(0, m_model.apTexture[nCntMat]);
+			//モデルパーツの描画
+			m_model.pMesh->DrawSubset(nCntMat);
+
+			pMat[nCntMat] = m_model.defMat[nCntMat];
+		}
+	}
+	//保持していたマテリアルを戻す
+	pDevice->SetMaterial(&matDef);
+	// テクスチャ情報の初期化
+	pDevice->SetTexture(0, 0);
 }

@@ -157,6 +157,7 @@
     <ClCompile Include="camera_base.cpp" />
     <ClCompile Include="camera_tps.cpp" />
     <ClCompile Include="captain.cpp" />
+    <ClCompile Include="cloud.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="count_selection.cpp" />
     <ClCompile Include="debug_log.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="camera_base.h" />
     <ClInclude Include="camera_tps.h" />
     <ClInclude Include="captain.h" />
+    <ClInclude Include="cloud.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="count_selection.h" />
     <ClInclude Include="debug_log.h" />

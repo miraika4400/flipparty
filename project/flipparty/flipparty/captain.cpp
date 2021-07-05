@@ -40,7 +40,7 @@ int CCaptain::m_nPartsNum = 0;
 //******************************
 // コンストラクタ
 //******************************
-CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_PLAYER)
+CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_CPU)
 {
 	// 変数のクリア
 	m_pFlipper = NULL;
@@ -77,7 +77,7 @@ CCaptain * CCaptain::Create(D3DXVECTOR3 pos)
 
 	// 各値の代入・セット
 	pCaptain->SetPos(pos);
-	pCaptain->SetPriority(OBJTYPE_PLAYER); // オブジェクトタイプ
+	pCaptain->SetPriority(OBJTYPE_CPU); // オブジェクトタイプ
 
 	return pCaptain;
 }
