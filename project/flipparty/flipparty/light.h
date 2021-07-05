@@ -15,7 +15,7 @@
 //*****************************
 // マクロ定義
 //*****************************
-#define LIGHT_DIR  D3DXVECTOR3(0.3f, -0.8f,-0.2f)// ライトの方向
+#define LIGHT_DIR_BASE  D3DXVECTOR3(0.0f, -0.7f,-0.5f)// ライトの方向
 
 //*****************************
 // 前方宣言
@@ -39,6 +39,8 @@ public:
 	void Uninit(void);  // 終了
 	void Update(void);  // 更新
 
+	void SetDir(D3DXVECTOR3 vecDir); // 向きのセット
+	D3DXVECTOR3 GetDir(void) { return m_Light.Direction; }
 private:
 	//============
 	// メンバ変数

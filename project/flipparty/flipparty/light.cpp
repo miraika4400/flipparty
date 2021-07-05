@@ -45,7 +45,7 @@ HRESULT CLight::Init(void)
 	m_Light.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// ライト方向の指定
-	vecDir = LIGHT_DIR;
+	vecDir = LIGHT_DIR_BASE;
 
 	// 正規化
 	D3DXVec3Normalize(&vecDir, &vecDir);
@@ -73,4 +73,21 @@ void CLight::Uninit(void)
 //=============================================================================
 void CLight::Update(void)
 {
+}
+
+//=============================================================================
+// 向きのセット
+//=============================================================================
+void CLight::SetDir(D3DXVECTOR3 vecDir)
+{
+
+	// 正規化
+	D3DXVec3Normalize(&vecDir, &vecDir);
+
+	m_Light.Direction = vecDir;
+
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	// ライトを設定
+	pDevice->SetLight(0, &m_Light);
 }

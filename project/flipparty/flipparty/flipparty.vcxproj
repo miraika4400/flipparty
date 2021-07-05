@@ -95,7 +95,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/flipparty;$(SolutionDir)/flipparty/remember_game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/flipparty/flag_raicing_game_rule;$(SolutionDir)/flipparty/fly_game;$(SolutionDir)/flipparty;$(SolutionDir)/flipparty/remember_game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,7 +125,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)/flipparty;$(SolutionDir)/flipparty/remember_game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/flipparty/flag_raicing_game_rule;$(SolutionDir)/flipparty/fly_game;$(SolutionDir)/flipparty;$(SolutionDir)/flipparty/remember_game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,14 +155,17 @@
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="camera_base.cpp" />
-    <ClCompile Include="camera_flygame.cpp" />
     <ClCompile Include="camera_tps.cpp" />
     <ClCompile Include="captain.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="count_selection.cpp" />
     <ClCompile Include="debug_log.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp" />
     <ClCompile Include="flipper.cpp" />
+    <ClCompile Include="fly_game\camera_flygame.cpp" />
+    <ClCompile Include="fly_game\player_flygame.cpp" />
+    <ClCompile Include="fly_game\rule_flygame.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="joypad.cpp" />
@@ -170,9 +173,9 @@
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
+    <ClCompile Include="mini_result.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="model_hierarchy.cpp" />
-    <ClCompile Include="model_shader.cpp" />
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="number.cpp" />
@@ -180,9 +183,11 @@
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
-    <ClCompile Include="remember_rule.cpp" />
+    <ClCompile Include="rank_ui.cpp" />
+    <ClCompile Include="remember_game\remember_rule.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
+    <ClCompile Include="resource_shader.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="scene2d.cpp" />
@@ -190,6 +195,7 @@
     <ClCompile Include="score.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="resource_texture.cpp" />
+    <ClCompile Include="timelimit.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="tutorial.cpp" />
   </ItemGroup>
@@ -204,7 +210,10 @@
     <ClInclude Include="count_selection.h" />
     <ClInclude Include="debug_log.h" />
     <ClInclude Include="fade.h" />
+    <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h" />
     <ClInclude Include="flipper.h" />
+    <ClInclude Include="fly_game\player_flygame.h" />
+    <ClInclude Include="fly_game\rule_flygame.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />
@@ -212,9 +221,9 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
+    <ClInclude Include="mini_result.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="model_hierarchy.h" />
-    <ClInclude Include="model_shader.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="number.h" />
@@ -222,9 +231,11 @@
     <ClInclude Include="pause.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
+    <ClInclude Include="rank_ui.h" />
     <ClInclude Include="remember_game\remember_rule.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="resource_model.h" />
+    <ClInclude Include="resource_shader.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="rule_base.h" />
     <ClInclude Include="scene.h" />
@@ -233,6 +244,7 @@
     <ClInclude Include="score.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="resource_texture.h" />
+    <ClInclude Include="timelimit.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="tutorial.h" />
   </ItemGroup>

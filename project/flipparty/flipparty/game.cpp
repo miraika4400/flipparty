@@ -24,6 +24,9 @@
 #include "player.h"
 #include "captain.h"
 #include "rule_base.h"
+#include "rule_flygame.h"
+#include "remember_rule.h"
+#include "flag_raicing_game_rule.h"
 
 //=============================
 // マクロ定義
@@ -96,27 +99,26 @@ HRESULT CGame::Init(void)
 	}
 
 	// ルールクラスの生成
-	///////////////////////////////////////////////////////////////
+	if (m_pGameRule == NULL)
+	{
+		m_pGameRule = CFlagRaicingGame_rule::Create();
+	}
 
 	// 背景の生成
 	CBg::Create();
 
 #ifdef _DEBUG
 
-	///////////////////////////////////////////////////////////////
-	// 各ルールクラスで生成する者たちの仮生成
-	
-	// カメラクラスの生成
-	SetCamera(CTpsCamera::Create());
-
-	// プレイヤーの生成
-	//CPlayer::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f), 0);
-
-	CCaptain::Create(D3DXVECTOR3(0.0f, -35.0f, 0.0f));
-	//CModel::Create(D3DXVECTOR3(0.0f, 35.0f, -20.0f), CResourceModel::MODEL_GENERAL_SPHERE,D3DXVECTOR3(10.0f,10.0f,10.0f));
 	
 	//
-	///////////////////////////////////////////////////////////////
+	//// カメラクラスの生成
+	//SetCamera(CTpsCamera::Create());
+	//
+	//// プレイヤーの生成
+	//CPlayer::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT, 0.0f), 0);
+	//
+	////
+	/////////////////////////////////////////////////////////////////
 	
 #endif
 	
@@ -189,11 +191,16 @@ void CGame::Update(void)
 //=============================
 void CGame::Draw(void)
 {
-	// カメラのセット
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->SetCamera();
-	}
+    if (m_pGameRule != NULL)
+    {
+        m_pGameRule->Draw();
+    }
+
+    // カメラのセット
+    if (m_pCamera != NULL)
+    {
+        m_pCamera->SetCamera();
+    }
 }
 
 //=============================
@@ -211,4 +218,3 @@ void CGame::SetCamera(CCamera * pCamera)
 	// セット
 	m_pCamera = pCamera;
 }
-

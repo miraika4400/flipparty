@@ -19,8 +19,8 @@
 //******************************
 // マクロ定義
 //******************************
-#define CAMERA_POS D3DXVECTOR3(0.0f,0.0f,500.0f)
-
+#define CAMERA_POS_V D3DXVECTOR3(0.0f,0.0f, 500.0f)  // 位置
+#define CAMERA_POS_R D3DXVECTOR3(0.0f, 150.0f, 0.0f) // 注視点
 //******************************
 // 静的メンバ変数宣言
 //******************************
@@ -60,8 +60,9 @@ HRESULT CFlyGameCamera::Init(void)
 	CCamera::Init();
 
 	// 位置の設定
-	m_posV = CAMERA_POS;
+	m_posV = CAMERA_POS_V;
 
+	m_posR = CAMERA_POS_R;
 	return S_OK;
 }
 
@@ -78,25 +79,4 @@ void CFlyGameCamera::Update(void)
 void CFlyGameCamera::SetCamera(void)
 {
 	CCamera::SetCamera();
-
-	//// デバイスの取得
-	//LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-	//D3DXMATRIXA16 matWorld;
-	//
-	////ビューマトリックスの初期化
-	//D3DXMatrixIdentity(GetViewMtx());
-	////ビューマトリックスの作成
-	//D3DXMatrixLookAtLH(GetViewMtx(), &this->m_posV, &this->m_posR, &this->m_vecU);
-	////ビューマトリックスの設定
-	//pDevice->SetTransform(D3DTS_VIEW, GetViewMtx());
-	//
-	////プロジェクトマトリックスの初期化
-	//D3DXMatrixIdentity(GetProjectionMtx());
-	//
-	////プロジェクションマトリックスの作成*並行投影
-	//D3DXMatrixOrthoLH(GetProjectionMtx(), ((float)SCREEN_WIDTH)*0.5f, ((float)SCREEN_HEIGHT)*0.5f, 10, 100000);
-	//
-	////プロジェクションマトリックスの設定
-	//pDevice->SetTransform(D3DTS_PROJECTION, GetProjectionMtx());
-	//pDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), 1.0f, 0);
 }

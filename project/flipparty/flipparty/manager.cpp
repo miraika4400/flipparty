@@ -28,6 +28,7 @@
 #include "model.h"
 #include "resource_texture.h"
 #include "resource_model.h"
+#include "resource_shader.h"
 #include "player.h"
 #include "Captain.h"
 
@@ -122,6 +123,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	CResourceTexture::Create();
 	// モデルリソースクラスの生成
 	CResourceModel::Create();
+	// シェーダーリソースクラスの生成
+	CResourceShader::Create();
 
 	// テクスチャ・モデルの読み込み
 	CPause::Load();    // ポーズ
@@ -140,10 +143,12 @@ void CManager::Uninit(void)
 	// 開放処理
 	CScene::ReleaseAll();
 
-	// テクスチャクラスの生成
+	// テクスチャクラスの破棄
 	CResourceTexture::Release();
-	// モデルリソースクラスの生成
+	// モデルリソースクラスの破棄
 	CResourceModel::Release();
+	// シェーダーリソースクラスの破棄
+	CResourceShader::Release();
 
 	// テクスチャのアンロード
 	CPause::Unload();    // ポーズ

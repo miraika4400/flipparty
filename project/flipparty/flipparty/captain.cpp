@@ -15,6 +15,7 @@
 #include "joypad.h"
 #include "game.h"
 #include "flipper.h"
+#include "flag_raicing_game_rule.h"
 
 
 //*****************************
@@ -42,13 +43,12 @@ int CCaptain::m_nPartsNum = 0;
 CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_PLAYER)
 {
 	// 変数のクリア
-	m_pFlieer = NULL;
+	m_pFlipper = NULL;
 	ZeroMemory(&m_fFlipperDist, sizeof(m_fFlipperDist)); // 羽の角度 目標値
 	m_nColor = 0;
 	m_nCount = 0;
 	m_nChoice = 0;
 
-	m_bLoop = true;
 	m_bJudgRed = false;
 	m_bJudgWhite = false;
 
@@ -128,11 +128,12 @@ HRESULT CCaptain::Init(void)
 		return E_FAIL;
 	}
 	// フリッパークラスの生成
-	m_pFlieer = CFlipper::Create();
+	m_pFlipper = CFlipper::Create();
 
 	// 羽の目標角度の初期化
 	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = 0.0f;
 	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = 0.0f;
+
 
 	return S_OK;
 }
@@ -143,6 +144,12 @@ HRESULT CCaptain::Init(void)
 void CCaptain::Uninit(void)
 {
 	CModelHierarchy::Uninit();
+	// フリッパークラスの終了処理
+	if (m_pFlipper != NULL)
+	{
+		m_pFlipper->Uninit();
+		m_pFlipper = NULL;
+	}
 }
 
 //******************************
@@ -150,7 +157,7 @@ void CCaptain::Uninit(void)
 //******************************
 void CCaptain::Update(void)
 {
-	while (m_bLoop)
+	if (CFlagRaicingGame_rule::GetGameLoop() == CFlagRaicingGame_rule::CAPTAIN_TRUN)
 	{
 		// 全部下げている状態
 		Judge(RED_FLAG_DOWN, WHITE_FLAG_DOWN, WHITE_DOWN, RED_DOWN);
@@ -161,9 +168,11 @@ void CCaptain::Update(void)
 		// どちらも上がっている状態
 		Judge(RED_FLAG_UP, WHITE_FLAG_UP, WHITE_UP, RED_UP);
 
-		// 旗上げ判定処理
-		FlagJudge();
+		CFlagRaicingGame_rule::SetGameLoop(CFlagRaicingGame_rule::PLAYER_TRUN);
 	}
+
+	// 旗上げ判定処理
+	FlagJudge();
 	// 羽の角度の管理
 	ManageFlipperAngle();
 }
@@ -217,17 +226,9 @@ void CCaptain::FlagJudge()
 		if (!m_bJudgWhite)
 		{
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
-
-			if (m_nChoice != 1)
-			{
-				m_bLoop = false;
-			}
-			else
-			{
-				m_eColorWhite = WHITE_FLAG_UP;
-				m_bJudgWhite = true;
-				m_nCount++;
-			}
+			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+			m_eColorWhite = WHITE_FLAG_UP;
+			m_bJudgWhite = true;
 		}
 		break;
 		// 青下げ
@@ -235,17 +236,9 @@ void CCaptain::FlagJudge()
 		if (m_bJudgWhite)
 		{
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
-
-			if (m_nChoice != 1)
-			{
-				m_bLoop = false;
-			}
-			else
-			{
-				m_eColorWhite = WHITE_FLAG_DOWN;
-				m_bJudgWhite = false;
-				m_nCount++;
-			}
+			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+			m_eColorWhite = WHITE_FLAG_DOWN;
+			m_bJudgWhite = false;
 		}
 		break;
 		// 赤上げ
@@ -253,17 +246,9 @@ void CCaptain::FlagJudge()
 		if (!m_bJudgRed)
 		{
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
-
-			if (m_nChoice != 2)
-			{
-				m_bLoop = false;
-			}
-			else
-			{
-				m_eColorRed = RED_FLAG_UP;
-				m_bJudgRed = true;
-				m_nCount++;
-			}
+			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+			m_eColorRed = RED_FLAG_UP;
+			m_bJudgRed = true;
 		}
 		break;
 		// 赤下げ
@@ -271,17 +256,9 @@ void CCaptain::FlagJudge()
 		if (m_bJudgRed)
 		{
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
-
-			if (m_nChoice != 2)
-			{
-				m_bLoop = false;
-			}
-			else
-			{
-				m_eColorRed = RED_FLAG_DOWN;
-				m_bJudgRed = false;
-				m_nCount++;
-			}
+			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+			m_eColorRed = RED_FLAG_DOWN;
+			m_bJudgRed = false;
 		}
 		break;
 	}
@@ -297,33 +274,5 @@ void CCaptain::ManageFlipperAngle(void)
 	pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z += (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] - pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z)*FLIPPER_RATE;
 	// 左羽を動かす
 	pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z += (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] - pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z)*FLIPPER_RATE;
-
-	// 右羽の上がっているか下がっているかの判定
-	if (pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z <= RIGHT_FLIPPER_DIST_ANGLE_UP + FLIPPER_JUDGE)
-	{// 上がっているとき
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
-	}
-	else if (pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z >= RIGHT_FLIPPER_DIST_ANGLE_DOWN - FLIPPER_JUDGE)
-	{// 下がっているとき
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
-	}
-	else
-	{// 中間
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPER_STATE_NONE);
-	}
-
-	// 右羽の上がっているか下がっているかの判定
-	if (pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z >= LEFT_FLIPPER_DIST_ANGLE_UP - FLIPPER_JUDGE)
-	{// 上がっているとき
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
-	}
-	else if (pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z <= LEFT_FLIPPER_DIST_ANGLE_DOWN + FLIPPER_JUDGE)
-	{// 下がっているとき
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
-	}
-	else
-	{// 中間
-		m_pFlieer->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPER_STATE_NONE);
-	}
 }
 

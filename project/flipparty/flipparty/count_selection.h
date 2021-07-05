@@ -53,13 +53,13 @@ public:
 	void Update(void);  // 更新
 	void Draw(void);    // 描画
 
-	int GetPlayerNum(void) { return m_nPlayerNum; }// プレイヤー人数の取得処理
+	static int GetPlayerNum(void) { return m_nPlayerNum; }// プレイヤー人数の取得処理
 
 private:
 	void SelectUi(void);      // UIの選択処理
 	void ManageUiColor(void); // UIカラーの管理
 	
-							  //============
+	//============
 	// メンバ変数
 	//============
 	static int m_nPlayerNum;                // ゲームに参加しているプレイヤーの人数

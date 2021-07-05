@@ -17,7 +17,6 @@
 //***********************************
 #define MAX_SCENE 1280   // ポリゴンの最大数
 #define PRIORITY_NUM OBJTYPE_MAX
-#define MAX_TEHNIQUENAME_LENGTH 64
 
 //=============================
 //クラス定義
@@ -30,13 +29,6 @@ public:
 	//============
 	// 構造体定義
 	//============
-	// シェーダー構造体
-	typedef struct
-	{
-		LPD3DXEFFECT pEffect;                             // エフェクトファイル
-		char achTechniqueName[MAX_TEHNIQUENAME_LENGTH];   // HLSLテクニックネーム
-		LPDIRECT3DCUBETEXTURE9 pCubeTex;                  // キューブテクスチャポインタ
-	}Shader;
 
 	//============
 	// 状態列挙
@@ -46,18 +38,19 @@ public:
 	typedef enum
 	{
 		OBJTYPE_NONE = 0,
-		OBJTYPE_BG,         // 背景
-		OBJTYPE_ITEM,       // アイテム
-		OBJTYPE_ATTACK,     // 攻撃
-		OBJTYPE_PLAYER,     // プレイヤー
-		OBJTYPE_CPU,        // CPU
-		OBJTYPE_CHECKPOINT, // チェックポイント
-		OBJTYPE_MAP,        // マップ
-		OBJTYPE_PARTICLE,   // パーティクル
-		OBJTYPE_MOTION,     // モーション
-		OBJTYPE_UI,         // UI
-		OBJTYPE_COLLISION,  // コリジョン
-		OBJTYPE_SYSTEM,     // システム
+		OBJTYPE_BG,            // 背景
+		OBJTYPE_ITEM,          // アイテム
+		OBJTYPE_ATTACK,        // 攻撃
+		OBJTYPE_PLAYER,        // プレイヤー
+		OBJTYPE_CPU,           // CPU
+		OBJTYPE_CHECKPOINT,    // チェックポイント
+		OBJTYPE_MAP,           // マップ
+		OBJTYPE_PARTICLE,      // パーティクル
+		OBJTYPE_MOTION,        // モーション
+		OBJTYPE_UI,            // UI
+		OBJTYPE_COLLISION,     // コリジョン
+		OBJTYPE_MINIRESULT,    // ミニゲームリザルト
+		OBJTYPE_SYSTEM,        // システム
 		OBJTYPE_MAX,        // タイプの最大数
 	}OBJTYPE;
 

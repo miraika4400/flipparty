@@ -70,24 +70,28 @@ public:
 
 	void ManageFlipperAngle(void); // 羽の角度管理
 	void Choice(int choice) { m_nChoice = choice; }
+
+	CFlipper*GetFlipper(void) { return m_pFlipper; }
+	CFlipper*GetFlipperMoveState(void) { return m_pFlipperMoveState; }
 private:
 
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
 	static int m_nPartsNum;
 
+	int m_nCntTime;
 	int m_nColor;
 	int m_nCount;
 	int m_nChoice;
 
-	bool m_bLoop;
 	bool m_bJudgRed;				// 赤上げてるか下げてるかの判別
 	bool m_bJudgWhite;				// 白上げてるか下げてるかの判別
 
 	FLAG m_eColorRed;
 	FLAG m_eColorWhite;
 
-	CFlipper * m_pFlieer;          // フリッパークラス
+	CFlipper * m_pFlipper;          // フリッパークラス
+	CFlipper * m_pFlipperMoveState;
 	float m_fFlipperDist[2];       // フリッパーの角度目標値
 };
 
