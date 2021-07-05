@@ -23,6 +23,7 @@
 //*****************************
 // 前方宣言
 //*****************************
+class CFlipper;
 
 //*****************************
 // クラス定義
@@ -32,6 +33,24 @@
 class CCaptain : public CModelHierarchy
 {
 public:
+	typedef enum
+	{
+		RED_FLAG_UP = 0,	// 赤上がっている状態
+		WHITE_FLAG_UP,		// 白上がっている状態
+		RED_FLAG_DOWN,		// 赤下がっている状態
+		WHITE_FLAG_DOWN,	// 白下がっている状態
+		FLAG_END
+	}FLAG;
+
+	typedef enum
+	{
+		COLOR_NORMAL = 0,
+		WHITE_UP,			// 白上がっている状態
+		WHITE_DOWN,			// 白下がっている状態
+		RED_UP,				// 赤上がっている状態
+		RED_DOWN,			// 赤下がっている状態
+		COLOR_END
+	}COLOR;
 
 	//メンバ関数
 	CCaptain();
@@ -45,12 +64,35 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void Judge(FLAG ColorFlagRed, FLAG ColorFlagWhite, COLOR ColorRed, COLOR ColorWhite);	// 色判別処理
+	void JudgeColor(FLAG ColorFlagRed, FLAG ColorFlagWhite, COLOR ColorRed, COLOR ColorWhite);
+	void FlagJudge();
+
+	void ManageFlipperAngle(void); // 羽の角度管理
+	void Choice(int choice) { m_nChoice = choice; }
+
+	CFlipper*GetFlipper(void) { return m_pFlipper; }
+	CFlipper*GetFlipperMoveState(void) { return m_pFlipperMoveState; }
 private:
 
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
 	static int m_nPartsNum;
 
+	int m_nCntTime;
+	int m_nColor;
+	int m_nCount;
+	int m_nChoice;
+
+	bool m_bJudgRed;				// 赤上げてるか下げてるかの判別
+	bool m_bJudgWhite;				// 白上げてるか下げてるかの判別
+
+	FLAG m_eColorRed;
+	FLAG m_eColorWhite;
+
+	CFlipper * m_pFlipper;          // フリッパークラス
+	CFlipper * m_pFlipperMoveState;
+	float m_fFlipperDist[2];       // フリッパーの角度目標値
 };
 
 #endif#pragma once

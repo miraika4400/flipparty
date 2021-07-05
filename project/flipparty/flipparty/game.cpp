@@ -25,6 +25,7 @@
 #include "rule_base.h"
 #include "rule_flygame.h"
 #include "remember_rule.h"
+#include "flag_raicing_game_rule.h"
 #include "rule_manager.h"
 
 //=============================
@@ -93,13 +94,12 @@ HRESULT CGame::Init(void)
 	if (m_pRuleManager == NULL)
 	{
 		m_pRuleManager = CRuleManager::Create();
-		m_pRuleManager->SetRule(CRuleManager::RULE_FLY);
+		m_pRuleManager->SetRule(CRuleManager::RULE_FLAG_RACING);
 	}
 
 #ifdef _DEBUG
 
-	/////////////////////////////////////////////////////////////////
-	//// 各ルールクラスで生成する者たちの仮生成
+	
 	//
 	//// カメラクラスの生成
 	//SetCamera(CTpsCamera::Create());

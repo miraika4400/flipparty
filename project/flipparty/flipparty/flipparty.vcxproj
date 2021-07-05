@@ -95,7 +95,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/flipparty/fly_game;$(SolutionDir)/flipparty;$(SolutionDir)/flipparty/remember_game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/flipparty/flag_raicing_game_rule;$(SolutionDir)/flipparty/fly_game;$(SolutionDir)/flipparty;$(SolutionDir)/flipparty/remember_game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,7 +125,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)/flipparty/fly_game;$(SolutionDir)/flipparty;$(SolutionDir)/flipparty/remember_game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/flipparty/flag_raicing_game_rule;$(SolutionDir)/flipparty/fly_game;$(SolutionDir)/flipparty;$(SolutionDir)/flipparty/remember_game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -162,6 +162,7 @@
     <ClCompile Include="count_selection.cpp" />
     <ClCompile Include="debug_log.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp" />
     <ClCompile Include="flipper.cpp" />
     <ClCompile Include="fly_game\camera_flygame.cpp" />
     <ClCompile Include="fly_game\player_flygame.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="count_selection.h" />
     <ClInclude Include="debug_log.h" />
     <ClInclude Include="fade.h" />
+    <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h" />
     <ClInclude Include="flipper.h" />
     <ClInclude Include="fly_game\camera_flygame.h" />
     <ClInclude Include="fly_game\player_flygame.h" />

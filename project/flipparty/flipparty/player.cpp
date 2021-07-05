@@ -71,6 +71,7 @@ CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
 	m_nRank = 0;
 	m_pActiveMotion = NULL;
 	m_facePattern = FACE_PATTERN_NORMAL;
+	m_nPoint = 0;
 
 #ifdef _DEBUG
 	// デバッグ用変数
@@ -147,6 +148,8 @@ HRESULT CPlayer::Init(void)
 	{
 		return E_FAIL;
 	}
+	// ポイントの初期化
+	m_nPoint = 0;
 
 	// フリッパークラスの生成
 	m_pFlipper = CFlipper::Create();

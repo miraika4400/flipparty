@@ -94,6 +94,11 @@ public:
 	void SetMotion(MOTION_TYPE type);
 	// 表情のセット
 	void SetFacePattern(FACE_PATTERN pattern) { m_facePattern = pattern; }
+
+	void SetPoint(int point) { m_nPoint = point; }
+	void AddPoint(int point) { m_nPoint += point; }
+	int GetPoint(void) { return m_nPoint; }
+
 private:
 	void DrawModel(void);
 
@@ -113,6 +118,7 @@ private:
 	bool m_bMove;                       // 動けるかどうかのフラグ
 	int m_nRank;                        // 順位
 	FACE_PATTERN  m_facePattern;               // 表情切り替え用
+	int m_nPoint;
 
 	// モーション用変数
 	static char m_achAnimPath[MOTION_MAX][64];   // アニメーションテキストのパス格納用

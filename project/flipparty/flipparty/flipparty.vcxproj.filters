@@ -19,6 +19,9 @@
     <Filter Include="fly_game">
       <UniqueIdentifier>{29d0d2ce-fd3c-4542-af27-880a490b5526}</UniqueIdentifier>
     </Filter>
+    <Filter Include="flag_raicing_game">
+      <UniqueIdentifier>{4f46a3df-0854-4415-aad7-c9d3fc618435}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tutorial.cpp">
@@ -155,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="rank_ui.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp">
+      <Filter>flag_raicing_game</Filter>
     </ClCompile>
     <ClCompile Include="rule_manager.cpp">
       <Filter>ソース ファイル</Filter>
@@ -301,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="rank_ui.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h">
+      <Filter>flag_raicing_game</Filter>
     </ClInclude>
     <ClInclude Include="fly_game\camera_flygame.h">
       <Filter>fly_game</Filter>
