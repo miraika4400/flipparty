@@ -162,6 +162,12 @@
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp">
       <Filter>flag_raicing_game</Filter>
     </ClCompile>
+    <ClCompile Include="rule_manager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="player_remember.cpp">
+      <Filter>remember_game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h">
@@ -281,9 +287,6 @@
     <ClInclude Include="count_selection.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="camera_flygame.h">
-      <Filter>fly_game</Filter>
-    </ClInclude>
     <ClInclude Include="fly_game\rule_flygame.h">
       <Filter>fly_game</Filter>
     </ClInclude>
@@ -304,6 +307,15 @@
     </ClInclude>
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h">
       <Filter>flag_raicing_game</Filter>
+    </ClInclude>
+    <ClInclude Include="fly_game\camera_flygame.h">
+      <Filter>fly_game</Filter>
+    </ClInclude>
+    <ClInclude Include="rule_manager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="player_remember.h">
+      <Filter>remember_game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

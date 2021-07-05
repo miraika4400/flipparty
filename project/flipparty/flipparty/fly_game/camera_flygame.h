@@ -40,3 +40,4 @@ private:
 };
 
 #endif#pragma once
+#pragma once

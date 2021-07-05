@@ -182,6 +182,7 @@
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="player_remember.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="rank_ui.cpp" />
     <ClCompile Include="remember_game\remember_rule.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="resource_model.cpp" />
     <ClCompile Include="resource_shader.cpp" />
     <ClCompile Include="result.cpp" />
+    <ClCompile Include="rule_manager.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="scene2d.cpp" />
     <ClCompile Include="scene3d.cpp" />
@@ -203,7 +205,6 @@
     <ClInclude Include="bg.h" />
     <ClInclude Include="billboard.h" />
     <ClInclude Include="camera_base.h" />
-    <ClInclude Include="camera_flygame.h" />
     <ClInclude Include="camera_tps.h" />
     <ClInclude Include="captain.h" />
     <ClInclude Include="collision.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="fade.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h" />
     <ClInclude Include="flipper.h" />
+    <ClInclude Include="fly_game\camera_flygame.h" />
     <ClInclude Include="fly_game\player_flygame.h" />
     <ClInclude Include="fly_game\rule_flygame.h" />
     <ClInclude Include="game.h" />
@@ -230,6 +232,7 @@
     <ClInclude Include="particle.h" />
     <ClInclude Include="pause.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="player_remember.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="rank_ui.h" />
     <ClInclude Include="remember_game\remember_rule.h" />
@@ -238,6 +241,7 @@
     <ClInclude Include="resource_shader.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="rule_base.h" />
+    <ClInclude Include="rule_manager.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="scene2d.h" />
     <ClInclude Include="scene3d.h" />

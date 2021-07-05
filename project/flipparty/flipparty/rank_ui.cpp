@@ -15,10 +15,10 @@
 //=============================
 // マクロ定義
 //=============================
-#define UI_SIZE D3DXVECTOR3(40.0f,40.0f,0.0f)
+#define UI_SIZE D3DXVECTOR3(30.0f,30.0f,0.0f)
 #define MAX_ANIMATION_X 4      // アニメーション数 横
 #define MAX_ANIMATION_Y 4      // アニメーション数 縦
-#define ANIMARION_INTERVAL 5   // アニメーション移行フレーム数
+#define ANIMARION_INTERVAL 10  // アニメーション移行フレーム数
 
 //=============================
 // 静的メンバ変数宣言
@@ -27,7 +27,7 @@
 //=============================
 // コンストラクタ
 //=============================
-CRankUI::CRankUI()
+CRankUI::CRankUI() :CScene(OBJTYPE_MINIRESULT)
 {
 	// 変数のクリア
 	m_pBillboard = NULL;  // ビルボードポインタ
@@ -113,10 +113,11 @@ void CRankUI::Update(void)
 {
 	m_nCntAnim++;
 
-	if ((ANIMARION_INTERVAL %m_nCntAnim) == 0)
+	if (ANIMARION_INTERVAL < m_nCntAnim )
 	{
+		m_nCntAnim = 0;
 		m_nAnimX++;
-		if (m_nAnimX >= MAX_ANIMATION_X)
+		if (m_nAnimX >= 2)
 		{
 			m_nAnimX = 0;
 		}
@@ -126,9 +127,9 @@ void CRankUI::Update(void)
 		float fu = 1.0f / MAX_ANIMATION_X;
 		float fv = 1.0f / MAX_ANIMATION_Y;
 
-		uv[0] = D3DXVECTOR2(fu*m_nAnimX, fv*m_nRank);
+		uv[0] = D3DXVECTOR2(fu*m_nAnimX     , fv*m_nRank);
 		uv[1] = D3DXVECTOR2(fu*m_nAnimX + fu, fv*m_nRank);
-		uv[2] = D3DXVECTOR2(fu*m_nAnimX, fv*m_nRank + fv);
+		uv[2] = D3DXVECTOR2(fu*m_nAnimX     , fv*m_nRank + fv);
 		uv[3] = D3DXVECTOR2(fu*m_nAnimX + fu, fv*m_nRank + fv);
 
 		// UV座標セット
