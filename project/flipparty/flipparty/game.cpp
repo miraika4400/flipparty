@@ -102,7 +102,7 @@ HRESULT CGame::Init(void)
 	if (m_pRuleManager == NULL)
 	{
 		m_pRuleManager = CRuleManager::Create();
-		m_pRuleManager->SetRule(CRuleManager::RULE_FLY);
+		m_pRuleManager->SetRule(CRuleManager::RULE_FLAG_RACING);
 	}
 	//// ƒ‹[ƒ‹ƒNƒ‰ƒX‚Ì¶¬
 	//if (m_pGameRule == NULL)
