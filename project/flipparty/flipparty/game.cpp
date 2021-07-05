@@ -42,7 +42,6 @@
 //=============================
 CCamera *CGame::m_pCamera = {};       // カメラクラスポインタ
 CLight  *CGame::m_pLight = NULL;      // ライトクラスポインタ
-CRuleBase   *CGame::m_pGameRule = NULL;   // ルールクラス
 CRuleManager* CGame::m_pRuleManager = NULL;
 //=============================
 // コンストラクタ
@@ -90,24 +89,12 @@ HRESULT CGame::Init(void)
 		}
 	}
 
-	// ルールクラスの初期化
-	if (m_pGameRule != NULL)
-	{
-		m_pGameRule->Uninit();
-		m_pGameRule = NULL;
-	}
-
 	// ルールクラスの生成
 	if (m_pRuleManager == NULL)
 	{
 		m_pRuleManager = CRuleManager::Create();
 		m_pRuleManager->SetRule(CRuleManager::RULE_FLY);
 	}
-	//// ルールクラスの生成
-	//if (m_pGameRule == NULL)
-	//{
-	//	m_pGameRule = CRuleFly::Create();
-	//}
 
 #ifdef _DEBUG
 
@@ -122,7 +109,7 @@ HRESULT CGame::Init(void)
 	//
 	////
 	/////////////////////////////////////////////////////////////////
-	
+	//CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), CResourceModel::MODEL_CLOUD, D3DXVECTOR3(0.0000001f, 0.0000001f, 0.0000001f))->SetPriority(OBJTYPE_MAP);
 #endif
 	
 	return S_OK;
@@ -148,14 +135,6 @@ void CGame::Uninit(void)
 		m_pLight = NULL;
 	}
 
-	// ルールクラスの破棄
-	if (m_pGameRule != NULL)
-	{
-		m_pGameRule->Uninit();
-		delete m_pGameRule;
-		m_pGameRule = NULL;
-	}
-
 	// 開放処理
 	Release();
 }
@@ -172,11 +151,6 @@ void CGame::Update(void)
 		m_pCamera->Update();
 	}
 
-	// ルールクラスの更新処理
-	if (m_pGameRule != NULL)
-	{
-		m_pGameRule->Update();
-	}
 
 #ifdef _DEBUG
 	// デバッグ用画面遷移コマンド
@@ -186,6 +160,17 @@ void CGame::Update(void)
 	}
 
 	// デバッグ用ルール遷移コマンド
+
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_1))
+	{
+		ReConnection();
+		m_pRuleManager->ReConnection();
+		ReleaseAll();
+
+		SetPriority(OBJTYPE_NONE);
+		m_pRuleManager->SetPriority(OBJTYPE_SYSTEM);
+		m_pRuleManager->SetRule(CRuleManager::RULE_FLAG_RACING);
+	}
 	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_2))
 	{
 		ReConnection();
@@ -216,11 +201,6 @@ void CGame::Update(void)
 //=============================
 void CGame::Draw(void)
 {
-    if (m_pGameRule != NULL)
-    {
-        m_pGameRule->Draw();
-    }
-
     // カメラのセット
     if (m_pCamera != NULL)
     {

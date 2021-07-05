@@ -20,7 +20,6 @@
 //=============================
 class CCamera;
 class CLight;
-class CRuleBase;
 class CRuleManager;
 //*****************************
 //マクロ定義
@@ -63,7 +62,6 @@ private:
 	//*****************************
 	static CCamera*m_pCamera;            // カメラ
 	static CLight*m_pLight;              // ライトポインタ
-	static CRuleBase *m_pGameRule;       // ルールクラス
 	static CRuleManager* m_pRuleManager; // ルールマネージャー
 };
 

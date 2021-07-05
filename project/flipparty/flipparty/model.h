@@ -64,6 +64,9 @@ public:
 	CResourceModel::Model *GetModelData(void);
 
 private:
+	virtual void SetWorldmtx(void); // ワールドマトリックスの設定
+	virtual void DrawModel(void);   // モデル描画処理
+
 	//============
 	// メンバ変数
 	//============

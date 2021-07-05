@@ -93,7 +93,7 @@ void CFlyGamePlayer::Update(void)
 		// ”ò‚Ôˆ—
 		Fly(GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_LEFT), leftStateOld);
 		Fly(GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_RIGHT), rightStateOld);
-	}	
+	}
 }
 
 //******************************

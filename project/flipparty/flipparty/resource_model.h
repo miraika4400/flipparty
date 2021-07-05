@@ -55,6 +55,7 @@ public:
 		MODEL_GENERAL_BOX,        // 汎用モデルボックス
 		MODEL_TEST,               // テストモデル
 		MODEL_BG,                 // 背景モデル
+		MODEL_CLOUD,              // 雲モデル
 		MODEL_MAX        // モデル数
 	}MODEL_TYPE;
 

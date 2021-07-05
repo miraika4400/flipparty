@@ -108,6 +108,7 @@ void CScene::UpdateAll(void)
 		while (pScene)
 		{
 			// ネクストの保存
+
 			CScene*pSave = pScene->m_pNext;
 
 			// 死亡フラグチェック
