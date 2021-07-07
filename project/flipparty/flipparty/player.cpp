@@ -422,6 +422,7 @@ void CPlayer::DrawModel(void)
 					pMat[nCntMat] = pModelData[nCntParts].defMat[nCntMat];
 				}
 			}
+			// シェーダー終了
 			shader.pEffect->End();
 		}
 		

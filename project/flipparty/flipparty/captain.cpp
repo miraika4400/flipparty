@@ -16,7 +16,11 @@
 #include "game.h"
 #include "flipper.h"
 #include "flag_raicing_game_rule.h"
-
+#include "resource_shader.h"
+#include "resource_texture.h"
+#include "game.h"
+#include "light.h"
+#include "camera_base.h"
 
 //*****************************
 // マクロ定義
@@ -30,6 +34,9 @@
 #define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
 #define FLIPPER_RATE 0.07f                                           // 羽を動かすときの係数
 #define FLIPPER_JUDGE D3DXToRadian(20.0f)                            // 上がっているか下がっているか判定の基準値
+#define FACE_PARTS_NUMBER 3  // 表情パーツのパーツ番号
+#define FACE_PATTERN 3       // 表情パターン数
+#define FACE_TEX_V (1.0f/(float)FACE_PATTERN) * (float)m_facePattern
 
 //*****************************
 // 静的メンバ変数宣言
@@ -48,6 +55,7 @@ CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_CPU)
 	m_nColor = 0;
 	m_nCount = 0;
 	m_nChoice = 0;
+	m_facePattern = 0;
 
 	m_bJudgRed = false;
 	m_bJudgWhite = false;
@@ -134,6 +142,8 @@ HRESULT CCaptain::Init(void)
 	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = 0.0f;
 	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = 0.0f;
 
+	// 表情の初期化
+	m_facePattern = 0;
 
 	return S_OK;
 }
@@ -263,6 +273,7 @@ void CCaptain::FlagJudge()
 		break;
 	}
 }
+
 //******************************
 // 羽の角度の管理
 //******************************
@@ -274,5 +285,116 @@ void CCaptain::ManageFlipperAngle(void)
 	pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z += (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] - pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z)*FLIPPER_RATE;
 	// 左羽を動かす
 	pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z += (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] - pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z)*FLIPPER_RATE;
+}
+
+//******************************
+// モデルの描画
+//******************************
+void CCaptain::DrawModel(void)
+{
+	//デバイス情報の取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	D3DMATERIAL9 matDef;	//現在のマテリアル保持用
+	D3DXMATERIAL*pMat;	//マテリアルデータへのポインタ
+
+	CResourceModel::Model *pModelData = GetModelData();
+
+	for (int nCntParts = 0; nCntParts < GetPartsNum(); nCntParts++)
+	{
+		//ワールドマトリックスの設定
+		pDevice->SetTransform(D3DTS_WORLD, &pModelData[nCntParts].mtxWorld);
+
+		//現在のマテリアルを取得する
+		pDevice->GetMaterial(&matDef);
+
+		// シェーダー情報の取得
+		CResourceShader::Shader shader = CResourceShader::GetShader(CResourceShader::SHADER_PLAYER);
+
+		if (shader.pEffect != NULL)
+		{
+			// シェーダープログラムに値を送る
+			SetShaderVariable(shader.pEffect, &pModelData[nCntParts]);
+
+			// フェイスパターン
+			if (nCntParts != FACE_PARTS_NUMBER)
+			{
+				shader.pEffect->SetFloat("fTexV", 0.0f);
+			}
+			else
+			{
+				shader.pEffect->SetFloat("fTexV", FACE_TEX_V);
+			}
+
+			//マテリアルデータへのポインタを取得
+			pMat = (D3DXMATERIAL*)pModelData[nCntParts].pBuffMat->GetBufferPointer();
+
+			// パス数の取得
+			UINT numPass = 0;
+			shader.pEffect->Begin(&numPass, 0);
+
+			// パス数分描画処理のループ
+			for (int nCntEffect = 0; nCntEffect < (int)numPass; nCntEffect++)
+			{
+				for (int nCntMat = 0; nCntMat < (int)pModelData[nCntParts].nNumMat; nCntMat++)
+				{
+					//マテリアルのアンビエントにディフューズカラーを設定
+					pMat[nCntMat].MatD3D.Ambient = pMat[nCntMat].MatD3D.Diffuse;
+
+					//マテリアルの設定
+					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+					// テクスチャ
+					pDevice->SetTexture(0, pModelData[nCntParts].apTexture[nCntMat]);
+
+					// テクスチャをシェーダーに送る
+					shader.pEffect->SetTexture("Tex", pModelData[nCntParts].apTexture[nCntMat]);
+					// テクスチャをシェーダーに送る
+					shader.pEffect->SetTexture("ToonTex", CResourceTexture::GetTexture(CResourceTexture::TEXTURE_TOONSHADOW));
+					// 色
+					shader.pEffect->SetFloatArray("DiffuseColor", (float*)&pMat[nCntMat].MatD3D.Diffuse, 4);
+					// シェーダパスの描画開始
+					shader.pEffect->BeginPass(nCntEffect);
+					//モデルパーツの描画
+					pModelData[nCntParts].pMesh->DrawSubset(nCntMat);
+					// シェーダパスの終了
+					shader.pEffect->EndPass();
+
+
+					pMat[nCntMat] = pModelData[nCntParts].defMat[nCntMat];
+				}
+			}
+			// シェーダー終了
+			shader.pEffect->End();
+		}
+
+		//保持していたマテリアルを戻す
+		pDevice->SetMaterial(&matDef);
+		// テクスチャの初期化
+		pDevice->SetTexture(0, 0);
+	}
+}
+
+//******************************
+// シェーダーに値を送る
+//******************************
+void CCaptain::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pModelData)
+{
+	if (pEffect != NULL)
+	{
+		// シェーダーに情報を渡す
+		D3DXMATRIX mat;
+		D3DXMatrixIdentity(&mat);
+		mat = pModelData->mtxWorld * (*CGame::GetCamera()->GetViewMtx())* (*CGame::GetCamera()->GetProjectionMtx());
+		// ワールドプロジェクション
+		pEffect->SetMatrix("WorldViewProj", &mat);
+		// ワールド座標
+		pEffect->SetMatrix("World", &pModelData->mtxWorld);
+		// ライトディレクション
+		D3DXVECTOR3 lightDir = CGame::GetLight()->GetDir();
+		pEffect->SetFloatArray("LightDirection", (float*)&D3DXVECTOR3(lightDir.x, -lightDir.y, -lightDir.z), 3);
+		// 視点位置
+		D3DXVECTOR3 eye = CGame::GetCamera()->GetPos();
+		pEffect->SetFloatArray("Eye", (float*)&eye, 3);
+	}
 }
 

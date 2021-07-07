@@ -34,7 +34,7 @@
 #define PLAYER_SPACE 150.0f //　プレイヤー位置の間隔
 #define BLACKOUT_SIZE  D3DXVECTOR3(10000.0f, 10000.0f, 0.0f)
 #define BLACKOUT_COLOR D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f)
-#define BLACKOUT_POS   D3DXVECTOR3(0.0f, 0.0f, 50.0f)
+#define BLACKOUT_POS   D3DXVECTOR3(0.0f, 0.0f, 70.0f)
 #define PLAYER_RESULT_WORST_ROT_X D3DXToRadian(70.0f) // 最下位の時の回転軸のXの値
 #define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
 
