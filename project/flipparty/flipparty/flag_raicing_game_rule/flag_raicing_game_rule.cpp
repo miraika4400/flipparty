@@ -32,12 +32,12 @@ CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eLoop
 #define TRUN_SET (40)			// ターンの制限時間の設定
 #define ADD_POINT_NUM (1)		// ポイント合計値の設定
 
-#define FLAG_PLAYER_POS_Y_NUM -150.0f
-#define FLAG_PLAYER_POS_Z_NUM -90.0f
+#define FLAG_PLAYER_POS_Y_NUM -100.0f
+#define FLAG_PLAYER_POS_Z_NUM -50.0f
 
 #define FLAG_CAPTAIN_POS_X_NUM 0.0f
 #define FLAG_CAPTAIN_POS_Y_NUM -30.0f
-#define FLAG_CAPTAIN_POS_Z_NUM -40.0f
+#define FLAG_CAPTAIN_POS_Z_NUM -150.0f
 
 #define RAND_FLAG rand() % 180 + 50
 
