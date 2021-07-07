@@ -16,6 +16,7 @@
 #include "camera_tps.h"
 #include "mini_result.h"
 #include "timelimit.h"
+#include "blind.h"
 
 //======================================================
 //	Ã“Iƒƒ“ƒo•Ï”éŒ¾‰Šú‰»
@@ -106,6 +107,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	// §ŒÀŠÔ‚Ì¶¬
 	m_pTimeLimit = CTimeLimit::Create(TRUN_SET);
 
+	CBlind::Create();
 	return S_OK;
 }
 

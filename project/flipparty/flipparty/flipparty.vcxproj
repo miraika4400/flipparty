@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="billboard.cpp" />
+    <ClCompile Include="blind.cpp" />
     <ClCompile Include="camera_base.cpp" />
     <ClCompile Include="camera_tps.cpp" />
     <ClCompile Include="captain.cpp" />
@@ -205,6 +206,7 @@
   <ItemGroup>
     <ClInclude Include="bg.h" />
     <ClInclude Include="billboard.h" />
+    <ClInclude Include="blind.h" />
     <ClInclude Include="camera_base.h" />
     <ClInclude Include="camera_tps.h" />
     <ClInclude Include="captain.h" />
