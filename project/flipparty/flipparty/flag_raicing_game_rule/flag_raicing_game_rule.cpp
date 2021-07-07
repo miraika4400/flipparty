@@ -15,6 +15,7 @@
 #include "flipper.h"
 #include "camera_tps.h"
 #include "mini_result.h"
+#include "timelimit.h"
 
 //======================================================
 //	静的メンバ変数宣言初期化
@@ -25,10 +26,19 @@ CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eLoop
 //======================================================
 //	マクロ定義
 //======================================================
-#define PLAYER_SPACE (150.0f)	// プレイヤー位置の間隔
+#define PLAYER_SPACE (110.0f)	// プレイヤー位置の間隔
 #define TIME_SET (180)			// 制限時間の設定
-#define TRUN_SET (20)			// ターン数の設定
+#define TRUN_SET (40)			// ターンの制限時間の設定
 #define ADD_POINT_NUM (1)		// ポイント合計値の設定
+
+#define FLAG_PLAYER_POS_Y_NUM -150.0f
+#define FLAG_PLAYER_POS_Z_NUM -90.0f
+
+#define FLAG_CAPTAIN_POS_X_NUM 0.0f
+#define FLAG_CAPTAIN_POS_Y_NUM -30.0f
+#define FLAG_CAPTAIN_POS_Z_NUM -40.0f
+
+#define RAND_FLAG rand() % 180 + 50
 
 //======================================================
 //	コンストラクタ
@@ -42,6 +52,8 @@ CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 	m_nCntTime = 0;
 	m_nPoint = 0;
 	m_nTarn = 0;
+	m_nRandTime = 0;
+	m_pTimeLimit = NULL;
 	m_bPlay = true;
 }
 
@@ -75,21 +87,24 @@ CFlagRaicingGame_rule * CFlagRaicingGame_rule::Create(void)
 HRESULT CFlagRaicingGame_rule::Init(void)
 {
 	m_bPlay = true;
-
+	m_nRandTime = TIME_SET;
 	//カメラの生成
 	CGame::SetCamera(CTpsCamera::Create());
 
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
+	float posX = 0 + ((float)(nPlayerNum - 1) * PLAYER_SPACE) / 2;// 位置の調整
 	// プレイヤーの人数分プレイヤー生成
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
 	{
-		float posX = 0 + ((float)(nCntPlayer)*PLAYER_SPACE) / 2;// 位置の調整
 		// プレイヤーの生成
-		m_pPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, -50.0f, 30.0f), nCntPlayer);
+		m_pPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
+		posX -= PLAYER_SPACE;
 	}
 	// キャプテンの生成
-	m_pCaptain = CCaptain::Create(D3DXVECTOR3(0.0f, -35.0f, -30.0f));
+	m_pCaptain = CCaptain::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_CAPTAIN_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM));
+	// 制限時間の生成
+	m_pTimeLimit = CTimeLimit::Create(TRUN_SET);
 
 	return S_OK;
 }
@@ -116,15 +131,17 @@ void CFlagRaicingGame_rule::Update(void)
 		FlagJudge();
 
 		// 時間経過で次の動作に入る
-		if (m_nCntTime == TIME_SET)
+		if (m_nCntTime == m_nRandTime)
 		{
-			m_nTarn++;					//ターンを進める
-			SetGameLoop(CAPTAIN_TRUN);	//キャプテンのターンに変更
-			m_nCntTime = 0;				//タイムの初期化
-			FlagPoint();				//ポイント追加
+			m_nRandTime = RAND_FLAG;	// ランダムで旗の上げるタイミングを設定
+			m_nTarn++;					// ターンを進める
+			SetGameLoop(CAPTAIN_TRUN);	// キャプテンのターンに変更
+			m_nCntTime = 0;				// タイムの初期化
+			FlagPoint();				// ポイント追加
 		}
 		// 上限のターン数を上回ったらゲームを終了させる
-		if (m_nTarn == TRUN_SET)
+		// 制限時間が0以下の時
+		if (m_pTimeLimit->GetTimeLimit() <= 0)
 		{
 			JudgeRank();
 		}

@@ -27,6 +27,7 @@ class CPolygon;
 class CPlayer;
 class CCaptain;
 class CCamera;
+class CTimeLimit;
 
 //======================================================
 //	クラス定義
@@ -66,6 +67,7 @@ private:
 	CCamera *m_pCamera;						// カメラへのポインタ
 	CCaptain *m_pCaptain;
 
+	int m_nRandTime;
 	int m_nCntTime;
 	int m_nPoint;
 	int m_nTarn;
@@ -73,6 +75,8 @@ private:
 
 	bool m_bPlay;
 	static TRUN m_eLoop;			// 上げるか上げないかの判別
+	CTimeLimit * m_pTimeLimit;		// 制限時間クラス
+
 };
 
 
