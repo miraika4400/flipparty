@@ -8,6 +8,7 @@
 //	インクルードファイル
 //======================================================
 #include "flag_raicing_game_rule.h"
+#include "flag_raicing_game_camera.h"
 #include "manager.h"
 #include "count_selection.h"
 #include "player.h"
@@ -89,7 +90,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	m_bPlay = true;
 	m_nRandTime = TIME_SET;
 	//カメラの生成
-	CGame::SetCamera(CTpsCamera::Create());
+	CGame::SetCamera(CFlagRaicingGameCamera::Create());
 
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
