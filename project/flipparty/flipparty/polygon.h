@@ -39,6 +39,7 @@ public:
 	LPDIRECT3DTEXTURE9 GetTexture(void) { return m_pTexture ; }               // テクスチャの取得処理
 	void SetVertexPos(D3DXVECTOR3 pos[NUM_VERTEX]);                           // 頂点座標の設定
 	void SetColor(const D3DXCOLOR col);                                       // 色の設定
+    void SetTextureUV(const D3DXVECTOR2 uv[NUM_VERTEX]);                      // uv座標の変更
 	void SetAddMode(bool bBool) { m_bAddMode = bBool; }  // 加算モードのセット
 
 private:

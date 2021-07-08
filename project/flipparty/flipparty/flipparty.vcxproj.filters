@@ -162,13 +162,13 @@
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp">
       <Filter>flag_raicing_game</Filter>
     </ClCompile>
-    <ClCompile Include="rule_manager.cpp">
+    <ClCompile Include="cloud.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="player_remember.cpp">
-      <Filter>remember_game</Filter>
+    <ClCompile Include="remember_game\player_remember.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="cloud.cpp">
+    <ClCompile Include="rule_manager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

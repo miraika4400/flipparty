@@ -18,7 +18,7 @@
 //======================================================
 //	マクロ定義
 //======================================================
-#define PLAYER_NUM 4
+
 
 //======================================================
 //	前方前言
@@ -62,7 +62,7 @@ private:
 	// CPlayerの動的配列
 	std::vector<CPlayer*> m_playerVector;
 
-	CPlayer *m_pPlayer[PLAYER_NUM];		// プレイヤーへのポインタ
+	CPlayer *m_pPlayer[MAX_PLAYER_NUM];		// プレイヤーへのポインタ
 	CCamera *m_pCamera;						// カメラへのポインタ
 	CCaptain *m_pCaptain;
 

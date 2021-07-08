@@ -180,3 +180,22 @@ void CPolygon::SetColor(const D3DXCOLOR col)
 	// アンロック
 	m_pVtxBuff->Unlock();
 }
+
+//===================================
+// アニメーション情報のセット
+//===================================
+void CPolygon::SetTextureUV(const D3DXVECTOR2 uv[NUM_VERTEX])
+{
+    VERTEX_2D *pVtx;// 頂点情報ポインタ
+
+                    // ロック
+    m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+    pVtx[0].tex = uv[0];
+    pVtx[1].tex = uv[1];
+    pVtx[2].tex = uv[2];
+    pVtx[3].tex = uv[3];
+
+    // アンロック
+    m_pVtxBuff->Unlock();
+}
