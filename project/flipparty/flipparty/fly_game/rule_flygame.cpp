@@ -18,6 +18,7 @@
 #include "camera_tps.h"
 #include "mini_result.h"
 #include "bg.h"
+#include "cloud.h"
 
 //******************************
 // マクロ定義
@@ -85,6 +86,9 @@ HRESULT CRuleFly::Init(void)
 
 	// プレイ中フラグの初期化
 	m_bPlay = true;
+
+	// 雲生成
+	CCloud::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	return S_OK;
 }

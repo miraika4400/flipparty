@@ -109,7 +109,6 @@ HRESULT CGame::Init(void)
 	//
 	////
 	/////////////////////////////////////////////////////////////////
-	//CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), CResourceModel::MODEL_CLOUD, D3DXVECTOR3(0.0000001f, 0.0000001f, 0.0000001f))->SetPriority(OBJTYPE_MAP);
 #endif
 	
 	return S_OK;
@@ -133,6 +132,13 @@ void CGame::Uninit(void)
 		m_pLight->Uninit();
 		delete m_pLight;
 		m_pLight = NULL;
+	}
+
+	// ルールマネージャー
+	if (m_pRuleManager != NULL)
+	{
+		m_pRuleManager->Uninit();
+		m_pRuleManager = NULL;
 	}
 
 	// 開放処理

@@ -41,6 +41,7 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/select3.png",      // 人数選択UI3人
 	"./data/Textures/select4.png",      // 人数選択UI4人
 	"./data/Textures/Toon_Shadow.png",  // トゥーンシャドウ
+	"./data/Textures/Toon_Shadow_Cloud.png",  // トゥーンシャドウ*雲
     "./data/Textures/ui_up.png",        // UI「あげて」
     "./data/Textures/ui_down.png",      // UI「さげて」
     "./data/Textures/UI_maru.png",      // UI「〇」

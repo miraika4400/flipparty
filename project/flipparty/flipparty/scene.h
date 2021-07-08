@@ -39,11 +39,8 @@ public:
 	{
 		OBJTYPE_NONE = 0,
 		OBJTYPE_BG,            // 背景
-		OBJTYPE_ITEM,          // アイテム
-		OBJTYPE_ATTACK,        // 攻撃
 		OBJTYPE_PLAYER,        // プレイヤー
 		OBJTYPE_CPU,           // CPU
-		OBJTYPE_CHECKPOINT,    // チェックポイント
 		OBJTYPE_MAP,           // マップ
 		OBJTYPE_PARTICLE,      // パーティクル
 		OBJTYPE_MOTION,        // モーション

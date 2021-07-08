@@ -52,6 +52,15 @@ public:
 		COLOR_END
 	}COLOR;
 
+	// 表情パターン
+	typedef enum
+	{
+		FACE_PATTERN_NORMAL = 0,
+		FACE_PATTERN_GOOD,
+		FACE_PATTERN_NO_GOOD,
+		FACE_PATTERN_MAX
+	}FACE_PATTERN;
+
 	//メンバ関数
 	CCaptain();
 	~CCaptain();
@@ -73,7 +82,13 @@ public:
 
 	CFlipper*GetFlipper(void) { return m_pFlipper; }
 	CFlipper*GetFlipperMoveState(void) { return m_pFlipperMoveState; }
+
+	// 表情のセット
+	void SetFacePattern(FACE_PATTERN pattern) { m_facePattern = pattern; }
+
 private:
+	void DrawModel(void);// モデルの描画
+	void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
 
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
@@ -83,6 +98,7 @@ private:
 	int m_nColor;
 	int m_nCount;
 	int m_nChoice;
+	int m_facePattern;
 
 	bool m_bJudgRed;				// 赤上げてるか下げてるかの判別
 	bool m_bJudgWhite;				// 白上げてるか下げてるかの判別
