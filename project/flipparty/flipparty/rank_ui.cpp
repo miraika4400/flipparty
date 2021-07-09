@@ -18,7 +18,7 @@
 #define UI_SIZE D3DXVECTOR3(30.0f,30.0f,0.0f)
 #define MAX_ANIMATION_X 4      // アニメーション数 横
 #define MAX_ANIMATION_Y 4      // アニメーション数 縦
-#define ANIMARION_INTERVAL 10  // アニメーション移行フレーム数
+#define ANIMATION_INTERVAL 10  // アニメーション移行フレーム数
 
 //=============================
 // 静的メンバ変数宣言
@@ -113,7 +113,7 @@ void CRankUI::Update(void)
 {
 	m_nCntAnim++;
 
-	if (ANIMARION_INTERVAL < m_nCntAnim )
+	if (ANIMATION_INTERVAL < m_nCntAnim )
 	{
 		m_nCntAnim = 0;
 		m_nAnimX++;

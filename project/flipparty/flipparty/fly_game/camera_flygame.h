@@ -39,5 +39,4 @@ public:
 private:
 };
 
-#endif#pragma once
-#pragma once
+#endif

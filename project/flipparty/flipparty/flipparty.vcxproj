@@ -167,6 +167,7 @@
     <ClCompile Include="fly_game\camera_flygame.cpp" />
     <ClCompile Include="fly_game\player_flygame.cpp" />
     <ClCompile Include="fly_game\rule_flygame.cpp" />
+    <ClCompile Include="fly_game\thunder.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="joypad.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="fly_game\camera_flygame.h" />
     <ClInclude Include="fly_game\player_flygame.h" />
     <ClInclude Include="fly_game\rule_flygame.h" />
+    <ClInclude Include="fly_game\thunder.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />

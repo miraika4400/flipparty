@@ -106,8 +106,6 @@ private:
 	void ControllFlipper(void);    // 羽の操作
 	void ManageFlipperAngle(void); // 羽の角度管理
 
-	
-
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];  // モデル構造体
 	static int m_nPartsNum;             // モデルパーツ数

@@ -21,6 +21,7 @@
 // 前方宣言
 //*****************************
 class CTimeLimit;
+class CFlyGamePlayer;
 //*****************************
 // クラス定義
 //*****************************
@@ -40,14 +41,17 @@ public:
 	void Draw(void);    // 描画
 
 	static CRuleFly *Create(void); // クラス生成
-
+	// プレイヤー取得処理
+	static CFlyGamePlayer * GetPlayer(int nPlayerNum) { return m_pPlayer[nPlayerNum]; }
+	static bool GetPlayFlag(void) { return m_bPlay; }
 private:
 	void JudgeRank(void); // 順位判定
 	//============
 	// メンバ変数
 	//============
 	CTimeLimit * m_pTimeLimit; // 制限時間クラス
-	bool m_bPlay; // プレイ中フラグ
+	static bool m_bPlay; // プレイ中フラグ
+	static CFlyGamePlayer * m_pPlayer[4];
 };
 
 
