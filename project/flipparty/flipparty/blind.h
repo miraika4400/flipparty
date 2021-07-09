@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // blindヘッダ [blind.h]
-// Author : 増澤 未来
+// Author : 山田 陵太
 //
 //=============================================================================
 
@@ -25,13 +25,17 @@ public:
 	CBlind();
 	~CBlind();
 
-	static CBlind *Create(void);
+	static CBlind *Create(int nTime);
 
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+
+	void SetTime(int nTime) { m_nTime = nTime; }
 private:
+	int m_nTime;	//タイマー
+	bool m_bMoving;	//移動可能かどうか
 };
 
 #endif

@@ -28,6 +28,7 @@ class CPlayer;
 class CCaptain;
 class CCamera;
 class CTimeLimit;
+class CBlind;
 
 //======================================================
 //	クラス定義
@@ -66,6 +67,7 @@ private:
 	CPlayer *m_pPlayer[PLAYER_NUM];		// プレイヤーへのポインタ
 	CCamera *m_pCamera;						// カメラへのポインタ
 	CCaptain *m_pCaptain;
+	CBlind *m_pBlind;					//ブラインドクラスのポインタ
 
 	int m_nRandTime;
 	int m_nCntTime;

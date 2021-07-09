@@ -1,13 +1,13 @@
 //=============================================================================
 //
 // cameraヘッダ [camera.h]
-// Author : 増澤 未来
+// Author : 筒井 俊稀
 //
 //=============================================================================
 
 //二重インクルード防止
-#ifndef _CAMERA_FLY_GAME_H_
-#define _CAMERA_FLY_GAME_H_
+#ifndef _FLAG_RAICING_GAME_CAMERA_H_
+#define _FLAG_RAICING_GAME_CAMERA_H_
 
 //*****************************
 // インクルード
@@ -20,17 +20,17 @@
 //*****************************
 
 // 連打ゲームのカメラクラス
-class CFlyGameCamera : public CCamera
+class CFlagRaicingGameCamera : public CCamera
 {
 public:
 	//============
 	// メンバ関数
 	//============
-	CFlyGameCamera();
-	~CFlyGameCamera();
+	CFlagRaicingGameCamera();
+	~CFlagRaicingGameCamera();
 
 	// static
-	static CFlyGameCamera *Create(void);  // クラス生成
+	static CFlagRaicingGameCamera *Create(void);  // クラス生成
 
 	HRESULT Init(void);   // 初期化
 	void Update(void);	  // 更新
@@ -39,4 +39,5 @@ public:
 private:
 };
 
-#endif
+#endif#pragma once
+#pragma once

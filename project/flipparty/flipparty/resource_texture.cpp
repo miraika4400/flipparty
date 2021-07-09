@@ -47,6 +47,7 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
     "./data/Textures/UI_maru.png",      // UI「〇」
     "./data/Textures/UI_batu.png",      // UI「×」
 	"./data/Textures/ranking.png",      // UI「順位]
+	"./data/Textures/blind.jpg",		// ブラインド
 	
 };
 

@@ -8,6 +8,7 @@
 //	インクルードファイル
 //======================================================
 #include "flag_raicing_game_rule.h"
+#include "flag_raicing_game_camera.h"
 #include "manager.h"
 #include "count_selection.h"
 #include "player.h"
@@ -56,6 +57,7 @@ CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 	m_nRandTime = 0;
 	m_pTimeLimit = NULL;
 	m_bPlay = true;
+	m_pBlind = NULL;
 }
 
 //======================================================
@@ -90,7 +92,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	m_bPlay = true;
 	m_nRandTime = TIME_SET;
 	//カメラの生成
-	CGame::SetCamera(CTpsCamera::Create());
+	CGame::SetCamera(CFlagRaicingGameCamera::Create());
 
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
@@ -106,8 +108,9 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	m_pCaptain = CCaptain::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_CAPTAIN_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM));
 	// 制限時間の生成
 	m_pTimeLimit = CTimeLimit::Create(TRUN_SET);
-
-	CBlind::Create();
+	
+	//ブラインドの生成
+	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit());
 	return S_OK;
 }
 
@@ -146,6 +149,12 @@ void CFlagRaicingGame_rule::Update(void)
 		if (m_pTimeLimit->GetTimeLimit() <= 0)
 		{
 			JudgeRank();
+		}
+
+		//ブラインドに現在タイムを与える
+		if (m_pBlind)
+		{
+			m_pBlind->SetTime(m_pTimeLimit->GetTimeLimit());
 		}
 	}
 }
