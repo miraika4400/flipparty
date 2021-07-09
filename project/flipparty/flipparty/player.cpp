@@ -53,7 +53,7 @@ char CPlayer::m_achAnimPath[MOTION_MAX][64]
 	{ "./data/Texts/motion/miniresult_3.txt" }, // 三位アニメーション
 	{ "./data/Texts/motion/miniresult_4.txt" }, // 最下位アニメーション
 	{ "./data/Texts/motion/fly.txt" },          // flyアニメーション
-	
+
 };
 
 //******************************
@@ -552,7 +552,6 @@ void CPlayer::ManageFlipperAngle(void)
 		m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPER_STATE_NONE);
 	}
 }
-
 
 //******************************
 // シェーダープログラムに値を送る

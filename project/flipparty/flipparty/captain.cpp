@@ -21,6 +21,7 @@
 #include "game.h"
 #include "light.h"
 #include "camera_base.h"
+#include "motion.h"
 
 //*****************************
 // マクロ定義
@@ -37,12 +38,17 @@
 #define FACE_PARTS_NUMBER 3  // 表情パーツのパーツ番号
 #define FACE_PATTERN 3       // 表情パターン数
 #define FACE_TEX_V (1.0f/(float)FACE_PATTERN) * (float)m_facePattern
+#define SCALE_VALUE 1.2f	//モデルのサイズ拡大係数
 
 //*****************************
 // 静的メンバ変数宣言
 //*****************************
 CResourceModel::Model CCaptain::m_model[MAX_PARTS_NUM] = {};
 int CCaptain::m_nPartsNum = 0;
+char CCaptainm_achAnimPath[64]
+{
+	 "./data/Texts/motion/idol.txt"          // 待機アニメーション
+};
 
 //******************************
 // コンストラクタ
@@ -62,6 +68,8 @@ CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_CPU)
 
 	m_eColorRed = RED_FLAG_DOWN;
 	m_eColorWhite = WHITE_FLAG_DOWN;
+
+	m_pMotion = NULL;
 }
 
 //******************************
@@ -135,6 +143,12 @@ HRESULT CCaptain::Init(void)
 	{
 		return E_FAIL;
 	}
+
+	for (int nCnt = 0; nCnt < MAX_PARTS_NUM; nCnt++)
+	{
+		m_model[nCnt].size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	}
+
 	// フリッパークラスの生成
 	m_pFlipper = CFlipper::Create();
 
@@ -144,6 +158,10 @@ HRESULT CCaptain::Init(void)
 
 	// 表情の初期化
 	m_facePattern = 0;
+
+	//　モーションの設定
+	m_pMotion = CMotion::Create(GetPartsNum(), CCaptainm_achAnimPath, GetModelData());
+	m_pMotion->SetActiveMotion(true);
 
 	return S_OK;
 }
@@ -194,7 +212,67 @@ void CCaptain::Update(void)
 //******************************
 void CCaptain::Draw(void)
 {
+	//デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	//Zバッファ設定の保存用変数
+	DWORD dwCurZTest = 0;
+
+	//Zバッファの設定を一時保存
+	pDevice->GetRenderState(D3DRS_ZFUNC, &dwCurZTest);
+
+	//Zテストの設定
+	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_NEVER);	//Zバッファへの書き込みを禁止する
+
+	//ステンシルテストの設定
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);				//ステンシルテストを有効にする
+	pDevice->SetRenderState(D3DRS_STENCILREF, 0x05);				//ステンシルバッファへ反映する参照値の設定
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
+	pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);		//ステンシルテストの判定を必ず成功するように指定
+
+	//テストの結果の組み合わせ設定
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		//ステンシル・Zテストともに失敗した場合
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);	//ステンシルのみ成功した場合
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		//両方とも成功した場合
+
+	//モデルサイズの取得
+	D3DXVECTOR3 size = CModelHierarchy::GetSize();
+
+	//アウトライン用にサイズを拡大
+	CModelHierarchy::SetSize(size * SCALE_VALUE);
+
+	//位置の取得
+	D3DXVECTOR3 pos = CModelHierarchy::GetPos();
+
+	//位置を修正して渡す
+	CModelHierarchy::SetPos(D3DXVECTOR3(pos.x, pos.y - 8.0f, pos.z));
+
+	//ステンシルバッファへ描画
 	CModelHierarchy::Draw();
+	
+	//位置を戻す
+	CModelHierarchy::SetPos(pos);
+	
+	//サイズを戻す
+	CModelHierarchy::SetSize(size);
+	
+	pDevice->SetRenderState(D3DRS_STENCILREF, 0x01);				//ステンシルバッファへ反映する参照値の設定
+	pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
+	pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
+	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);		//ステンシルテストの判定を必ず成功するように指定
+	
+	//テストの結果の組み合わせ設定
+	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		//ステンシル・Zテストともに失敗した場合
+	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);	//ステンシルのみ成功した場合
+	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);		//両方とも成功した場合
+
+	pDevice->SetRenderState(D3DRS_ZFUNC, dwCurZTest);		//Zバッファの設定を戻す
+
+	//Zバッファへ通常描画
+	CModelHierarchy::Draw();
+
+	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);	//ステンシルテストを無効にする
 }
 
 //******************************

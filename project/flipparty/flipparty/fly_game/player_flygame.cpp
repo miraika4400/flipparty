@@ -9,12 +9,14 @@
 // インクルード
 //******************************
 #include "player_flygame.h"
+#include "rule_flygame.h"
 
 //*****************************
 // マクロ定義
 //*****************************
 #define FLY_HEIGHT 0.5f // 一回の判定で飛ぶ高さ
 #define FLY_RATE 1.0f   // 飛ぶ係数
+#define STAN_FLANE 100  // スタンフレーム数
 
 //*****************************
 // 静的メンバ変数宣言
@@ -26,6 +28,8 @@
 CFlyGamePlayer::CFlyGamePlayer()
 {
 	m_fHeightDist = 0.0f;
+	m_state = STATE_NORMAL;
+	m_nCntState = 0;
 }
 
 //******************************
@@ -65,6 +69,11 @@ HRESULT CFlyGamePlayer::Init(void)
 {
 	CPlayer::Init();
 
+	// 状態初期化
+	m_state = STATE_NORMAL;
+	m_nCntState = 0;
+
+	SetFacePattern(FACE_PATTERN_GOOD);
 	return S_OK;
 }
 
@@ -81,6 +90,9 @@ void CFlyGamePlayer::Uninit(void)
 //******************************
 void CFlyGamePlayer::Update(void)
 {
+	// 状態管理
+	ManageState();
+
 	if (GetMoveFlag())
 	{
 		// フリッパー更新前の移動状態
@@ -115,6 +127,7 @@ void CFlyGamePlayer::Fly(CFlipper::FLIPPER_STATE stateNow, CFlipper::FLIPPER_STA
 		m_fHeightDist += FLY_HEIGHT;
 
 		SetMotion(MOTION_FLY);
+		SetFacePattern(FACE_PATTERN_NORMAL);
 	}
 
 	// 座標の取得
@@ -122,4 +135,35 @@ void CFlyGamePlayer::Fly(CFlipper::FLIPPER_STATE stateNow, CFlipper::FLIPPER_STA
 	pos.y += (m_fHeightDist - pos.y)*FLY_RATE;
 	// 座標のセット
 	SetPos(pos);
+}
+
+void CFlyGamePlayer::ManageState(void)
+{
+	switch (m_state)
+	{
+	case STATE_NORMAL:
+		break;
+	case STATE_STAN:
+
+		if (m_nCntState == 0) 
+		{
+			SetMotion(MOTION_MINIRESULT_3);
+			SetMoveFlag(false);
+			SetFacePattern(FACE_PATTERN_NO_GOOD);
+		}
+		
+		m_nCntState++;
+		if (m_nCntState >= STAN_FLANE)
+		{
+			m_nCntState = 0;
+			m_state = STATE_NORMAL;
+			SetMotion(MOTION_FLY);
+			SetMoveFlag(CRuleFly::GetPlayFlag());
+			SetFacePattern(FACE_PATTERN_NORMAL);
+		}
+		break;
+
+	default:
+		break;
+	}
 }

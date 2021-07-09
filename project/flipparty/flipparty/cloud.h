@@ -33,7 +33,7 @@ public:
 	CCloud();
 	~CCloud();
 
-	static CCloud *Create(D3DXVECTOR3 pos); // クラス生成
+	static CCloud *Create(int nPlayerNum); // クラス生成
 	
 	HRESULT Init(void); // 初期化
 	void Uninit(void);  // 終了
@@ -51,6 +51,9 @@ private:
 	D3DXVECTOR3 m_size; // サイズ
 	int m_nCntAction;   // アクションカウント
 	float m_fAlpha;
+	int m_nPlayerNum;   // プレイヤー番号
+	D3DXVECTOR3 m_playerPosSave; // プレイヤー座標の保存用
+	bool m_bThunder; // 雷を落としたか判定用
 };
 
 #endif

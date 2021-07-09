@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="billboard.cpp" />
+    <ClCompile Include="blind.cpp" />
     <ClCompile Include="camera_base.cpp" />
     <ClCompile Include="camera_tps.cpp" />
     <ClCompile Include="captain.cpp" />
@@ -162,11 +163,13 @@
     <ClCompile Include="count_selection.cpp" />
     <ClCompile Include="debug_log.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="flag_raicing_game_camera.cpp" />
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp" />
     <ClCompile Include="flipper.cpp" />
     <ClCompile Include="fly_game\camera_flygame.cpp" />
     <ClCompile Include="fly_game\player_flygame.cpp" />
     <ClCompile Include="fly_game\rule_flygame.cpp" />
+    <ClCompile Include="fly_game\thunder.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="joypad.cpp" />
@@ -205,6 +208,7 @@
   <ItemGroup>
     <ClInclude Include="bg.h" />
     <ClInclude Include="billboard.h" />
+    <ClInclude Include="blind.h" />
     <ClInclude Include="camera_base.h" />
     <ClInclude Include="camera_tps.h" />
     <ClInclude Include="captain.h" />
@@ -213,11 +217,13 @@
     <ClInclude Include="count_selection.h" />
     <ClInclude Include="debug_log.h" />
     <ClInclude Include="fade.h" />
+    <ClInclude Include="flag_raicing_game_camera.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h" />
     <ClInclude Include="flipper.h" />
     <ClInclude Include="fly_game\camera_flygame.h" />
     <ClInclude Include="fly_game\player_flygame.h" />
     <ClInclude Include="fly_game\rule_flygame.h" />
+    <ClInclude Include="fly_game\thunder.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />

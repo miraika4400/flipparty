@@ -19,17 +19,19 @@
 #include "mini_result.h"
 #include "bg.h"
 #include "cloud.h"
+#include "thunder.h"
 
 //******************************
 // マクロ定義
 //******************************
 #define PLAYER_SPACE 150.0f //　プレイヤー位置の間隔
-#define PLAY_TIME 5         // 制限時間
+#define PLAY_TIME 30         // 制限時間
 
 //******************************
 // 静的メンバ変数宣言
 //******************************
-
+CFlyGamePlayer * CRuleFly::m_pPlayer[4] = {};
+bool CRuleFly::m_bPlay = true;
 //******************************
 // コンストラクタ
 //******************************
@@ -37,7 +39,6 @@ CRuleFly::CRuleFly()
 {
 	// 変数のクリア
 	m_pTimeLimit = NULL;
-	m_bPlay = true;
 }
 
 //******************************
@@ -77,7 +78,8 @@ HRESULT CRuleFly::Init(void)
 	float posX = 0 + ((float)(nPlayNum - 1) * PLAYER_SPACE) / 2;
 	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
 	{
-		CFlyGamePlayer::Create(D3DXVECTOR3(posX, 0.0f, 0.0f), nCntPlayer);
+		m_pPlayer[nCntPlayer] = CFlyGamePlayer::Create(D3DXVECTOR3(posX, 0.0f, 0.0f), nCntPlayer);
+		m_pPlayer[nCntPlayer]->SetRot(D3DXVECTOR3(0.0f, D3DXToRadian(180.0f), 0.0f));
 		posX -= PLAYER_SPACE;
 	}
 
@@ -86,9 +88,6 @@ HRESULT CRuleFly::Init(void)
 
 	// プレイ中フラグの初期化
 	m_bPlay = true;
-
-	// 雲生成
-	CCloud::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	return S_OK;
 }
@@ -105,8 +104,25 @@ void CRuleFly::Uninit(void)
 //******************************
 void CRuleFly::Update(void)
 {
+#ifdef _DEBUG
 
-	// 制限時間が0以下の時
+	////////////////////////////////////////
+	// 仮置き
+
+	// 雷雲の生成
+	if (m_pTimeLimit->GetTimeLimit() == 20 && m_pTimeLimit->GetTimeCount() == 0 || m_pTimeLimit->GetTimeLimit() == 10 && m_pTimeLimit->GetTimeCount() == 0)
+	{
+		for (int nCntPlayer = 0; nCntPlayer < CCountSelect::GetPlayerNum(); nCntPlayer++)
+		{
+			CCloud::Create(nCntPlayer);
+		}
+	}
+
+	/////////////////////////////////////////
+
+#endif // _DEBUG
+
+
 	if (m_pTimeLimit->GetTimeLimit() <= 0)
 	{
 		if (m_bPlay)

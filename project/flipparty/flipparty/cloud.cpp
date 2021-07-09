@@ -18,6 +18,9 @@
 #include "light.h"
 #include "resource_shader.h"
 #include "resource_texture.h"
+#include "thunder.h"
+#include "rule_flygame.h"
+#include "player_flygame.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -29,7 +32,12 @@
 #define MAX_SIZE  D3DXVECTOR3(1.0f, 1.0f, 1.0f)
 #define SIZE_RATE 0.05f
 #define CLOUD_COLOR D3DXCOLOR(0.95f, 0.95f, 1.0f, m_fAlpha)
-#define LIFE 200
+#define LIFE 100
+#define THUNDER_CREATE_COUNT_MIN 30
+#define THUNDER_CREATE_COUNT_MAX LIFE
+
+#define THUNDER_POS_Y -60
+#define CLOUD_POS_Y   150
 
 //=============================
 // コンストラクタ
@@ -39,6 +47,9 @@ CCloud::CCloud() :CModel(OBJTYPE_MAP)
 	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_nCntAction = 0;
 	m_fAlpha = 0.0f;
+	m_nPlayerNum = 0;
+	m_playerPosSave = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_bThunder = false;
 }
 
 //=============================
@@ -51,16 +62,15 @@ CCloud::~CCloud()
 //=============================
 // クリエイト
 //=============================
-CCloud * CCloud::Create(D3DXVECTOR3 pos)
+CCloud * CCloud::Create(int nPlayerNum)
 {
 	// メモリの確保
 	CCloud *pCloud = new CCloud;
 	
+	pCloud->m_nPlayerNum = nPlayerNum;
 	// 初期化
 	pCloud->Init();
-
-	// 座標の設定
-	pCloud->SetPos(pos);
+	
 
 	return pCloud;
 }
@@ -73,6 +83,10 @@ HRESULT CCloud::Init(void)
 	// モデルクラスの初期化
 	CModel::Init();
 
+	// 座標の設定
+	D3DXVECTOR3 pos = CRuleFly::GetPlayer(m_nPlayerNum)->GetPos();
+	SetPos(D3DXVECTOR3(pos.x, pos.y + CLOUD_POS_Y, 30.0f));
+
 	// モデルの割り当て
 	BindModel(CResourceModel::GetModel(CResourceModel::MODEL_CLOUD));
 
@@ -82,8 +96,12 @@ HRESULT CCloud::Init(void)
 
 	// カウントの初期化
 	m_nCntAction = 0;
-
+	// アルファ値の初期化
 	m_fAlpha = 0.0f;
+	// プレイヤー座標保存変数
+	m_playerPosSave = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	// 雷フラグ
+	m_bThunder = false;
 	return S_OK;
 }
 
@@ -114,6 +132,25 @@ void CCloud::Update(void)
 		// サイズの変更
 		m_size += (MAX_SIZE - m_size)*SIZE_RATE;
 		m_fAlpha += (1.0f - m_fAlpha)*SIZE_RATE;
+	}
+
+	// 雷を落とすかの判定
+	if (m_nCntAction == THUNDER_CREATE_COUNT_MIN)
+	{
+		// 座標の保存
+		m_playerPosSave = CRuleFly::GetPlayer(m_nPlayerNum)->GetPos();
+	}
+	if (m_nCntAction >= THUNDER_CREATE_COUNT_MIN&&m_nCntAction <= THUNDER_CREATE_COUNT_MAX)
+	{
+		// 保存していた座標と違う時&&雷をまだ落としていないとき
+		if(m_playerPosSave!= CRuleFly::GetPlayer(m_nPlayerNum)->GetPos()&& !m_bThunder)
+		{
+			// 雷の生成
+			D3DXVECTOR3 pos = GetPos();
+			CThunder::Create(D3DXVECTOR3(pos.x, pos.y + THUNDER_POS_Y, pos.z), m_nPlayerNum);
+			// 雷を落とした状態にする
+			m_bThunder = true;
+		}
 	}
 
 	// サイズのセット

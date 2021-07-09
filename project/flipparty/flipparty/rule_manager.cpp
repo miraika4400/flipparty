@@ -13,6 +13,7 @@
 #include "rule_base.h"
 #include "rule_flygame.h"
 #include "remember_rule.h"
+#include "flag_raicing_game_rule.h"
 
 //=============================
 // マクロ定義
@@ -66,12 +67,6 @@ HRESULT CRuleManager::Init(void)
 		m_pGameRule->Uninit();
 		delete m_pGameRule;
 		m_pGameRule = NULL;
-	}
-
-	// ルールクラスの生成
-	if (m_pGameRule == NULL)
-	{
-		m_pGameRule = CRuleFly::Create();
 	}
 
 	// ポリゴンの生成
@@ -156,7 +151,7 @@ void CRuleManager::Update(void)
 				{
 				case RULE_FLAG_RACING: 
 					// 旗揚げ
-					//m_pGameRule = CRuleFly::Create();
+					m_pGameRule = CFlagRaicingGame_rule::Create();
 					break;
 				case RULE_FLY:
 					// フライ

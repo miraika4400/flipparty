@@ -49,6 +49,7 @@ public:
 
 	// §ŒÀŠÔ‚Ìæ“¾
 	int GetTimeLimit(void) { return m_nLimitTime; }
+	int GetTimeCount(void) { return m_nCntTime; }
 private:
 	//============
 	// ƒƒ“ƒo•Ï”
