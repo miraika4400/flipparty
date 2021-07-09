@@ -82,13 +82,21 @@ HRESULT CRememjber_rule::Init(void)
     //-----------------------------
     m_nLossPlayer = 0;      // 脱落したプレイヤーの人数
     m_nTurn = 0;            // ターン数初期化
-    m_nTurnPlayer = 1;      // どのプレイヤーのターンか
+
+    // ターン数の管理
+    for (int nCnt = 0; nCnt < MAX_PLAYER_NUM; nCnt++)
+    {
+        m_aTurn[nCnt] = nCnt; // 入っている番号がプレイヤーの番号になる
+    }
+
+    m_nTurnPlayer = 0;      // どのプレイヤーのターンか
     m_nNumInput = 0;        // プレイヤーが入力した回数
     m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
     m_nInputCount = 0;
     ZeroMemory(&FlipperData, sizeof(FlipperData));      // 見本データの配列
     ZeroMemory(&PlayerInput, sizeof(PlayerInput));      // プレイヤーの入力情報
     ZeroMemory(&m_apAnswer, sizeof(m_apAnswer));        // 回答のポリゴン表示
+    m_IsPlay = true;                // ゲームをプレイ中かどうか
 
     //-----------------------------
     // 各オブジェクト生成
@@ -122,6 +130,9 @@ HRESULT CRememjber_rule::Init(void)
         m_pPolygon[nCntUI] = CPolygon::Create(UIData[nCntUI].pos, UIData[nCntUI].size, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
         m_pPolygon[nCntUI]->BindTexture(CResourceTexture::GetTexture(UIData[nCntUI].pTexture));
     }
+
+    ChangeTurnUI();
+
     return S_OK;
 }
 
@@ -160,15 +171,11 @@ void CRememjber_rule::Uninit(void)
 //=============================================================================
 void CRememjber_rule::Update(void)
 {
+    if (m_IsPlay)
+    {
     // プレイヤーの入力
     InputPlayer();
-
-    // 入力された数がターン数と同じになった
-    if (m_IsinputEnd)
-    {
-        Comparison();   // 入力内容の比較
     }
-
     // リザルト遷移
     if (m_nTurn== MAX_TARN)
         CManager::SetMode(CManager::MODE_TITLE);
@@ -224,11 +231,11 @@ void CRememjber_rule::InputPlayer(void)
         m_nInputCount = INPUT_COUNT;
     }
 
-// プレイヤーの最後の入力を見本に追加
+    // プレイヤーがターン数と同じ数入力したら
     if (m_nNumInput == m_nTurn + 1)
     {
         FlipperData[m_nTurn] = PlayerInput[m_nTurn];    // プレイヤーの入力を見本データに保存
-        m_IsinputEnd = true;                            // プレイヤーの入力完了フラグオン
+        Comparison();                                   // 入力内容の比較
         m_nTurn++;                                      // ターン数を増やす
         m_nNumInput = 0;                                // 入力回数をリセット
         TurnChange();                                   // プレイヤーのターン変更
@@ -236,18 +243,50 @@ void CRememjber_rule::InputPlayer(void)
 }
 
 //=============================================================================
+// [ChangeTurnUI]プレイヤー番号UIの変更処理
+//=============================================================================
+void CRememjber_rule::ChangeTurnUI(void)
+{
+    D3DXVECTOR2 Vtx[NUM_VERTEX];
+    float fv = 1.0/ MAX_PLAYER_NUM;
+
+    Vtx[0] = {0.0,fv * m_nTurnPlayer};
+    Vtx[1] = {1.0,fv * m_nTurnPlayer};
+    Vtx[2] = {0.0,fv * m_nTurnPlayer+ fv };
+    Vtx[3] = {1.0,fv * m_nTurnPlayer+ fv };
+
+    // uv座標のセット
+    m_pPolygon[0]->SetTextureUV(Vtx);
+}
+
+//=============================================================================
 // [TurnChange]ターンの変更
 //=============================================================================
 void CRememjber_rule::TurnChange(void)
 {
-   m_nTurnPlayer = (m_nTurn + 1) % m_nNumPlayer;
+    // ターン数と生き残っているプレイヤー数を割ったあまりのプレイヤー番号
+    m_nTurnPlayer = m_aTurn[(m_nTurn) % (m_nNumPlayer- m_nLossPlayer)];
 
-   // プレイヤーが脱落していた場合
-   if (m_pPlayer[m_nTurnPlayer]->GetIsLoss() == false)
-   {
-       // 脱落しているプレイヤーを飛ばす
-       // テクスチャ変更
-   }
+   // テクスチャ変更
+   ChangeTurnUI();
+}
+
+//=============================================================================
+// [PlayerChange]プレイヤー番号の並び替え
+// 引数: 脱落したプレイヤーの番号
+//=============================================================================
+void CRememjber_rule::PlayerChange(int nPlayerNum)
+{
+   // 脱落したプレイヤーの番号を配列の最後に移動
+   // バブルソートで入れ替えれば最終的に順位と同じ順番になる
+    for (int nData = nPlayerNum; nData < m_nNumPlayer- m_nLossPlayer; nData++)
+    {
+
+        int nSwap = m_aTurn[nData];// 入れ替え用変数
+
+        m_aTurn[nData] = m_aTurn[nData + 1];
+        m_aTurn[nData + 1] = nSwap;
+    }
 
 }
 
@@ -284,14 +323,21 @@ void CRememjber_rule::Comparison(void)
 //=============================================================================
 void CRememjber_rule::Ranking(void)
 {
-    // 順位の設定
-    m_pPlayer[m_nTurnPlayer]->SetRank(m_nNumPlayer - m_nLossPlayer);
+    m_nLossPlayer++;// 脱落したプレイヤーの人数をカウント
+    PlayerChange(m_nTurnPlayer);
     m_pPlayer[m_nTurnPlayer]->SetIsLoss(true);// 脱落フラグをたてる
 
     // プレイヤーが最後の1人になったらリザルト生成
     if (m_nNumPlayer - m_nLossPlayer == 1)
     {
+        // 順位の設定
+        for (int nRank = 0; nRank < m_nNumPlayer; nRank++)
+        {
+            m_pPlayer[nRank]->SetRank(m_aTurn[nRank]);
+        }
+
         CMiniResult::Create();
+        m_IsPlay = false;
     }
-    m_nLossPlayer++;// 脱落したプレイヤーの人数をカウント
+
 }

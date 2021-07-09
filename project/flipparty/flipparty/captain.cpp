@@ -167,6 +167,7 @@ void CCaptain::Uninit(void)
 //******************************
 void CCaptain::Update(void)
 {
+    // キャプテンが動く処理
 	if (CFlagRaicingGame_rule::GetGameLoop() == CFlagRaicingGame_rule::CAPTAIN_TRUN)
 	{
 		// 全部下げている状態
@@ -178,6 +179,7 @@ void CCaptain::Update(void)
 		// どちらも上がっている状態
 		Judge(RED_FLAG_UP, WHITE_FLAG_UP, WHITE_UP, RED_UP);
 
+        // プレイヤーのターンに変更
 		CFlagRaicingGame_rule::SetGameLoop(CFlagRaicingGame_rule::PLAYER_TRUN);
 	}
 

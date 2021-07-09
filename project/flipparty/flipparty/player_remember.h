@@ -30,12 +30,14 @@ public:
     void Draw(void);
 
     // SetŠÖ”
-    void SetIsLoss(bool IsLoss) { m_IsLoss = IsLoss; }
+    void SetIsLoss(bool IsLoss) { m_IsLoss = IsLoss; }  // ’E—‚µ‚½‚©‚Ç‚¤‚©
 
     // GetŠÖ”
-    bool GetIsLoss(void) { return m_IsLoss;}      // ’E—‚µ‚½‚©‚Ç‚¤‚©
+    bool GetIsLoss(void) { return m_IsLoss;}            // ’E—‚µ‚½‚©‚Ç‚¤‚©
+
 private:
     bool m_IsLoss;        // ’E—‚µ‚½‚©‚Ç‚¤‚©
+    bool m_IsTurn;        // ©•ª‚Ìƒ^[ƒ“‚©‚Ç‚¤‚©
 };
 
 

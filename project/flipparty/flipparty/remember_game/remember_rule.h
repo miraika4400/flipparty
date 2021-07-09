@@ -54,10 +54,12 @@ public:
     void Update(void);
     void Draw(void);
 
-    void InputPlayer(void); // プレイヤーの入力
-    void TurnChange(void);  // ターンの変更
-    void Comparison(void);  // 比較
-    void Ranking(void);     // 順位の設定
+    void InputPlayer(void);     // プレイヤーの入力
+    void ChangeTurnUI(void);    // プレイヤー番号UIの変更処理
+    void TurnChange(void);      // ターンの変更
+    void PlayerChange(int nPlayerNum);    // プレイヤー番号の並び替え
+    void Comparison(void);      // 入力内容の比較
+    void Ranking(void);         // 順位の設定
 
     // Get関数
     CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
@@ -69,15 +71,16 @@ private:
     CFlipper::FLIPPER_TYPE PlayerInput[MAX_TARN];// プレイヤーの入力内容
 
     CPlayerRemember *m_pPlayer[MAX_PLAYER_NUM];     // プレイヤーへのポインタ
-    CCamera *m_pCamera;// カメラへのポインタ
+    CCamera *m_pCamera;         // カメラへのポインタ
     int m_nNumPlayer;           // プレイヤーの人数
     int m_nLossPlayer;          // 脱落したプレイヤーの人数
     int m_nNumInput;            // 入力された回数
     int m_nTurn;                // 現在のターン数
+    int m_aTurn[MAX_PLAYER_NUM];                // ターン管理用変数
     int m_nTurnPlayer;          // 現在自分の番のプレイヤー番号
     unsigned int m_nInputCount; // 再入力を受け付ける時間
     bool m_IsinputEnd;          // プレイヤーの入力が終了しているか
-
+    bool m_IsPlay;              // ゲームをプレイ中かどうか
 
     CPolygon *m_pPolygon[MAX_UI_REMEMBER];// ポリゴンクラスのポインタ
 #ifdef _DEBUG
