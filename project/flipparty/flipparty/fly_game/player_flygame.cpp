@@ -72,6 +72,8 @@ HRESULT CFlyGamePlayer::Init(void)
 	// èÛë‘èâä˙âª
 	m_state = STATE_NORMAL;
 	m_nCntState = 0;
+
+	SetFacePattern(FACE_PATTERN_GOOD);
 	return S_OK;
 }
 
@@ -125,6 +127,7 @@ void CFlyGamePlayer::Fly(CFlipper::FLIPPER_STATE stateNow, CFlipper::FLIPPER_STA
 		m_fHeightDist += FLY_HEIGHT;
 
 		SetMotion(MOTION_FLY);
+		SetFacePattern(FACE_PATTERN_NORMAL);
 	}
 
 	// ç¿ïWÇÃéÊìæ
@@ -146,6 +149,7 @@ void CFlyGamePlayer::ManageState(void)
 		{
 			SetMotion(MOTION_MINIRESULT_3);
 			SetMoveFlag(false);
+			SetFacePattern(FACE_PATTERN_NO_GOOD);
 		}
 		
 		m_nCntState++;
@@ -155,6 +159,7 @@ void CFlyGamePlayer::ManageState(void)
 			m_state = STATE_NORMAL;
 			SetMotion(MOTION_FLY);
 			SetMoveFlag(CRuleFly::GetPlayFlag());
+			SetFacePattern(FACE_PATTERN_NORMAL);
 		}
 		break;
 

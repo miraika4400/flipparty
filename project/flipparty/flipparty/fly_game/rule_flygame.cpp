@@ -79,6 +79,7 @@ HRESULT CRuleFly::Init(void)
 	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
 	{
 		m_pPlayer[nCntPlayer] = CFlyGamePlayer::Create(D3DXVECTOR3(posX, 0.0f, 0.0f), nCntPlayer);
+		m_pPlayer[nCntPlayer]->SetRot(D3DXVECTOR3(0.0f, D3DXToRadian(180.0f), 0.0f));
 		posX -= PLAYER_SPACE;
 	}
 

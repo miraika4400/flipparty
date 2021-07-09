@@ -95,6 +95,7 @@ HRESULT CThunder::Init(void)
 	// UV座標セット
 	SetTextureUV(uv);
 
+	SetAddMode(true);
 	return S_OK;
 }
 
@@ -112,6 +113,7 @@ void CThunder::Uninit(void)
 //=============================
 void CThunder::Update(void)
 {
+	// カウントを進める
 	m_nCntAnim++;
 
 	if (ANIMATION_INTERVAL < m_nCntAnim)

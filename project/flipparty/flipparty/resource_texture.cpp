@@ -50,7 +50,6 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
     "./data/Textures/UI001.png",        // UI「のばんです」（記憶ゲームで使用）
 	"./data/Textures/ranking.png",      // UI「順位]
 	"./data/Textures/blind.jpg",		// ブラインド
-	
 	"./data/Textures/thunder.png",      // 雷エフェクト
 	
 };
