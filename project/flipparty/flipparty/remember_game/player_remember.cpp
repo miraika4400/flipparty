@@ -11,7 +11,7 @@
 //=============================================================================
 CPlayerRemember::CPlayerRemember()
 {
-
+    m_IsLoss = false;
 }
 
 //=============================================================================
@@ -31,6 +31,12 @@ CPlayerRemember * CPlayerRemember::Create(D3DXVECTOR3 pos, int nPlayerNum)
     if (!pPlayer)
     {
         pPlayer = new CPlayerRemember;
+
+        // プレイヤー番号のセット
+        pPlayer->SetPlayerNumber(nPlayerNum);
+        pPlayer->SetPos(pos);       // プレイヤーの位置を設定
+        pPlayer->SetPriority(OBJTYPE_PLAYER); // オブジェクトタイプ
+        // 初期化
         pPlayer->Init();
     }
     return pPlayer;
@@ -41,6 +47,10 @@ CPlayerRemember * CPlayerRemember::Create(D3DXVECTOR3 pos, int nPlayerNum)
 //=============================================================================
 HRESULT CPlayerRemember::Init(void)
 {
+    m_IsLoss = false;
+
+    CPlayer::Init();
+
     return S_OK;
 }
 
@@ -49,7 +59,7 @@ HRESULT CPlayerRemember::Init(void)
 //=============================================================================
 void CPlayerRemember::Uninit(void)
 {
-
+    CPlayer::Uninit();
 }
 
 //=============================================================================
@@ -57,7 +67,8 @@ void CPlayerRemember::Uninit(void)
 //=============================================================================
 void CPlayerRemember::Update(void)
 {
-
+    // プレイヤークラスの更新処理
+    CPlayer::Update();
 }
 
 //=============================================================================
@@ -65,5 +76,5 @@ void CPlayerRemember::Update(void)
 //=============================================================================
 void CPlayerRemember::Draw(void)
 {
-
+    CPlayer::Draw();
 }
