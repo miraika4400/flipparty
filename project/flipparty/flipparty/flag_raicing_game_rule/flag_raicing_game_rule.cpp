@@ -19,6 +19,7 @@
 #include "mini_result.h"
 #include "timelimit.h"
 #include "blind.h"
+#include "bg.h"
 
 //======================================================
 //	Ã“Iƒƒ“ƒo•Ï”éŒ¾‰Šú‰»
@@ -89,6 +90,9 @@ CFlagRaicingGame_rule * CFlagRaicingGame_rule::Create(void)
 //======================================================
 HRESULT CFlagRaicingGame_rule::Init(void)
 {
+	// ”wŒi‚Ì¶¬
+	CBg::Create();
+
 	m_bPlay = true;
 	m_nRandTime = TIME_SET;
 	//ƒJƒƒ‰‚Ì¶¬
