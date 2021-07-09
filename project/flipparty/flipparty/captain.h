@@ -24,6 +24,7 @@
 // 前方宣言
 //*****************************
 class CFlipper;
+class CMotion;
 
 //*****************************
 // クラス定義
@@ -109,6 +110,10 @@ private:
 	CFlipper * m_pFlipper;          // フリッパークラス
 	CFlipper * m_pFlipperMoveState;
 	float m_fFlipperDist[2];       // フリッパーの角度目標値
+
+	// モーション用変数
+	static char m_achAnimPath[64];   // モーションテキストのパス格納用
+	CMotion *m_pMotion;              // モーションポインタ
 };
 
 #endif#pragma once

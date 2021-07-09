@@ -53,7 +53,7 @@ char CPlayer::m_achAnimPath[MOTION_MAX][64]
 	{ "./data/Texts/motion/miniresult_3.txt" }, // 三位アニメーション
 	{ "./data/Texts/motion/miniresult_4.txt" }, // 最下位アニメーション
 	{ "./data/Texts/motion/fly.txt" },          // flyアニメーション
-	
+
 };
 
 //******************************

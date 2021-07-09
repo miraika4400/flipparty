@@ -21,6 +21,7 @@
 #include "game.h"
 #include "light.h"
 #include "camera_base.h"
+#include "motion.h"
 
 //*****************************
 // マクロ定義
@@ -44,6 +45,10 @@
 //*****************************
 CResourceModel::Model CCaptain::m_model[MAX_PARTS_NUM] = {};
 int CCaptain::m_nPartsNum = 0;
+char CCaptainm_achAnimPath[64]
+{
+	 "./data/Texts/motion/idol.txt"          // 待機アニメーション
+};
 
 //******************************
 // コンストラクタ
@@ -63,6 +68,8 @@ CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_CPU)
 
 	m_eColorRed = RED_FLAG_DOWN;
 	m_eColorWhite = WHITE_FLAG_DOWN;
+
+	m_pMotion = NULL;
 }
 
 //******************************
@@ -151,6 +158,10 @@ HRESULT CCaptain::Init(void)
 
 	// 表情の初期化
 	m_facePattern = 0;
+
+	//　モーションの設定
+	m_pMotion = CMotion::Create(GetPartsNum(), CCaptainm_achAnimPath, GetModelData());
+	m_pMotion->SetActiveMotion(true);
 
 	return S_OK;
 }
