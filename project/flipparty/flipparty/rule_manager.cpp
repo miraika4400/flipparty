@@ -69,6 +69,12 @@ HRESULT CRuleManager::Init(void)
 		m_pGameRule = NULL;
 	}
 
+	// ルールクラスの生成
+	if (m_pGameRule == NULL)
+	{
+		m_pGameRule = CRuleFly::Create();
+	}
+
 	// ポリゴンの生成
 	m_pFadePolygon = CPolygon::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), // 座標　
 		                              D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), // サイズ
@@ -179,6 +185,11 @@ void CRuleManager::Update(void)
 //=============================
 void CRuleManager::Draw(void)
 {
+    if (m_pGameRule != NULL)
+    {
+        m_pGameRule->Draw();
+    }
+
 	m_pFadePolygon->Draw();
 }
 

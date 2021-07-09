@@ -185,9 +185,9 @@
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="player_remember.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="rank_ui.cpp" />
+    <ClCompile Include="remember_game\player_remember.cpp" />
     <ClCompile Include="remember_game\remember_rule.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
