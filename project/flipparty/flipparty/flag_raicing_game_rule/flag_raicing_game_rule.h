@@ -59,6 +59,7 @@ public:
 
 	static TRUN GetGameLoop(void) { return m_eLoop; }		// ターン情報の取得
 	static void SetGameLoop(TRUN loop) { m_eLoop = loop; }	// ターン情報の設定
+
 private:
 	// CPlayerの動的配列
 	std::vector<CPlayer*> m_playerVector;

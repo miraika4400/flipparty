@@ -7,6 +7,7 @@
 //======================================================
 //	インクルードファイル
 //======================================================
+#include <time.h>
 #include "flag_raicing_game_rule.h"
 #include "flag_raicing_game_camera.h"
 #include "manager.h"
@@ -125,6 +126,8 @@ void CFlagRaicingGame_rule::Update(void)
 	// プレイヤーを必要時以外動けなくするようにする処理
 	if (m_bPlay)
 	{
+		// 乱数の初期化
+		srand((unsigned int)time(NULL));
 		// 時間計算処理
 		++m_nCntTime;
 		// 判別処理
