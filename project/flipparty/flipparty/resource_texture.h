@@ -52,6 +52,7 @@ public:
         TEXTURE_UI_000,          // UI プレイヤー番号（記憶ゲームで使用）
         TEXTURE_UI_001,          // UI「のばんです」（記憶ゲームで使用）
 		TEXTURE_UI_RANK,         // UI「順位」
+		TEXTURE_BLIND,			 //ブラインド
 		TEXTURE_THUNDER_EFFECT,  // 雷エフェクト
 		TEXTURE_MAX        // テクスチャ数
 	}TEXTURE_TYPE;

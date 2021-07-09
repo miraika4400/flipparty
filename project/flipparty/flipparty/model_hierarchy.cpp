@@ -246,14 +246,18 @@ void CModelHierarchy::SetWorldmtx(void)
 
 		if (m_model[nCntParts].nParent == -1)
 		{// 自分が一番の親のとき
-
-		 //向きを反映
+		
+			//向きを反映
 			D3DXMatrixRotationYawPitchRoll(&mtxRot, m_model[nCntParts].rot.y, m_model[nCntParts].rot.x, m_model[nCntParts].rot.z);
 			D3DXMatrixMultiply(&m_model[nCntParts].mtxWorld, &m_model[nCntParts].mtxWorld, &mtxRot);
 
 			//位置を反映
 			D3DXMatrixTranslation(&mtxRot, m_model[nCntParts].pos.x, m_model[nCntParts].pos.y, m_model[nCntParts].pos.z);
 			D3DXMatrixMultiply(&m_model[nCntParts].mtxWorld, &m_model[nCntParts].mtxWorld, &mtxRot);
+
+			//スケールの反映（スケール座標の変換行列）
+			D3DXMatrixScaling(&mtxScail, m_size.x, m_size.y, m_size.z);
+			D3DXMatrixMultiply(&m_model[nCntParts].mtxWorld, &m_model[nCntParts].mtxWorld, &mtxScail);
 
 			//向きを反映
 			D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
@@ -267,7 +271,7 @@ void CModelHierarchy::SetWorldmtx(void)
 		else
 		{// 自分が一番の親じゃないとき
 
-		 //向きを反映
+			//向きを反映
 			D3DXMatrixRotationYawPitchRoll(&mtxRot, m_model[nCntParts].rot.y, m_model[nCntParts].rot.x, m_model[nCntParts].rot.z);
 			D3DXMatrixMultiply(&m_model[nCntParts].mtxWorld, &m_model[nCntParts].mtxWorld, &mtxRot);
 

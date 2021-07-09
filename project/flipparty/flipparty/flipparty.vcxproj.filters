@@ -174,6 +174,12 @@
     <ClCompile Include="fly_game\thunder.cpp">
       <Filter>fly_game</Filter>
     </ClCompile>
+    <ClCompile Include="blind.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="flag_raicing_game_camera.cpp">
+      <Filter>flag_raicing_game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h">
@@ -328,6 +334,12 @@
     </ClInclude>
     <ClInclude Include="fly_game\thunder.h">
       <Filter>fly_game</Filter>
+    </ClInclude>
+    <ClInclude Include="blind.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="flag_raicing_game_camera.h">
+      <Filter>flag_raicing_game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
