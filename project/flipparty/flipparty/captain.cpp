@@ -22,6 +22,7 @@
 #include "light.h"
 #include "camera_base.h"
 #include "motion.h"
+#include "billboard.h"
 
 //*****************************
 // マクロ定義
@@ -39,6 +40,10 @@
 #define FACE_PATTERN 3       // 表情パターン数
 #define FACE_TEX_V (1.0f/(float)FACE_PATTERN) * (float)m_facePattern
 #define SCALE_VALUE 1.2f	//モデルのサイズ拡大係数
+#define FLAG_RIGHT_POS D3DXVECTOR3(-50.0f,0.0f,100.0f)
+#define FLAG_LEFT_POS D3DXVECTOR3(50.0f,0.0f,100.0f)
+#define FLAG_RIGHT_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)
+#define FLAG_LEFT_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)
 
 //*****************************
 // 静的メンバ変数宣言
@@ -65,11 +70,14 @@ CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_CPU)
 
 	m_bJudgRed = false;
 	m_bJudgWhite = false;
+	m_bFlagLeft = false;
+	m_bFlagRight = false;
 
 	m_eColorRed = RED_FLAG_DOWN;
 	m_eColorWhite = WHITE_FLAG_DOWN;
 
 	m_pMotion = NULL;
+	ZeroMemory(m_pFlagTex, sizeof(m_pFlagTex));
 }
 
 //******************************
@@ -163,6 +171,10 @@ HRESULT CCaptain::Init(void)
 	m_pMotion = CMotion::Create(GetPartsNum(), CCaptainm_achAnimPath, GetModelData());
 	m_pMotion->SetActiveMotion(true);
 
+	
+	m_pFlagTex[RIGHT] = CBillboard::Create(FLAG_RIGHT_POS, FLAG_RIGHT_SIZE);
+	m_pFlagTex[LEFT] = CBillboard::Create(FLAG_LEFT_POS, FLAG_LEFT_SIZE);
+
 	return S_OK;
 }
 
@@ -177,6 +189,16 @@ void CCaptain::Uninit(void)
 	{
 		m_pFlipper->Uninit();
 		m_pFlipper = NULL;
+	}
+	for (int nCnt = 0; nCnt < 2; nCnt++)
+	{
+		// テクスチャクラスの終了処理
+		if (m_pFlagTex != NULL)
+		{
+			m_pFlagTex[nCnt]->Uninit();
+			m_pFlagTex[nCnt] = NULL;
+			delete m_pFlagTex[nCnt];
+		}
 	}
 }
 
@@ -212,6 +234,20 @@ void CCaptain::Update(void)
 //******************************
 void CCaptain::Draw(void)
 {
+	if (m_bFlagRight)
+	{
+		if (m_pFlagTex)
+		{
+			m_pFlagTex[RIGHT]->Draw();
+		}
+	}
+	if (m_bFlagLeft)
+	{
+		if (m_pFlagTex)
+		{
+			m_pFlagTex[LEFT]->Draw();
+		}
+	}
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
@@ -315,40 +351,52 @@ void CCaptain::FlagJudge()
 	case WHITE_UP:
 		if (!m_bJudgWhite)
 		{
+			m_pFlagTex[RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 			m_eColorWhite = WHITE_FLAG_UP;
 			m_bJudgWhite = true;
+			m_bFlagRight = true;
+			m_bFlagLeft = false;
 		}
 		break;
 		// 青下げ
 	case WHITE_DOWN:
 		if (m_bJudgWhite)
 		{
+			m_pFlagTex[RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_DOWN));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 			m_eColorWhite = WHITE_FLAG_DOWN;
 			m_bJudgWhite = false;
+			m_bFlagRight = true;
+			m_bFlagLeft = false;
 		}
 		break;
 		// 赤上げ
 	case RED_UP:
 		if (!m_bJudgRed)
 		{
+			m_pFlagTex[LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 			m_eColorRed = RED_FLAG_UP;
 			m_bJudgRed = true;
+			m_bFlagLeft = true;
+			m_bFlagRight = false;
 		}
 		break;
 		// 赤下げ
 	case RED_DOWN:
 		if (m_bJudgRed)
 		{
+			m_pFlagTex[LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_DOWN));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 			m_eColorRed = RED_FLAG_DOWN;
 			m_bJudgRed = false;
+			m_bFlagLeft = true;
+			m_bFlagRight = false;
 		}
 		break;
 	}

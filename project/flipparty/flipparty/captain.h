@@ -19,12 +19,13 @@
 //*****************************
 // マクロ定義
 //*****************************
-
+#define MAX_FLAG_TEXTURRE 2
 //*****************************
 // 前方宣言
 //*****************************
 class CFlipper;
 class CMotion;
+class CBillboard;
 
 //*****************************
 // クラス定義
@@ -42,6 +43,13 @@ public:
 		WHITE_FLAG_DOWN,	// 白下がっている状態
 		FLAG_END
 	}FLAG;
+
+	typedef enum
+	{
+		RIGHT,
+		LEFT,
+		END
+	}FLAG_TEX;
 
 	typedef enum
 	{
@@ -103,9 +111,13 @@ private:
 
 	bool m_bJudgRed;				// 赤上げてるか下げてるかの判別
 	bool m_bJudgWhite;				// 白上げてるか下げてるかの判別
+	bool m_bFlagRight;
+	bool m_bFlagLeft;
 
 	FLAG m_eColorRed;
 	FLAG m_eColorWhite;
+
+	CBillboard * m_pFlagTex[MAX_FLAG_TEXTURRE];		// 右左どちらを上げるかのテクスチャを表示させる変数
 
 	CFlipper * m_pFlipper;          // フリッパークラス
 	CFlipper * m_pFlipperMoveState;
