@@ -70,14 +70,12 @@ CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_CPU)
 
 	m_bJudgRed = false;
 	m_bJudgWhite = false;
-	m_bFlagLeft = false;
-	m_bFlagRight = false;
 
 	m_eColorRed = RED_FLAG_DOWN;
 	m_eColorWhite = WHITE_FLAG_DOWN;
 
 	m_pMotion = NULL;
-	ZeroMemory(m_pFlagTex, sizeof(m_pFlagTex));
+	ZeroMemory(&m_falgTexVal, sizeof(m_falgTexVal));
 }
 
 //******************************
@@ -172,8 +170,8 @@ HRESULT CCaptain::Init(void)
 	m_pMotion->SetActiveMotion(true);
 
 	
-	m_pFlagTex[RIGHT] = CBillboard::Create(FLAG_RIGHT_POS, FLAG_RIGHT_SIZE);
-	m_pFlagTex[LEFT] = CBillboard::Create(FLAG_LEFT_POS, FLAG_LEFT_SIZE);
+	m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT] = CBillboard::Create(FLAG_RIGHT_POS, FLAG_RIGHT_SIZE);
+	m_falgTexVal.apFlagTex[FLAG_TEX_LEFT] = CBillboard::Create(FLAG_LEFT_POS, FLAG_LEFT_SIZE);
 
 	return S_OK;
 }
@@ -190,14 +188,14 @@ void CCaptain::Uninit(void)
 		m_pFlipper->Uninit();
 		m_pFlipper = NULL;
 	}
-	for (int nCnt = 0; nCnt < 2; nCnt++)
+	for (int nCnt = 0; nCnt < FLAG_TEX_MAX; nCnt++)
 	{
 		// テクスチャクラスの終了処理
-		if (m_pFlagTex != NULL)
+		if (m_falgTexVal.apFlagTex[nCnt] != NULL)
 		{
-			m_pFlagTex[nCnt]->Uninit();
-			m_pFlagTex[nCnt] = NULL;
-			delete m_pFlagTex[nCnt];
+			m_falgTexVal.apFlagTex[nCnt]->Uninit();
+			m_falgTexVal.apFlagTex[nCnt] = NULL;
+			delete m_falgTexVal.apFlagTex[nCnt];
 		}
 	}
 }
@@ -234,18 +232,18 @@ void CCaptain::Update(void)
 //******************************
 void CCaptain::Draw(void)
 {
-	if (m_bFlagRight)
+	if (m_falgTexVal.bFlagRight)
 	{
-		if (m_pFlagTex)
+		if (m_falgTexVal.apFlagTex[FLAG_TEX_LEFT])
 		{
-			m_pFlagTex[RIGHT]->Draw();
+			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->Draw();
 		}
 	}
-	if (m_bFlagLeft)
+	if (m_falgTexVal.bFlagLeft)
 	{
-		if (m_pFlagTex)
+		if (m_falgTexVal.apFlagTex[FLAG_TEX_LEFT])
 		{
-			m_pFlagTex[LEFT]->Draw();
+			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->Draw();
 		}
 	}
 	//デバイスの取得
@@ -293,15 +291,15 @@ void CCaptain::Draw(void)
 	//サイズを戻す
 	CModelHierarchy::SetSize(size);
 	
-	pDevice->SetRenderState(D3DRS_STENCILREF, 0x01);				//ステンシルバッファへ反映する参照値の設定
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
-	pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);		//ステンシルテストの判定を必ず成功するように指定
-	
-	//テストの結果の組み合わせ設定
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		//ステンシル・Zテストともに失敗した場合
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);	//ステンシルのみ成功した場合
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);		//両方とも成功した場合
+	//pDevice->SetRenderState(D3DRS_STENCILREF, 0x01);				//ステンシルバッファへ反映する参照値の設定
+	//pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
+	//pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
+	//pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);		//ステンシルテストの判定を必ず成功するように指定
+	//
+	////テストの結果の組み合わせ設定
+	//pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		//ステンシル・Zテストともに失敗した場合
+	//pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);	//ステンシルのみ成功した場合
+	//pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);		//両方とも成功した場合
 
 	pDevice->SetRenderState(D3DRS_ZFUNC, dwCurZTest);		//Zバッファの設定を戻す
 
@@ -351,52 +349,52 @@ void CCaptain::FlagJudge()
 	case WHITE_UP:
 		if (!m_bJudgWhite)
 		{
-			m_pFlagTex[RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
+			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 			m_eColorWhite = WHITE_FLAG_UP;
 			m_bJudgWhite = true;
-			m_bFlagRight = true;
-			m_bFlagLeft = false;
+			m_falgTexVal.bFlagRight = true;
+			m_falgTexVal.bFlagLeft = false;
 		}
 		break;
 		// 青下げ
 	case WHITE_DOWN:
 		if (m_bJudgWhite)
 		{
-			m_pFlagTex[RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_DOWN));
+			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_DOWN));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 			m_eColorWhite = WHITE_FLAG_DOWN;
 			m_bJudgWhite = false;
-			m_bFlagRight = true;
-			m_bFlagLeft = false;
+			m_falgTexVal.bFlagRight = true;
+			m_falgTexVal.bFlagLeft = false;
 		}
 		break;
 		// 赤上げ
 	case RED_UP:
 		if (!m_bJudgRed)
 		{
-			m_pFlagTex[LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
+			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 			m_eColorRed = RED_FLAG_UP;
 			m_bJudgRed = true;
-			m_bFlagLeft = true;
-			m_bFlagRight = false;
+			m_falgTexVal.bFlagLeft = true;
+			m_falgTexVal.bFlagRight = false;
 		}
 		break;
 		// 赤下げ
 	case RED_DOWN:
 		if (m_bJudgRed)
 		{
-			m_pFlagTex[LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_DOWN));
+			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_DOWN));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 			m_eColorRed = RED_FLAG_DOWN;
 			m_bJudgRed = false;
-			m_bFlagLeft = true;
-			m_bFlagRight = false;
+			m_falgTexVal.bFlagLeft = true;
+			m_falgTexVal.bFlagRight = false;
 		}
 		break;
 	}

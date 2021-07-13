@@ -46,10 +46,17 @@ public:
 
 	typedef enum
 	{
-		RIGHT,
-		LEFT,
-		END
+		FLAG_TEX_RIGHT,
+		FLAG_TEX_LEFT,
+		FLAG_TEX_MAX
 	}FLAG_TEX;
+
+	typedef struct
+	{
+		bool bFlagRight;
+		bool bFlagLeft;
+		CBillboard * apFlagTex[MAX_FLAG_TEXTURRE];		// 右左どちらを上げるかのテクスチャを表示させる変数
+	}FLAG_TEX_VARIABLE;
 
 	typedef enum
 	{
@@ -111,13 +118,12 @@ private:
 
 	bool m_bJudgRed;				// 赤上げてるか下げてるかの判別
 	bool m_bJudgWhite;				// 白上げてるか下げてるかの判別
-	bool m_bFlagRight;
-	bool m_bFlagLeft;
+
 
 	FLAG m_eColorRed;
 	FLAG m_eColorWhite;
 
-	CBillboard * m_pFlagTex[MAX_FLAG_TEXTURRE];		// 右左どちらを上げるかのテクスチャを表示させる変数
+	FLAG_TEX_VARIABLE m_falgTexVal;	//指示テクスチャの構造体変数
 
 	CFlipper * m_pFlipper;          // フリッパークラス
 	CFlipper * m_pFlipperMoveState;
