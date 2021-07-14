@@ -18,12 +18,13 @@
 #include "player_remember.h"
 #include "camera_tps.h"
 #include "mini_result.h"
+#include "snow.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 #define PLAYER_SPACE (150.0f) //　プレイヤー位置の間隔
-#define INPUT_COUNT (5)        // 入力してから再入力できるまでの待ち時間
+#define INPUT_COUNT  (15)        // 入力してから再入力できるまでの待ち時間
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -106,6 +107,9 @@ HRESULT CRememjber_rule::Init(void)
 
     // カメラの生成
     CGame::SetCamera(CTpsCamera::Create());
+
+    // 吹雪の生成
+    //CSnow::Create();
 
     // プレイヤーの人数取得
     m_nNumPlayer = CCountSelect::GetPlayerNum();
@@ -236,8 +240,8 @@ void CRememjber_rule::InputPlayer(void)
     {
         FlipperData[m_nTurn] = PlayerInput[m_nTurn];    // プレイヤーの入力を見本データに保存
         Comparison();                                   // 入力内容の比較
-        m_nTurn++;                                      // ターン数を増やす
         m_nNumInput = 0;                                // 入力回数をリセット
+        m_nTurn++;                                      // ターン数を増やす
         TurnChange();                                   // プレイヤーのターン変更
     }
 }
@@ -264,8 +268,8 @@ void CRememjber_rule::ChangeTurnUI(void)
 //=============================================================================
 void CRememjber_rule::TurnChange(void)
 {
-    // ターン数と生き残っているプレイヤー数を割ったあまりのプレイヤー番号
-    m_nTurnPlayer = m_aTurn[(m_nTurn) % (m_nNumPlayer- m_nLossPlayer)];
+    // ターン数とプレイヤー数を割ったあまりの配列を代入
+    m_nTurnPlayer = m_aTurn[m_nTurn % (m_nNumPlayer + m_nLossPlayer)];
 
    // テクスチャ変更
    ChangeTurnUI();
@@ -281,7 +285,6 @@ void CRememjber_rule::PlayerChange(int nPlayerNum)
    // バブルソートで入れ替えれば最終的に順位と同じ順番になる
     for (int nData = nPlayerNum; nData < m_nNumPlayer- m_nLossPlayer; nData++)
     {
-
         int nSwap = m_aTurn[nData];// 入れ替え用変数
 
         m_aTurn[nData] = m_aTurn[nData + 1];
@@ -324,7 +327,7 @@ void CRememjber_rule::Comparison(void)
 void CRememjber_rule::Ranking(void)
 {
     m_nLossPlayer++;// 脱落したプレイヤーの人数をカウント
-    PlayerChange(m_nTurnPlayer);
+    PlayerChange(m_nTurnPlayer);    // プレイヤーの順番変更
     m_pPlayer[m_nTurnPlayer]->SetIsLoss(true);// 脱落フラグをたてる
 
     // プレイヤーが最後の1人になったらリザルト生成
@@ -339,5 +342,4 @@ void CRememjber_rule::Ranking(void)
         CMiniResult::Create();
         m_IsPlay = false;
     }
-
 }

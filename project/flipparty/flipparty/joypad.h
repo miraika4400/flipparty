@@ -18,7 +18,7 @@
 //===============================
 //マクロ定義
 //===============================
-#define MAX_JOYSTICK_NUM 4    // JOYPAD接続上限
+#define MAX_JOYSTICK_NUM 5    // JOYPAD接続上限
 #define	NUM_JOY_MAX 31        // ボタンの最大数
 #define JOYSTICK_TIP_MAX 1000 // 傾けの値の最大値
 #define JOYPAD_SENSI_RATE 45000.0f // コントローラーのスティックの感度

@@ -76,7 +76,7 @@ private:
     int m_nLossPlayer;          // 脱落したプレイヤーの人数
     int m_nNumInput;            // 入力された回数
     int m_nTurn;                // 現在のターン数
-    int m_aTurn[MAX_PLAYER_NUM];                // ターン管理用変数
+    int m_aTurn[MAX_PLAYER_NUM];// ターン管理用変数
     int m_nTurnPlayer;          // 現在自分の番のプレイヤー番号
     unsigned int m_nInputCount; // 再入力を受け付ける時間
     bool m_IsinputEnd;          // プレイヤーの入力が終了しているか

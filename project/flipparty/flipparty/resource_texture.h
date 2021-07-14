@@ -54,7 +54,8 @@ public:
 		TEXTURE_UI_RANK,         // UI「順位」
 		TEXTURE_BLIND,			 //ブラインド
 		TEXTURE_THUNDER_EFFECT,  // 雷エフェクト
-		TEXTURE_MAX        // テクスチャ数
+        TEXTURE_SNOW,            // 吹雪エフェクト
+		TEXTURE_MAX              // テクスチャ数
 	}TEXTURE_TYPE;
 	
 	// メンバ関数

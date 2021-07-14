@@ -44,7 +44,7 @@ CBlind::~CBlind()
 //===================================
 CBlind * CBlind::Create(int nTime)
 {
-	//ポインタ変数
+	// ポインタ変数
 	CBlind *pBlind = NULL;
 
 	//インスタンス生成

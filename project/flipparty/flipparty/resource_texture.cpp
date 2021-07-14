@@ -51,7 +51,7 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/ranking.png",      // UI「順位]
 	"./data/Textures/blind.jpg",		// ブラインド
 	"./data/Textures/thunder.png",      // 雷エフェクト
-	
+	"./data/Textures/snow.png",         // 吹雪エフェクト
 };
 
 //===================================

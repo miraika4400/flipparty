@@ -190,6 +190,7 @@
     <ClCompile Include="rank_ui.cpp" />
     <ClCompile Include="remember_game\player_remember.cpp" />
     <ClCompile Include="remember_game\remember_rule.cpp" />
+    <ClCompile Include="remember_game\snow.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
     <ClCompile Include="resource_shader.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="scene2d.h" />
     <ClInclude Include="scene3d.h" />
     <ClInclude Include="score.h" />
+    <ClInclude Include="remember_game\snow.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="resource_texture.h" />
     <ClInclude Include="timelimit.h" />
