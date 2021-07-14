@@ -53,6 +53,10 @@ public:
         TEXTURE_UI_001,          // UI「のばんです」（記憶ゲームで使用）
 		TEXTURE_UI_RANK,         // UI「順位」
 		TEXTURE_BLIND,			 //ブラインド
+		TEXTURE_UI_RIGHT_UP,	 // UI　右上げ
+		TEXTURE_UI_RIGHT_DOWN,	 // UI　右下げ
+		TEXTURE_UI_LEFT_UP,		 // UI　左上げ
+		TEXTURE_UI_LEFT_DOWN,	 // UI　左下げ
 		TEXTURE_THUNDER_EFFECT,  // 雷エフェクト
         TEXTURE_SNOW,            // 吹雪エフェクト
 		TEXTURE_MAX              // テクスチャ数
