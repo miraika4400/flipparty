@@ -23,6 +23,7 @@
 #include "camera_base.h"
 #include "motion.h"
 #include "billboard.h"
+#include "blind.h"
 
 //*****************************
 // マクロ定義
@@ -109,7 +110,6 @@ CCaptain * CCaptain::Create(D3DXVECTOR3 pos)
 //******************************
 HRESULT CCaptain::Load(void)
 {
-
 	// モデルの読み込み
 	LoadModels(HIERARCHY_TEXT_PATH, &m_model[0], &m_nPartsNum);
 
@@ -121,7 +121,6 @@ HRESULT CCaptain::Load(void)
 //******************************
 void CCaptain::Unload(void)
 {
-
 	for (int nCnt = 0; nCnt < m_nPartsNum; nCnt++)
 	{
 		//メッシュの破棄
@@ -169,8 +168,10 @@ HRESULT CCaptain::Init(void)
 	m_pMotion = CMotion::Create(GetPartsNum(), CCaptainm_achAnimPath, GetModelData());
 	m_pMotion->SetActiveMotion(true);
 
-	
+	//右挙げ指示ビルボードの作成
 	m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT] = CBillboard::Create(FLAG_RIGHT_POS, FLAG_RIGHT_SIZE);
+	
+	//左挙げ指示ビルボードの作成
 	m_falgTexVal.apFlagTex[FLAG_TEX_LEFT] = CBillboard::Create(FLAG_LEFT_POS, FLAG_LEFT_SIZE);
 
 	return S_OK;
@@ -181,7 +182,9 @@ HRESULT CCaptain::Init(void)
 //******************************
 void CCaptain::Uninit(void)
 {
+	//階層モデルの終了
 	CModelHierarchy::Uninit();
+
 	// フリッパークラスの終了処理
 	if (m_pFlipper != NULL)
 	{
@@ -193,9 +196,14 @@ void CCaptain::Uninit(void)
 		// テクスチャクラスの終了処理
 		if (m_falgTexVal.apFlagTex[nCnt] != NULL)
 		{
+			//ビルボードの終了
 			m_falgTexVal.apFlagTex[nCnt]->Uninit();
-			m_falgTexVal.apFlagTex[nCnt] = NULL;
+
+			//メモリの削除
 			delete m_falgTexVal.apFlagTex[nCnt];
+
+			//メモリのクリア
+			m_falgTexVal.apFlagTex[nCnt] = NULL;
 		}
 	}
 }
@@ -232,81 +240,64 @@ void CCaptain::Update(void)
 //******************************
 void CCaptain::Draw(void)
 {
-	if (m_falgTexVal.bFlagRight)
-	{
-		if (m_falgTexVal.apFlagTex[FLAG_TEX_LEFT])
-		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->Draw();
-		}
-	}
-	if (m_falgTexVal.bFlagLeft)
-	{
-		if (m_falgTexVal.apFlagTex[FLAG_TEX_LEFT])
-		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->Draw();
-		}
-	}
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	//Zバッファ設定の保存用変数
 	DWORD dwCurZTest = 0;
 
-	//Zバッファの設定を一時保存
-	pDevice->GetRenderState(D3DRS_ZFUNC, &dwCurZTest);
-
-	//Zテストの設定
-	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_NEVER);	//Zバッファへの書き込みを禁止する
-
-	//ステンシルテストの設定
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);				//ステンシルテストを有効にする
-	pDevice->SetRenderState(D3DRS_STENCILREF, 0x05);				//ステンシルバッファへ反映する参照値の設定
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
-	pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);		//ステンシルテストの判定を必ず成功するように指定
-
-	//テストの結果の組み合わせ設定
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		//ステンシル・Zテストともに失敗した場合
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);	//ステンシルのみ成功した場合
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		//両方とも成功した場合
-
-	//モデルサイズの取得
-	D3DXVECTOR3 size = CModelHierarchy::GetSize();
-
-	//アウトライン用にサイズを拡大
-	CModelHierarchy::SetSize(size * SCALE_VALUE);
-
-	//位置の取得
-	D3DXVECTOR3 pos = CModelHierarchy::GetPos();
-
-	//位置を修正して渡す
-	CModelHierarchy::SetPos(D3DXVECTOR3(pos.x, pos.y - 8.0f, pos.z));
-
-	//ステンシルバッファへ描画
-	CModelHierarchy::Draw();
+	if (CFlagRaicingGame_rule::GetBlind()->GetState() != CBlind::BLIND_STATE_NORMAL)
+	{
+		//右を挙げていたら
+		if (m_falgTexVal.bFlagRight)
+		{
+			if (m_falgTexVal.apFlagTex[FLAG_TEX_LEFT])
+			{
+				m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->Draw();
+			}
+		}
+		//左を挙げていたら
+		if (m_falgTexVal.bFlagLeft)
+		{
+			if (m_falgTexVal.apFlagTex[FLAG_TEX_LEFT])
+			{
+				m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->Draw();
+			}
+		}
+	}
 	
-	//位置を戻す
-	CModelHierarchy::SetPos(pos);
-	
-	//サイズを戻す
-	CModelHierarchy::SetSize(size);
-	
-	//pDevice->SetRenderState(D3DRS_STENCILREF, 0x01);				//ステンシルバッファへ反映する参照値の設定
-	//pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
-	//pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
-	//pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);		//ステンシルテストの判定を必ず成功するように指定
-	//
-	////テストの結果の組み合わせ設定
-	//pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		//ステンシル・Zテストともに失敗した場合
-	//pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);	//ステンシルのみ成功した場合
-	//pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);		//両方とも成功した場合
+	if (CFlagRaicingGame_rule::GetBlind()->GetState() == CBlind::BLIND_STATE_NORMAL)
+	{
+		//Zバッファの設定を一時保存
+		pDevice->GetRenderState(D3DRS_ZFUNC, &dwCurZTest);
 
-	pDevice->SetRenderState(D3DRS_ZFUNC, dwCurZTest);		//Zバッファの設定を戻す
+		//Zテストの設定
+		pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_NEVER);	//Zバッファへの書き込みを禁止する
 
-	//Zバッファへ通常描画
-	CModelHierarchy::Draw();
+		//ステンシルテストの設定
+		pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);				//ステンシルテストを有効にする
+		pDevice->SetRenderState(D3DRS_STENCILREF, 0x05);				//ステンシルバッファへ反映する参照値の設定
+		pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
+		pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
+		pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);		//ステンシルテストの判定を必ず成功するように指定
 
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);	//ステンシルテストを無効にする
+		//テストの結果の組み合わせ設定
+		pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);		//ステンシル・Zテストともに失敗した場合
+		pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);	//ステンシルのみ成功した場合
+		pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);		//両方とも成功した場合
+
+		//ステンシルバッファへ描画
+		CModelHierarchy::Draw();
+
+		pDevice->SetRenderState(D3DRS_ZFUNC, dwCurZTest);		//Zバッファの設定を戻す
+		pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);	//ステンシルテストを無効にする
+	}
+
+	if (CFlagRaicingGame_rule::GetBlind()->GetState() != CBlind::BLIND_STATE_NORMAL)
+	{
+		//Zバッファへ通常描画
+		CModelHierarchy::Draw();
+	}
 }
 
 //******************************

@@ -26,6 +26,7 @@
 //======================================================
 CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eLoop
 	= CFlagRaicingGame_rule::CAPTAIN_TRUN;	// キャプテンのターンかプレイヤーのターンかを判別する変数
+CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 
 //======================================================
 //	マクロ定義

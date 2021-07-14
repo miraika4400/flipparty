@@ -61,7 +61,7 @@ public:
 
 	static TRUN GetGameLoop(void) { return m_eLoop; }		// ターン情報の取得
 	static void SetGameLoop(TRUN loop) { m_eLoop = loop; }	// ターン情報の設定
-
+	static CBlind *GetBlind(void) { return m_pBlind; }
 private:
 	// CPlayerの動的配列
 	std::vector<CPlayer*> m_playerVector;
@@ -69,7 +69,7 @@ private:
 	CPlayer *m_pPlayer[MAX_PLAYER_NUM];	// プレイヤーへのポインタ
 	CCamera *m_pCamera;				// カメラへのポインタ
 	CCaptain *m_pCaptain;			// キャプテンのポインタ
-	CBlind *m_pBlind;					//ブラインドクラスのポインタ
+	static CBlind *m_pBlind;					//ブラインドクラスのポインタ
 
 	int m_nRandTime;				// フラッグを上げる間隔
 	int m_nCntTime;					// 時間計算

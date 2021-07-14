@@ -22,6 +22,14 @@
 class CBlind : public CScene3d
 {
 public:
+
+	typedef enum
+	{
+		BLIND_STATE_MOVE = 0,
+		BLIND_STATE_NORMAL,
+		BLIND_STATE_MAX
+	}BLIND_STATE;
+
 	CBlind();
 	~CBlind();
 
@@ -33,9 +41,10 @@ public:
 	void Draw(void);
 
 	void SetTime(int nTime) { m_nTime = nTime; }
+	BLIND_STATE GetState(void) { return m_state; }
 private:
 	int m_nTime;	//タイマー
-	bool m_bMoving;	//移動可能かどうか
+	BLIND_STATE m_state;	//ブラインドの状態
 };
 
 #endif
