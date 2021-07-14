@@ -28,11 +28,11 @@
 //*****************************
 // マクロ定義
 //*****************************
-#define HIERARCHY_TEXT_PATH "./data/Texts/hierarchy/pengin00.txt"    //階層構造テキストのパス
+#define HIERARCHY_TEXT_PATH "./data/Texts/hierarchy/captain.txt"    //階層構造テキストのパス
 #define RIGHT_FLIPPER_PARTS_NUM 5                                    // 右羽のパーツ番号
 #define LEFT_FLIPPER_PARTS_NUM  4                                    // 左羽のパーツ番号
-#define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-60.0f)           // 右羽を上げたときの角度
-#define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)            // 右羽を下げたときの角度
+#define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-40.0f)           // 右羽を上げたときの角度
+#define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(50.0f)            // 右羽を下げたときの角度
 #define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
 #define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
 #define FLIPPER_RATE 0.07f                                           // 羽を動かすときの係数

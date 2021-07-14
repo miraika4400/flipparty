@@ -186,6 +186,7 @@ void CFlagRaicingGame_rule::FlagJudge(void)
 
 	// キャプテンの旗判別
 	pCaptainFlipper = m_pCaptain->GetFlipper();
+
 	// プレイヤーの数分処理を回す
 	for (int nCount = 0; nCount < nPlayerNum; nCount++)
 	{
