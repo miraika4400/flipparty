@@ -26,7 +26,7 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/title.png",        // タイトル背景
 	"./data/Textures/tutorial_1.png",   // チュートリアル
 	"./data/Textures/particle001.png",  // パーティクル*箱
-	"./data/Textures/particle000.png",  // パーティクル*星
+	"./data/Textures/Tears.png",        // パーティクル*涙
 	"./data/Textures/particle004.png",  // パーティクル*円
 	"./data/Textures/number.png",       // ナンバー
 	"./data/Textures/debug_left.png",   // 左

@@ -30,7 +30,7 @@ public:
 	typedef enum
 	{
 		PARTICLE_BOX = 0, // 四角
-		PARTICLE_STAR,    // 星
+		PARTICLE_TEARS,   // 涙
 		PARTICLE_CIRCLE,  // 丸
 		PARTICLE_MAX,     // タイプの最大数
 	}PARTICLE_TYPE;
@@ -49,6 +49,10 @@ public:
 	void Uninit(void);  // 終了
 	void Update(void);  // 更新
 	void Draw(void);    // 描画
+
+	// 移動量の取得・セット
+	D3DXVECTOR3 GetMove(void) { return m_move; }
+	void SetMove(D3DXVECTOR3 move) { m_move = move; }
 
 private:
 	//============

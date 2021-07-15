@@ -46,7 +46,8 @@ public:
 		OBJTYPE_MOTION,        // モーション
 		OBJTYPE_UI,            // UI
 		OBJTYPE_COLLISION,     // コリジョン
-		OBJTYPE_MINIRESULT,    // ミニゲームリザルト
+		OBJTYPE_MINIRESULT_SYSTEM, // ミニリザルトシステム
+		OBJTYPE_MINIRESULT_OBJ,    // ミニゲームリザルトのオブジェクト
 		OBJTYPE_SYSTEM,        // システム
 		OBJTYPE_MAX,           // タイプの最大数
 	}OBJTYPE;

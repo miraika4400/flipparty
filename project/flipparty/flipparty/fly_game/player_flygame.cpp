@@ -10,6 +10,9 @@
 //******************************
 #include "player_flygame.h"
 #include "rule_flygame.h"
+#include "manager.h"
+#include "keyboard.h"
+#include "joypad.h"
 
 //*****************************
 // マクロ定義
@@ -137,6 +140,9 @@ void CFlyGamePlayer::Fly(CFlipper::FLIPPER_STATE stateNow, CFlipper::FLIPPER_STA
 	SetPos(pos);
 }
 
+//******************************
+// 状態管理
+//******************************
 void CFlyGamePlayer::ManageState(void)
 {
 	switch (m_state)
@@ -165,5 +171,95 @@ void CFlyGamePlayer::ManageState(void)
 
 	default:
 		break;
+	}
+}
+
+//******************************
+// 羽の操作処理
+//******************************
+void CFlyGamePlayer::ControllFlipper(void)
+{
+
+#ifdef _DEBUG
+	// キーボード操作
+	// 右羽を操作
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_A))
+	{
+		if (GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_RIGHT) == CFlipper::FLIPPERSTATE_DOWN)
+		{// 上げる
+			SetFlipperDist(CFlipper::FLIPPER_TYPE_RIGHT, RIGHT_FLIPPER_DIST_ANGLE_UP);
+
+			// 移動状態の更新
+			GetFlipperMoveState()->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+		}
+		else
+		{// 下げる
+			SetFlipperDist(CFlipper::FLIPPER_TYPE_RIGHT, RIGHT_FLIPPER_DIST_ANGLE_DOWN);
+
+			// 移動状態の更新
+			GetFlipperMoveState()->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+		}
+	}
+
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_D))
+	{
+		if (GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_LEFT) == CFlipper::FLIPPERSTATE_DOWN)
+		{// 上げる
+			SetFlipperDist(CFlipper::FLIPPER_TYPE_LEFT, LEFT_FLIPPER_DIST_ANGLE_UP);
+
+			// 移動状態の更新
+			GetFlipperMoveState()->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+		}
+		else
+		{// 下げる
+			SetFlipperDist(CFlipper::FLIPPER_TYPE_LEFT, LEFT_FLIPPER_DIST_ANGLE_DOWN);
+
+			// 移動状態の更新
+			GetFlipperMoveState()->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+		}
+	}
+
+#endif // _DEBUG
+	// コントローラー操作
+
+	// プレイヤー番号の取得
+	int nPlayerNum = GetPlayerNumber();
+	// 右羽を操作
+	if (CManager::GetJoypad()->GetJoystickTrigger(5, nPlayerNum))
+	{
+		if (GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_RIGHT) == CFlipper::FLIPPERSTATE_DOWN)
+		{
+			// 上げる
+			SetFlipperDist(CFlipper::FLIPPER_TYPE_RIGHT, RIGHT_FLIPPER_DIST_ANGLE_UP);
+
+			// 移動状態の更新
+			GetFlipperMoveState()->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+		}
+		else
+		{// 下げる
+			SetFlipperDist(CFlipper::FLIPPER_TYPE_RIGHT, RIGHT_FLIPPER_DIST_ANGLE_DOWN);
+
+			// 移動状態の更新
+			GetFlipperMoveState()->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+		}
+	}
+
+	// 左羽を操作
+	if (CManager::GetJoypad()->GetJoystickTrigger(4, nPlayerNum))
+	{
+		if (GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_LEFT) == CFlipper::FLIPPERSTATE_DOWN)
+		{// 上げる
+			SetFlipperDist(CFlipper::FLIPPER_TYPE_LEFT, LEFT_FLIPPER_DIST_ANGLE_UP);
+
+			// 移動状態の更新
+			GetFlipperMoveState()->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+		}
+		else
+		{// 下げる
+			SetFlipperDist(CFlipper::FLIPPER_TYPE_LEFT, LEFT_FLIPPER_DIST_ANGLE_DOWN);
+
+			// 移動状態の更新
+			GetFlipperMoveState()->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+		}
 	}
 }

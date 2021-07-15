@@ -43,7 +43,8 @@
 //=============================
 CCamera *CGame::m_pCamera = {};       // カメラクラスポインタ
 CLight  *CGame::m_pLight = NULL;      // ライトクラスポインタ
-CRuleManager* CGame::m_pRuleManager = NULL;
+CRuleManager* CGame::m_pRuleManager = NULL; // ルールマネージャークラス
+
 //=============================
 // コンストラクタ
 //=============================
@@ -88,13 +89,6 @@ HRESULT CGame::Init(void)
 		{
 			return -1;
 		}
-	}
-
-	// ルールクラスの生成
-	if (m_pRuleManager == NULL)
-	{
-		m_pRuleManager = CRuleManager::Create();
-		m_pRuleManager->SetRule(CRuleManager::RULE_FLAG_RACING);
 	}
 
 #ifdef _DEBUG
@@ -150,6 +144,12 @@ void CGame::Uninit(void)
 //=============================
 void CGame::Update(void)
 {
+	// ルールクラスの生成
+	if (m_pRuleManager == NULL)
+	{
+		m_pRuleManager = CRuleManager::Create();
+		m_pRuleManager->SetRule(CRuleManager::RULE_FLAG_RACING);
+	}
 
 	// カメラクラス更新処理
 	if (m_pCamera != NULL)
@@ -169,32 +169,14 @@ void CGame::Update(void)
 
 	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_1))
 	{
-		ReConnection();
-		m_pRuleManager->ReConnection();
-		ReleaseAll();
-
-		SetPriority(OBJTYPE_NONE);
-		m_pRuleManager->SetPriority(OBJTYPE_SYSTEM);
 		m_pRuleManager->SetRule(CRuleManager::RULE_FLAG_RACING);
 	}
 	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_2))
 	{
-		ReConnection();
-		m_pRuleManager->ReConnection();
-		ReleaseAll();
-
-		SetPriority(OBJTYPE_NONE);
-		m_pRuleManager->SetPriority(OBJTYPE_SYSTEM);
 		m_pRuleManager->SetRule(CRuleManager::RULE_FLY);
 	}
 	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_3))
 	{
-		ReConnection();
-		m_pRuleManager->ReConnection();
-		ReleaseAll();
-
-		SetPriority(OBJTYPE_NONE);
-		m_pRuleManager->SetPriority(OBJTYPE_SYSTEM);
 		m_pRuleManager->SetRule(CRuleManager::RULE_REMENBER);
 	}
 

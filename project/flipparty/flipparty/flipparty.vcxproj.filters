@@ -180,6 +180,12 @@
     <ClCompile Include="flag_raicing_game_camera.cpp">
       <Filter>flag_raicing_game</Filter>
     </ClCompile>
+    <ClCompile Include="tears_particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="tears_manager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h">
@@ -340,6 +346,12 @@
     </ClInclude>
     <ClInclude Include="flag_raicing_game_camera.h">
       <Filter>flag_raicing_game</Filter>
+    </ClInclude>
+    <ClInclude Include="tears_particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="tears_manager.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

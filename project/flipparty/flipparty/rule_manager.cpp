@@ -14,7 +14,8 @@
 #include "rule_flygame.h"
 #include "remember_rule.h"
 #include "flag_raicing_game_rule.h"
-
+#include "fade.h"
+#include "game.h"
 //=============================
 // マクロ定義
 //=============================
@@ -73,6 +74,9 @@ HRESULT CRuleManager::Init(void)
 	m_pFadePolygon = CPolygon::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), // 座標　
 		                              D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), // サイズ
 		                              m_polygonCol);                                          // 色
+
+	// ルールネクスト
+	m_ruleNext = RULE_FLAG_RACING;           // ネクストルール
 
 	return S_OK;
 }
@@ -192,6 +196,35 @@ void CRuleManager::Draw(void)
 //=============================
 void CRuleManager::SetRule(RULE_TYPE ruleNext)
 {
+	ReConnection();
+	CManager::GetGame()->ReConnection();
+	
+	ReleaseAll();
+
+	SetPriority(OBJTYPE_SYSTEM);
+	if (CManager::GetGame() != NULL) CManager::GetGame()->SetPriority(OBJTYPE_NONE);
+
 	m_fadeState = FADE_OUT;
 	m_ruleNext = ruleNext;
+}
+
+//=============================
+// ルール遷移
+//=============================
+void CRuleManager::TransitionRule(void)
+{
+	switch (m_ruleNext)
+	{
+	case RULE_FLAG_RACING:// 旗揚げ
+		SetRule(RULE_FLY);
+		break;
+	case RULE_FLY:           // フライ
+		SetRule(RULE_REMENBER);
+		break;
+	case RULE_REMENBER:       // 記憶
+		CManager::GetFade()->SetFade(CManager::MODE_RESULT);
+
+	default:
+		break;
+	}
 }

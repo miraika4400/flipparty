@@ -27,7 +27,7 @@
 //=============================
 // コンストラクタ
 //=============================
-CRankUI::CRankUI() :CScene(OBJTYPE_MINIRESULT)
+CRankUI::CRankUI() :CScene(OBJTYPE_MINIRESULT_OBJ)
 {
 	// 変数のクリア
 	m_pBillboard = NULL;  // ビルボードポインタ

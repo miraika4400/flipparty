@@ -23,6 +23,10 @@
 #define FLIPPER_NUM 2 // 手の数
 #define RIGHT_FLIPPER_PARTS_NUM 5 // 右羽のパーツ番号
 #define LEFT_FLIPPER_PARTS_NUM  4 // 左羽のパーツ番号
+#define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-60.0f)           // 右羽を上げたときの角度
+#define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)            // 右羽を下げたときの角度
+#define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
+#define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
 
 //*****************************
 // 前方宣言
@@ -98,13 +102,15 @@ public:
 	void SetPoint(int point) { m_nPoint = point; }
 	void AddPoint(int point) { m_nPoint += point; }
 	int GetPoint(void) { return m_nPoint; }
+	// フリッパー目標値セット
+	void SetFlipperDist(int nIndex, float fAngle) { m_fFlipperDist[nIndex] = fAngle; }
 
 private:
 	void DrawModel(void); // モデルの描画
 	void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
 
-	void ControllFlipper(void);    // 羽の操作
-	void ManageFlipperAngle(void); // 羽の角度管理
+	virtual void ControllFlipper(void);    // 羽の操作
+	void ManageFlipperAngle(void);         // 羽の角度管理
 
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];  // モデル構造体

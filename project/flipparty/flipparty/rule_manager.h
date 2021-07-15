@@ -42,6 +42,7 @@ public:
 		RULE_REMENBER,        // 記憶
 		RULE_MAX
 	}RULE_TYPE;
+
 	// フェード状態
 	typedef enum
 	{
@@ -65,7 +66,12 @@ public:
 	void Draw(void);    // 描画
 
 	void SetRule(RULE_TYPE ruleNext); //ルールのセット
+	void TransitionRule(void);        // ルール遷移
 private:
+
+	//*****************************
+	// メンバ変数
+	//*****************************
 	CRuleBase* m_pGameRule;     // ルール
 	CPolygon*  m_pFadePolygon;  // フェード用ポリゴン
 	RULE_TYPE  m_ruleNext;      // ネクストルール

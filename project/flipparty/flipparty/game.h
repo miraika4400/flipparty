@@ -29,7 +29,7 @@ class CRuleManager;
 //クラス定義
 //*****************************
 
-//2dポリゴンクラス
+//ゲームクラス
 class CGame : public CScene
 {
 public:
@@ -51,8 +51,9 @@ public:
 	void Draw(void);    // 描画
 
 	// 取得処理
-	static CLight*GetLight(void) { return m_pLight; }     // ライトクラスのポインタ
-	static CCamera *GetCamera(void) { return m_pCamera; } // カメラポインタ
+	static CLight*GetLight(void) { return m_pLight; }                    // ライトクラスのポインタ
+	static CCamera *GetCamera(void) { return m_pCamera; }                // カメラポインタ
+	static CRuleManager *GetRuleManager(void) { return m_pRuleManager; } // ルールマネージャーポインタ
 	static void SetCamera(CCamera * pCamera);             // カメラクラスのセット処理
 
 private:

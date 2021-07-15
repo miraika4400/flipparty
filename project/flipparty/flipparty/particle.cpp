@@ -75,7 +75,7 @@ HRESULT CParticle::Init(void)
 	}
 
 	m_apTexture[PARTICLE_BOX] = CResourceTexture::GetTexture(CResourceTexture::TEXTURE_PARTICLE_BOX);
-	m_apTexture[PARTICLE_STAR] = CResourceTexture::GetTexture(CResourceTexture::TEXTURE_PARTICLE_STAR);
+	m_apTexture[PARTICLE_TEARS] = CResourceTexture::GetTexture(CResourceTexture::TEXTURE_PARTICLE_TEARS);
 	m_apTexture[PARTICLE_CIRCLE] = CResourceTexture::GetTexture(CResourceTexture::TEXTURE_PARTICLE_CIRCLE);
 	// テクスチャ割り当て
 	BindTexture(m_apTexture[m_type]);

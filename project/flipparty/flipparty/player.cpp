@@ -27,10 +27,6 @@
 // マクロ定義
 //*****************************
 #define HIERARCHY_TEXT_PATH1 "./data/Texts/hierarchy/pengin00.txt"   // 階層構造テキストのパス
-#define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-60.0f)           // 右羽を上げたときの角度
-#define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)            // 右羽を下げたときの角度
-#define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
-#define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
 #define FLIPPER_RATE 0.1f                                            // 羽を動かすときの係数
 #define FLIPPER_JUDGE D3DXToRadian(20.0f)                            // 上がっているか下がっているか判定の基準値
 #define PLAYER_NUMBER_ICON_HEIGHT 85.0f                              // プレイヤー番号アイコンの高さ
@@ -256,6 +252,8 @@ void CPlayer::Update(void)
 	{// フラグがtrueの時
 		// 羽を動かす
 		ControllFlipper();
+		// 羽の角度の管理
+		ManageFlipperAngle();
 	}
 	else
 	{
@@ -506,9 +504,6 @@ void CPlayer::ControllFlipper(void)
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
-
-	// 羽の角度の管理
-	ManageFlipperAngle();
 
 }
 

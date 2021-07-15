@@ -25,7 +25,7 @@
 //**********************************
 #define MAX_ANIMATION_X 3     // アニメーション数 横
 #define MAX_ANIMATION_Y 4     // アニメーション数 縦
-#define ANIMATION_INTERVAL 6  // アニメーション移行フレーム数
+#define ANIMATION_INTERVAL 7  // アニメーション移行フレーム数
 #define SIZE D3DXVECTOR3(100.0f,100.0f,0.0f)
 
 //=============================
@@ -95,7 +95,6 @@ HRESULT CThunder::Init(void)
 	// UV座標セット
 	SetTextureUV(uv);
 
-	SetAddMode(true);
 	return S_OK;
 }
 

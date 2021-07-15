@@ -29,7 +29,7 @@ public:
 		TEXTURE_TITLE = 0,       // タイトル
 		TEXTURE_TUTORIAL,        // チュートリアル
 		TEXTURE_PARTICLE_BOX,    // パーティクル*箱
-		TEXTURE_PARTICLE_STAR,   // パーティクル*星
+		TEXTURE_PARTICLE_TEARS,  // パーティクル*涙
 		TEXTURE_PARTICLE_CIRCLE, // パーティクル*円
 		TEXTURE_NUMBER,          // ナンバー
 		TEXTURE_LEFT,            // 左矢印

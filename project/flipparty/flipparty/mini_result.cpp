@@ -23,6 +23,8 @@
 #include "count_selection.h"
 #include "player.h"
 #include "rank_ui.h"
+#include "tears_manager.h"
+#include "rule_manager.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -37,11 +39,11 @@
 #define BLACKOUT_POS   D3DXVECTOR3(0.0f, 0.0f, 50.0f)
 #define PLAYER_RESULT_WORST_ROT_X D3DXToRadian(70.0f) // 最下位の時の回転軸のXの値
 #define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
-
+#define PLAYER_HEAD_PARTS_NUM 2
 //=============================
 // コンストラクタ
 //=============================
-CMiniResult::CMiniResult():CScene(OBJTYPE_MINIRESULT)
+CMiniResult::CMiniResult():CScene(OBJTYPE_MINIRESULT_SYSTEM)
 {
 }
 
@@ -81,7 +83,7 @@ HRESULT CMiniResult::Init(void)
 	// 背景を暗くするよう
 	CScene3d * p3DPolygon = CScene3d::Create(BLACKOUT_POS, BLACKOUT_SIZE);
 	p3DPolygon -> SetColor(BLACKOUT_COLOR);      //色の設定
-	p3DPolygon->SetPriority(OBJTYPE_MINIRESULT); // プライオリティの設定
+	p3DPolygon->SetPriority(OBJTYPE_MINIRESULT_OBJ); // プライオリティの設定
 
 	// プレイヤー数の取得
 	int nPlayNum = CCountSelect::GetPlayerNum();
@@ -115,7 +117,7 @@ HRESULT CMiniResult::Init(void)
 		// プレイヤーの生成
 		CPlayer * pResultPlayer = CPlayer::Create(createPlayerPos, nCntPlayer);
 		// オブジェクトタイプ
-		pResultPlayer->SetPriority(OBJTYPE_MINIRESULT);
+		pResultPlayer->SetPriority(OBJTYPE_MINIRESULT_OBJ);
 		// 操作不可
 		pResultPlayer->SetMoveFlag(false);
 
@@ -140,6 +142,12 @@ HRESULT CMiniResult::Init(void)
 			pResultPlayer->SetRot(D3DXVECTOR3(PLAYER_RESULT_WORST_ROT_X, fRotY, 0.0f));
 			// 表情の設定
 			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
+			pResultPlayer->Draw();
+			D3DXVECTOR3 headPos;
+			headPos.x = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
+			headPos.y = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
+			headPos.z = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 5;
+			CTearsManager::Create(headPos);
 		}
 		else if (pPlayer->GetRank() == 1)
 		{// 二位
@@ -161,6 +169,7 @@ HRESULT CMiniResult::Init(void)
 		pPlayer = (CPlayer*)pPlayer->GetNext();
 	}
 
+	
 	return S_OK;
 }
 
@@ -179,7 +188,13 @@ void CMiniResult::Uninit(void)
 //=============================
 void CMiniResult::Update(void)
 {
-
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN) ||
+		CManager::GetMouse()->GetMouseTrigger(0) ||
+		CManager::GetJoypad()->GetJoystickTrigger(3, 0) ||
+		CManager::GetJoypad()->GetJoystickTrigger(11, 0))
+	{
+		CGame::GetRuleManager()->TransitionRule();
+	}
 }
 
 
