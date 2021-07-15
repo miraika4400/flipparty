@@ -26,6 +26,7 @@
 //======================================================
 CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eLoop
 	= CFlagRaicingGame_rule::CAPTAIN_TRUN;	// キャプテンのターンかプレイヤーのターンかを判別する変数
+CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 
 //======================================================
 //	マクロ定義
@@ -185,6 +186,7 @@ void CFlagRaicingGame_rule::FlagJudge(void)
 
 	// キャプテンの旗判別
 	pCaptainFlipper = m_pCaptain->GetFlipper();
+
 	// プレイヤーの数分処理を回す
 	for (int nCount = 0; nCount < nPlayerNum; nCount++)
 	{

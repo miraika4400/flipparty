@@ -29,7 +29,7 @@
 CBlind::CBlind()
 {
 	m_nTime = 0;
-	m_bMoving = true;
+	m_state = BLIND_STATE_MOVE;
 }
 
 //===================================
@@ -44,7 +44,7 @@ CBlind::~CBlind()
 //===================================
 CBlind * CBlind::Create(int nTime)
 {
-	//ポインタ変数
+	// ポインタ変数
 	CBlind *pBlind = NULL;
 
 	//インスタンス生成
@@ -100,7 +100,7 @@ void CBlind::Update(void)
 	//更新処理
 	CScene3d::Update();
 
-	if (m_bMoving)
+	if (m_state == BLIND_STATE_MOVE)
 	{
 		//移動開始タイムより小さくなった時
 		if (m_nTime <= MOVE_START_TIME)
@@ -118,7 +118,7 @@ void CBlind::Update(void)
 				pos.y = BLIND_POS.y;
 
 				//移動をやめる
-				m_bMoving = false;
+				m_state = BLIND_STATE_NORMAL;
 			}
 
 			//位置の設定
@@ -134,29 +134,35 @@ void CBlind::Draw(void)
 {
 	//デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
-
+	
 	//Zバッファ設定の保存用変数
 	DWORD dwCurZTest = 0;
+	
+	if (m_state == BLIND_STATE_NORMAL)
+	{
+		//Zバッファの設定を一時保存
+		pDevice->GetRenderState(D3DRS_ZFUNC, &dwCurZTest);
 
-	//Zバッファの設定を一時保存
-	pDevice->GetRenderState(D3DRS_ZFUNC, &dwCurZTest);
+		//ステンシルテストの設定
+		pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);				//ステンシルテストを有効にする
+		pDevice->SetRenderState(D3DRS_STENCILREF, 0x03);				//ステンシルバッファへ反映する参照値の設定
+		pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
+		pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
+		pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATER);		//ステンシルテストの判定を必ず成功するように指定
 
-	//ステンシルテストの設定
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);				//ステンシルテストを有効にする
-	pDevice->SetRenderState(D3DRS_STENCILREF, 0x03);				//ステンシルバッファへ反映する参照値の設定
-	pDevice->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);			//マスクの設定（ビットを削らないように指定）
-	pDevice->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);	//0xffffffffにする
-	pDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_GREATER);		//ステンシルテストの判定を必ず成功するように指定
+		//テストの結果の組み合わせ設定
+		pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);	//ステンシル・Zテストともに失敗した場合
+		pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	//ステンシルのみ成功した場合
+		pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);	//両方とも成功した場合
 
-	//テストの結果の組み合わせ設定
-	pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);	//ステンシル・Zテストともに失敗した場合
-	pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	//ステンシルのみ成功した場合
-	pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);	//両方とも成功した場合
+	}
 
 	//ポリゴンの描画
 	CScene3d::Draw();
 
-	pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);	//ステンシルテストを無効にする
-	pDevice->SetRenderState(D3DRS_ZFUNC, dwCurZTest);		//Zバッファの設定を戻す
-
+	if (m_state == BLIND_STATE_NORMAL)
+	{
+		pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);	//ステンシルテストを無効にする
+		pDevice->SetRenderState(D3DRS_ZFUNC, dwCurZTest);		//Zバッファの設定を戻す
+	}
 }

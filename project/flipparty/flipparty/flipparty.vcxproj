@@ -163,7 +163,7 @@
     <ClCompile Include="count_selection.cpp" />
     <ClCompile Include="debug_log.cpp" />
     <ClCompile Include="fade.cpp" />
-    <ClCompile Include="flag_raicing_game_camera.cpp" />
+    <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_camera.cpp" />
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp" />
     <ClCompile Include="flipper.cpp" />
     <ClCompile Include="fly_game\camera_flygame.cpp" />
@@ -190,6 +190,7 @@
     <ClCompile Include="rank_ui.cpp" />
     <ClCompile Include="remember_game\player_remember.cpp" />
     <ClCompile Include="remember_game\remember_rule.cpp" />
+    <ClCompile Include="remember_game\snow.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resource_model.cpp" />
     <ClCompile Include="resource_shader.cpp" />
@@ -219,7 +220,7 @@
     <ClInclude Include="count_selection.h" />
     <ClInclude Include="debug_log.h" />
     <ClInclude Include="fade.h" />
-    <ClInclude Include="flag_raicing_game_camera.h" />
+    <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_camera.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h" />
     <ClInclude Include="flipper.h" />
     <ClInclude Include="fly_game\camera_flygame.h" />
@@ -256,6 +257,7 @@
     <ClInclude Include="scene2d.h" />
     <ClInclude Include="scene3d.h" />
     <ClInclude Include="score.h" />
+    <ClInclude Include="remember_game\snow.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="resource_texture.h" />
     <ClInclude Include="tears_manager.h" />
