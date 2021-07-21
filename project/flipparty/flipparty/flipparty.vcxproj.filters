@@ -189,6 +189,9 @@
     <ClCompile Include="remember_game\snow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="remember_game\camera_remember.cpp">
+      <Filter>remember_game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h">
@@ -358,6 +361,9 @@
     </ClInclude>
     <ClInclude Include="remember_game\snow.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="remember_game\camera_remember.h">
+      <Filter>remember_game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

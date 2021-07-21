@@ -19,7 +19,9 @@
 class CPlayerRemember : public CPlayer
 {
 public:
+    //---------------------
     // メンバ関数
+    //---------------------
     CPlayerRemember();
     ~CPlayerRemember();
 
@@ -36,8 +38,11 @@ public:
     bool GetIsLoss(void) { return m_IsLoss;}            // 脱落したかどうか
 
 private:
+    //---------------------
+    // メンバ変数
+    //---------------------
     bool m_IsLoss;        // 脱落したかどうか
-    bool m_IsTurn;        // 自分のターンかどうか
+    //bool m_IsTurn;        // 自分のターンかどうか
 };
 
 
