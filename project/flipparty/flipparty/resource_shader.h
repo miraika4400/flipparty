@@ -33,6 +33,7 @@ public:
 	{
 		SHADER_PLAYER = 0,  // プレイヤー
 		SHADER_CLOUD,       // 雲
+		SHADER_ZTEX,        // Z値テクスチャ生成用
 		SHADER_MAX          // テクスチャ数
 	}SHADER_TYPE;
 

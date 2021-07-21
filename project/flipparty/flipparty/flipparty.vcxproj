@@ -207,6 +207,7 @@
     <ClCompile Include="timelimit.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="tutorial.cpp" />
+    <ClCompile Include="z_tex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="fly_game\rule_flygame.h" />
     <ClInclude Include="fly_game\thunder.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="z_tex.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />
     <ClInclude Include="keyboard.h" />

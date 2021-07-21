@@ -30,10 +30,10 @@
 // É}ÉNÉçíËã`
 //**********************************
 #define MAX_SIZE  D3DXVECTOR3(1.0f, 1.0f, 1.0f)
-#define SIZE_RATE 0.05f
+#define SIZE_RATE 0.07f
 #define CLOUD_COLOR D3DXCOLOR(0.95f, 0.95f, 1.0f, m_fAlpha)
-#define LIFE 100
-#define THUNDER_CREATE_COUNT_MIN 30
+#define LIFE 70
+#define THUNDER_CREATE_COUNT_MIN 20
 #define THUNDER_CREATE_COUNT_MAX LIFE
 
 #define THUNDER_POS_Y -60

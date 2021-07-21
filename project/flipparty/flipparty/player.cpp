@@ -411,11 +411,10 @@ void CPlayer::DrawModel(void)
 					shader.pEffect->SetFloatArray("DiffuseColor", (float*)&pMat[nCntMat].MatD3D.Diffuse, 4);
 					// シェーダパスの描画開始
 					shader.pEffect->BeginPass(nCntEffect);
-					//モデルパーツの描画
+					// モデルパーツの描画
 					pModelData[nCntParts].pMesh->DrawSubset(nCntMat);
 					// シェーダパスの終了
 					shader.pEffect->EndPass();
-
 
 					pMat[nCntMat] = pModelData[nCntParts].defMat[nCntMat];
 				}

@@ -26,12 +26,16 @@ const std::string CResourceShader::m_aEffectPath[CResourceShader::SHADER_MAX]
 {
 	"data/HLSL/PlayerShader.fx",       // プレイヤー
 	"data/HLSL/CloudShader.fx",        // 雲
+	"data/HLSL/ZValuePlot.fx",         // Z値テクスチャ
+	
 };
 
 // テクニック名
 const std::string CResourceShader::m_aTechniqueName[CResourceShader::SHADER_MAX]
 {
 	"Shader",        // プレイヤー
+	"Shader",        // 雲
+	"ZValuePlotTec", // Z値テクスチャ
 };
 
 //===================================
