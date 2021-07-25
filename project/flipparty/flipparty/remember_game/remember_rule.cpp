@@ -236,7 +236,6 @@ void CRememjber_rule::InputPlayer(void)
     if (m_nNumInput == m_nTurn + 1)
     {
         FlipperData[m_nTurn] = PlayerInput[m_nTurn];    // プレイヤーの入力を見本データに保存
-        Comparison();                                   // 入力内容の比較
         m_nNumInput = 0;                                // 入力回数をリセット
         m_nTurn++;                                      // ターン数を増やす
         TurnChange();                                   // プレイヤーのターン変更
@@ -256,6 +255,8 @@ void CRememjber_rule::InputPlayer(void)
         m_nInputCount = INPUT_COUNT;
         // 右手を上げる
         ControllFlipper(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+        Comparison();                                   // 入力内容の比較
+
     }
     // 左を押したとき
     else if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 ||
@@ -266,6 +267,8 @@ void CRememjber_rule::InputPlayer(void)
         m_nInputCount = INPUT_COUNT;
         // 左手を上げる
         ControllFlipper(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+        Comparison();                                   // 入力内容の比較
+
     }
 
 }
@@ -338,26 +341,22 @@ void CRememjber_rule::PlayerChange(int nPlayerNum)
 //=============================================================================
 void CRememjber_rule::Comparison(void)
 {
-    // プレイヤーの入力フラグをオフにする
-    m_IsinputEnd = false;
+    //// プレイヤーの入力フラグをオフにする
+    //m_IsinputEnd = false;
 
     // データの比較
-    for (int nCnt = 0; nCnt < m_nTurn; nCnt++)
-    {
-        if (FlipperData[nCnt] != PlayerInput[nCnt])
+        if (FlipperData[m_nNumInput] != PlayerInput[m_nNumInput])
         {
             // 外れた場合×を表示
-            m_apAnswer[nCnt]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
-
+            m_apAnswer[m_nNumInput]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
             // ミスしたプレイヤーの順位をつける
             Ranking();
             return;
         }
         else
         {
-            m_apAnswer[nCnt]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_MARU));
+            m_apAnswer[m_nNumInput]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_MARU));
         }
-    }
 }
 
 //=============================================================================
