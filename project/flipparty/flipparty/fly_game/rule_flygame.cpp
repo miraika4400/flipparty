@@ -65,7 +65,7 @@ CRuleFly * CRuleFly::Create(void)
 //******************************
 HRESULT CRuleFly::Init(void)
 {
-	CIceberg::Create(D3DXVECTOR3(0.0f, 0.0f, -1000.0f));
+	CIceberg::Create(D3DXVECTOR3(0.0f, 0.0f, -1000.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
 	// îwåiÇÃê∂ê¨
 	//CBg::Create();
 
