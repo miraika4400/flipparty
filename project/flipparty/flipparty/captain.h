@@ -134,4 +134,4 @@ private:
 	CMotion *m_pMotion;              // モーションポインタ
 };
 
-#endif#pragma once
+#endif

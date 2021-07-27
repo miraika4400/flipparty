@@ -31,6 +31,7 @@
 #include "resource_shader.h"
 #include "player.h"
 #include "Captain.h"
+#include "passingpenguin.h"
 
 //=============================
 // 静的メンバ変数宣言
@@ -130,6 +131,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	CPause::Load();    // ポーズ
 	CPlayer::Load();   // プレイヤー
 	CCaptain::Load();  // キャプテン
+	CPassingPenguin::Load();	//通過ペンギン
 
 	// ポーズ状態の時
 	return S_OK;
@@ -154,6 +156,7 @@ void CManager::Uninit(void)
 	CPause::Unload();    // ポーズ
 	CPlayer::Unload();   // プレイヤー
 	CCaptain::Unload();  // キャプテン
+	CPassingPenguin::Unload();	//通過ペンギン
 
 	if (m_pSound != NULL)
 	{

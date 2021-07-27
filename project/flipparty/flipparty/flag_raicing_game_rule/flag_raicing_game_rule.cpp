@@ -20,6 +20,7 @@
 #include "timelimit.h"
 #include "blind.h"
 #include "bg.h"
+#include "passingpenguin.h"
 
 //======================================================
 //	静的メンバ変数宣言初期化
@@ -118,6 +119,8 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	
 	//ブラインドの生成
 	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit());
+
+	CPassingPenguin::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM));
 	return S_OK;
 }
 

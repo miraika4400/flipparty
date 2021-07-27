@@ -23,7 +23,9 @@ class CMotion;
 class CPassingPenguin :public CModelHierarchy
 {
 public:
-	static CPassingPenguin *Create();
+	CPassingPenguin();
+	~CPassingPenguin();
+	static CPassingPenguin *Create(D3DXVECTOR3 pos);
 	static HRESULT Load(void);
 	static void Unload(void);
 
@@ -33,6 +35,10 @@ public:
 	void Draw(void);
 
 private:
+	void DrawModel(void);// モデルの描画
+	void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
+
+
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
 	static int m_nPartsNum;	//モデルパーツ数
