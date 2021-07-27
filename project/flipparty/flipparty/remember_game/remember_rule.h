@@ -45,6 +45,9 @@ public:
         CResourceTexture::TEXTURE_TYPE pTexture;    // テクスチャへのポインタ
     }UI_DATA;
 
+    //---------------------
+    // メンバ関数
+    //---------------------
     ~CRememjber_rule();
 
     static CRememjber_rule* Create(void);
@@ -65,28 +68,37 @@ public:
     CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
 
 private:
+
+    //---------------------
+    // メンバ関数
+    //---------------------
+    void ControllFlipper(CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state);
+
+    //---------------------
+    // メンバ変数
+    //---------------------
     // 見本の保存用
     static UI_DATA UIData[MAX_UI_REMEMBER];     // UIの情報
     CFlipper::FLIPPER_TYPE FlipperData[MAX_TARN];// 見本データ
     CFlipper::FLIPPER_TYPE PlayerInput[MAX_TARN];// プレイヤーの入力内容
 
-    CPlayerRemember *m_pPlayer[MAX_PLAYER_NUM];     // プレイヤーへのポインタ
+    std::vector<CPlayerRemember*> m_pPlayer;     // プレイヤーへのポインタ
     CCamera *m_pCamera;         // カメラへのポインタ
     int m_nNumPlayer;           // プレイヤーの人数
     int m_nLossPlayer;          // 脱落したプレイヤーの人数
     int m_nNumInput;            // 入力された回数
     int m_nTurn;                // 現在のターン数
-    int m_aTurn[MAX_PLAYER_NUM];// ターン管理用変数
+    int m_aTurn[MAX_PLAYER_NUM];// 順位用
     int m_nTurnPlayer;          // 現在自分の番のプレイヤー番号
-    unsigned int m_nInputCount; // 再入力を受け付ける時間
+    unsigned int m_nInputCount; // 入力を受け付けないカウント
     bool m_IsinputEnd;          // プレイヤーの入力が終了しているか
     bool m_IsPlay;              // ゲームをプレイ中かどうか
 
     CPolygon *m_pPolygon[MAX_UI_REMEMBER];// ポリゴンクラスのポインタ
-#ifdef _DEBUG
+
     // デバッグ用変数
     CPolygon *m_apAnswer[MAX_TARN];// 答えの表示用ポリゴン
-#endif // _DEBUG
+
 
 };
 
