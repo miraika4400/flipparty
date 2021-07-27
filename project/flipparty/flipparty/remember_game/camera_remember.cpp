@@ -45,13 +45,10 @@ CCameraRemember::~CCameraRemember()
 //=============================================================================
 CCameraRemember * CCameraRemember::Create(void)
 {
-    if (!m_pInsutance)
-    {
-        m_pInsutance = new CCameraRemember;
-        m_pInsutance->Init();
-    }
+    CCameraRemember* pInsutance = new CCameraRemember;
+    pInsutance->Init();
 
-    return m_pInsutance;
+    return pInsutance;
 }
 
 //=============================================================================
@@ -88,7 +85,6 @@ void CCameraRemember::Update(void)
 //=============================================================================
 void CCameraRemember::SetCamera(void)
 {
-
     CCamera::SetCamera();
 }
 

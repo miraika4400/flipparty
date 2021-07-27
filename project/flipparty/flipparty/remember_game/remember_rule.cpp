@@ -24,12 +24,17 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define PLAYER_SPACE (300.0f) //　プレイヤー位置の間隔
-#define INPUT_COUNT  (30)        // 入力してから再入力できるまでの待ち時間
+#define PLAYER_SPACE (300.0f)             //　プレイヤー位置の間隔
+#define INPUT_COUNT  (30)                 // 入力してから再入力できるまでの待ち時間
 #define FLIPPER_NONE D3DXToRadian(0.0f)
 #define FLIPPER_UP_LEFT D3DXToRadian(70.0f)
 #define FLIPPER_UP_RIGHT D3DXToRadian(-70.0f)
-#define CAMERA_POS (150)        // カメラの基準位置
+#define CAMERA_POS (150)                  // カメラの基準位置
+#define SNOWSTORM_TURN (m_nNumPlayer * 2) // 吹雪の登場ターン
+#define MAX_INPUT_TIME (5 * 60)           // 入力の制限時間
+
+#define ANSWER_UI_POS  D3DXVECTOR3(SCREEN_WIDTH / 2.0f, 200.0f, 0.0f)    // 答えのUIの位置
+#define ANSWER_UI_SIZE D3DXVECTOR3(30.0f,30.0f,0.0f)    // 答えのUIのサイズ
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -71,7 +76,7 @@ CRememjber_rule::~CRememjber_rule()
 //=============================================================================
 // [Create]インスタンス生成
 //=============================================================================
-CRememjber_rule * CRememjber_rule::Create(void)
+CRememjber_rule *CRememjber_rule::Create(void)
 {
     if (!m_pinstace)
     {
@@ -101,11 +106,13 @@ HRESULT CRememjber_rule::Init(void)
     m_nTurnPlayer = 0;      // どのプレイヤーのターンか
     m_nNumInput = 0;        // プレイヤーが入力した回数
     m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
-    m_nInputCount = 0;
+    m_nInputCount = 0;      // プレイヤーが入力できるようになるまでのカウント
+
     ZeroMemory(&FlipperData, sizeof(FlipperData));      // 見本データの配列
     ZeroMemory(&PlayerInput, sizeof(PlayerInput));      // プレイヤーの入力情報
     ZeroMemory(&m_apAnswer, sizeof(m_apAnswer));        // 回答のポリゴン表示
     m_IsPlay = true;                // ゲームをプレイ中かどうか
+    m_IsSnow = false;       // 吹雪が出ているかどうか
 
     //-----------------------------
     // 各オブジェクト生成
@@ -115,9 +122,6 @@ HRESULT CRememjber_rule::Init(void)
 
     // カメラの生成
     CGame::SetCamera(CCameraRemember::Create());
-
-    // 吹雪の生成
-    //CSnow::Create();
 
     // プレイヤーの人数取得
     m_nNumPlayer = CCountSelect::GetPlayerNum();
@@ -136,11 +140,7 @@ HRESULT CRememjber_rule::Init(void)
     m_pPlayer.at(m_nTurnPlayer)->SetMoveFlag(true); // 最初のプレイヤーの操作フラグオン
 
     // UIの生成
-    for (int nCntUI = 0; nCntUI < MAX_TARN; nCntUI++)
-    {
-        float posX = 100 + ((float)(nCntUI)* 100) / 2;// 位置の調整
-        m_apAnswer[nCntUI] = CPolygon::Create(D3DXVECTOR3(posX, 200.0f, 0.0f), D3DXVECTOR3(20.0f, 20.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
-    }
+        m_apAnswer = CPolygon::Create(ANSWER_UI_POS, ANSWER_UI_SIZE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
 
     for (int nCntUI = 0; nCntUI < MAX_UI_REMEMBER; nCntUI++)
     {
@@ -170,17 +170,14 @@ void CRememjber_rule::Uninit(void)
             m_pPolygon[nCntUI] = nullptr;
         }
     }
-#ifdef _DEBUG
-        // ポリゴンの解放
-        for (int nCntUI = 0; nCntUI < MAX_TARN; nCntUI++)
-        {
-            m_apAnswer[nCntUI]->Uninit();
-            delete m_apAnswer[nCntUI];
-            m_apAnswer[nCntUI] = nullptr;
-        }
 
-        m_pinstace = nullptr;
-#endif // _DEBUG
+        // ポリゴンの解放
+            m_apAnswer->Uninit();
+            delete m_apAnswer;
+            m_apAnswer = nullptr;
+
+            m_pinstace = nullptr;
+
 }
 
 //=============================================================================
@@ -194,6 +191,12 @@ void CRememjber_rule::Update(void)
         InputPlayer();
     }
 
+    // 吹雪の生成
+    if (IsSnowstormTurn())
+    {
+        m_IsSnow = true;// フラグをオンにする
+        CSnow::Create();// 生成
+    }
 }
 
 //=============================================================================
@@ -206,13 +209,12 @@ void CRememjber_rule::Draw(void)
     {
         m_pPolygon[nCntUI]->Draw();
     }
-
-#ifdef _DEBUG
-    for (int nCntUI = 0; nCntUI < MAX_TARN; nCntUI++)
+        // あっているかのUI描画
+    if (m_nInputCount)
     {
-        m_apAnswer[nCntUI]->Draw();
+        m_apAnswer->Draw();
     }
-#endif // _DEBUG
+
 }
 
 //=============================================================================
@@ -251,11 +253,11 @@ void CRememjber_rule::InputPlayer(void)
         CManager::GetKeyboard()->GetKeyTrigger(DIK_UP))
     {
         PlayerInput[m_nNumInput] = CFlipper::FLIPPER_TYPE_RIGHT;
-        m_nNumInput++;
         m_nInputCount = INPUT_COUNT;
         // 右手を上げる
         ControllFlipper(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
         Comparison();                                   // 入力内容の比較
+        m_nNumInput++;
 
     }
     // 左を押したとき
@@ -263,14 +265,12 @@ void CRememjber_rule::InputPlayer(void)
         CManager::GetKeyboard()->GetKeyTrigger(DIK_W))
     {
         PlayerInput[m_nNumInput] = CFlipper::FLIPPER_TYPE_LEFT;
-        m_nNumInput++;
         m_nInputCount = INPUT_COUNT;
         // 左手を上げる
         ControllFlipper(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
         Comparison();                                   // 入力内容の比較
-
+        m_nNumInput++;
     }
-
 }
 
 //=============================================================================
@@ -299,7 +299,7 @@ void CRememjber_rule::TurnChange(void)
     m_pPlayer[m_nTurnPlayer]->SetMoveFlag(false);
 
     // ターン変更
-    if (m_nTurnPlayer == m_pPlayer.size() -1)
+    if (m_nTurnPlayer == m_pPlayer.size() - 1)
     {
         m_nTurnPlayer = 0;
     }
@@ -341,21 +341,19 @@ void CRememjber_rule::PlayerChange(int nPlayerNum)
 //=============================================================================
 void CRememjber_rule::Comparison(void)
 {
-    //// プレイヤーの入力フラグをオフにする
-    //m_IsinputEnd = false;
 
     // データの比較
         if (FlipperData[m_nNumInput] != PlayerInput[m_nNumInput])
         {
             // 外れた場合×を表示
-            m_apAnswer[m_nNumInput]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
+            m_apAnswer->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
             // ミスしたプレイヤーの順位をつける
             Ranking();
             return;
         }
         else
         {
-            m_apAnswer[m_nNumInput]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_MARU));
+            m_apAnswer->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_MARU));
         }
 }
 
@@ -364,7 +362,7 @@ void CRememjber_rule::Comparison(void)
 //=============================================================================
 void CRememjber_rule::Ranking(void)
 {
-    m_nLossPlayer++;// 脱落したプレイヤーの人数をカウント
+    m_nLossPlayer++;                // 脱落したプレイヤーの人数をカウント
     PlayerChange(m_nTurnPlayer);    // プレイヤーの順番変更
     m_pPlayer[m_nTurnPlayer]->SetIsLoss(true);// 脱落フラグをたてる
 
@@ -407,4 +405,17 @@ void CRememjber_rule::ControllFlipper(CFlipper::FLIPPER_TYPE type, CFlipper::FLI
         break;
     }
         m_pPlayer[m_nTurnPlayer]->SetFlipperDist(type, fAngle);
+}
+
+//=============================================================================
+// [IsSnowstormTurn] 吹雪を発生させるかどうかの判定
+// 返り値: 判定結果を返す
+//=============================================================================
+bool CRememjber_rule::IsSnowstormTurn(void)
+{
+    // 吹雪生成用条件
+    // 条件：吹雪が出ていない、かつ吹雪出現ターンになったか
+    bool IsSnowstormTurn = !m_IsSnow && m_nTurn == SNOWSTORM_TURN;
+
+    return IsSnowstormTurn;
 }
