@@ -192,6 +192,9 @@
     <ClCompile Include="remember_game\camera_remember.cpp">
       <Filter>remember_game</Filter>
     </ClCompile>
+    <ClCompile Include="flag_raicing_game_rule\passingpenguin.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h">
@@ -364,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="remember_game\camera_remember.h">
       <Filter>remember_game</Filter>
+    </ClInclude>
+    <ClInclude Include="flag_raicing_game_rule\passingpenguin.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

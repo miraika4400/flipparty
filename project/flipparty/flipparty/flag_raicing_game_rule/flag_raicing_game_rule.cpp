@@ -102,6 +102,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
 	float posX = 0 + ((float)(nPlayerNum - 1) * PLAYER_SPACE) / 2;// 位置の調整
+
 	// プレイヤーの人数分プレイヤー生成
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
 	{
@@ -111,6 +112,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	}
 	// キャプテンの生成
 	m_pCaptain = CCaptain::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_CAPTAIN_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM));
+	
 	// 制限時間の生成
 	m_pTimeLimit = CTimeLimit::Create(TRUN_SET);
 	
