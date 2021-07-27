@@ -18,6 +18,7 @@
 #include "joypad.h"
 #include "fade.h"
 #include "score.h"
+#include "camera_base.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -62,9 +63,9 @@ HRESULT CResult::Init(void)
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
-	m_pPolygon = CPolygon::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f),
+	/*m_pPolygon = CPolygon::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f),
 		D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));*/
 
 	//m_pPolygon->BindTexture();
 	
@@ -97,8 +98,11 @@ void CResult::Uninit(void)
 //=============================
 void CResult::Update(void)
 {
-	// ポリゴンの更新処理
-	m_pPolygon->Update();
+	if (m_pPolygon != NULL)
+	{
+		// ポリゴンの更新処理
+		m_pPolygon->Update();
+	}
 
 	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN) || 
 		CManager::GetMouse()->GetMouseTrigger(0) || 
@@ -114,6 +118,9 @@ void CResult::Update(void)
 //=============================
 void CResult::Draw(void)
 {
-	// ポリゴンの描画処理
-	m_pPolygon->Draw();
+	if (m_pPolygon != NULL)
+	{
+		// ポリゴンの描画処理
+		m_pPolygon->Draw();
+	}
 }

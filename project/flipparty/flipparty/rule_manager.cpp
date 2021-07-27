@@ -168,7 +168,6 @@ void CRuleManager::Update(void)
 				default:
 					break;
 				}
-				
 			}
 		}
 

@@ -113,17 +113,17 @@ private:
 	void ManageFlipperAngle(void);         // 羽の角度管理
 
 	// メンバ変数
-	static CResourceModel::Model m_model[MAX_PARTS_NUM];  // モデル構造体
-	static int m_nPartsNum;             // モデルパーツ数
-	int m_nPlayerNum;                   // プレイヤー番号
-	CFlipper * m_pFlipper;              // フリッパークラス
-	CFlipper * m_pFlipperMoveState;     // フリッパーの移動状態
-	float m_fFlipperDist[FLIPPER_NUM];  // フリッパーの角度目標値
-	CBillboard * m_pPlayerNumIcon;      // プレイヤー番号のアイコン
-	bool m_bMove;                       // 動けるかどうかのフラグ
-	int m_nRank;                        // 順位
-	FACE_PATTERN  m_facePattern;               // 表情切り替え用
-	int m_nPoint;
+	static CResourceModel::Model m_model[MAX_PARTS_NUM]; // モデル構造体
+	static int m_nPartsNum;                              // モデルパーツ数
+	int m_nPlayerNum;                                    // プレイヤー番号
+	CFlipper * m_pFlipper;                               // フリッパークラス
+	CFlipper * m_pFlipperMoveState;                      // フリッパーの移動状態
+	float m_fFlipperDist[FLIPPER_NUM];                   // フリッパーの角度目標値
+	CBillboard * m_pPlayerNumIcon;                       // プレイヤー番号のアイコン
+	bool m_bMove;                                        // 動けるかどうかのフラグ
+	int m_nRank;                                         // 順位
+	FACE_PATTERN  m_facePattern;                         // 表情切り替え用
+	int m_nPoint;                                        // ポイント
 
 	// モーション用変数
 	static char m_achAnimPath[MOTION_MAX][64];   // アニメーションテキストのパス格納用

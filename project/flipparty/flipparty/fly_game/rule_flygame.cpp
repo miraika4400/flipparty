@@ -20,6 +20,7 @@
 #include "bg.h"
 #include "cloud.h"
 #include "thunder.h"
+#include "iceberg.h"
 
 //******************************
 // マクロ定義
@@ -64,8 +65,9 @@ CRuleFly * CRuleFly::Create(void)
 //******************************
 HRESULT CRuleFly::Init(void)
 {
+	CIceberg::Create(D3DXVECTOR3(0.0f, 0.0f, -1000.0f));
 	// 背景の生成
-	CBg::Create();
+	//CBg::Create();
 
 	// カメラクラスの生成
 	CGame::SetCamera(CFlyGameCamera::Create());

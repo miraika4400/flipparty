@@ -92,7 +92,6 @@ HRESULT CGame::Init(void)
 	}
 
 #ifdef _DEBUG
-
 	
 	//
 	//// ƒJƒƒ‰ƒNƒ‰ƒX‚Ì¶¬

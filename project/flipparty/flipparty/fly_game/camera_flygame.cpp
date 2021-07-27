@@ -72,11 +72,3 @@ HRESULT CFlyGameCamera::Init(void)
 void CFlyGameCamera::Update(void)
 {
 }
-
-//******************************
-// カメラのセット
-//******************************
-void CFlyGameCamera::SetCamera(void)
-{
-	CCamera::SetCamera();
-}
