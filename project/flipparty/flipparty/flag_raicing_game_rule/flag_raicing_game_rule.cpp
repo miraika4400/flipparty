@@ -120,7 +120,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	//ƒuƒ‰ƒCƒ“ƒh‚Ì¶¬
 	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit());
 
-	CPassingPenguin::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM));
+	CPassingPenguin::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM+100.0f, FLAG_CAPTAIN_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM));
 	return S_OK;
 }
 

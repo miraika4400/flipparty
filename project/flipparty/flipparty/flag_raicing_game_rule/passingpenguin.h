@@ -35,8 +35,8 @@ public:
 	void Draw(void);
 
 private:
-	void DrawModel(void);// モデルの描画
-	void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
+	//void DrawModel(void);// モデルの描画
+	//void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
 
 
 	// メンバ変数

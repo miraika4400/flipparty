@@ -9,7 +9,12 @@
 // インクルードファイル
 //*****************************************************************************
 #include "passingpenguin.h"
-
+#include "renderer.h"
+#include "motion.h"
+#ifdef _DEBUG
+#include "manager.h"
+#include "keyboard.h"
+#endif
 //=============================================================================
 //マクロ定義
 //=============================================================================
@@ -51,6 +56,7 @@ CPassingPenguin * CPassingPenguin::Create(D3DXVECTOR3 pos)
 	{
 		pPassingPenguin->SetPos(pos);
 		pPassingPenguin->Init();
+		pPassingPenguin->SetPriority(OBJTYPE_CPU); // オブジェクトタイプ
 	}
 
 	return pPassingPenguin;
@@ -100,6 +106,13 @@ HRESULT CPassingPenguin::Init(void)
 	{
 		return E_FAIL;
 	}
+
+	//モーションの生成
+	m_pMotion = CMotion::Create(m_nPartsNum, m_achAnimPath, GetModelData());
+
+	//モーションの再生
+	m_pMotion->SetActiveMotion(true);
+
 	return S_OK;
 }
 
@@ -108,7 +121,7 @@ HRESULT CPassingPenguin::Init(void)
 //=============================================================================
 void CPassingPenguin::Uninit(void)
 {
-	//階層モデルの終了
+	//階層構造付きモデルクラスの終了
 	CModelHierarchy::Uninit();
 }
 
@@ -118,6 +131,33 @@ void CPassingPenguin::Uninit(void)
 //=============================================================================
 void CPassingPenguin::Update(void)
 {
+#ifdef _DEBUG
+	D3DXVECTOR3 pos = GetPos();
+
+	//左
+	if (CManager::GetKeyboard()->GetKeyPress(DIK_NUMPAD4))
+	{
+		pos.x += 1.0f;
+	}
+	//右
+	if (CManager::GetKeyboard()->GetKeyPress(DIK_NUMPAD6))
+	{
+		pos.x -= 1.0f;
+	}
+
+	//手前
+	if (CManager::GetKeyboard()->GetKeyPress(DIK_NUMPAD2))
+	{
+		pos.z += 1.0f;
+	}
+	//奥
+	if (CManager::GetKeyboard()->GetKeyPress(DIK_NUMPAD8))
+	{
+		pos.z -= 1.0f;
+	}
+
+	SetPos(pos);
+#endif
 }
 
 //=============================================================================
@@ -125,20 +165,21 @@ void CPassingPenguin::Update(void)
 //=============================================================================
 void CPassingPenguin::Draw(void)
 {
-	//描画
+	//階層構造付きモデルクラスの描画
 	CModelHierarchy::Draw();
 }
 
-//=============================================================================
-//passingpenguinクラスのモデルの描画処理
-//=============================================================================
-void CPassingPenguin::DrawModel(void)
-{
-}
-
-//=============================================================================
-//passingpenguinクラスのシェーダーの設定処理
-//=============================================================================
-void CPassingPenguin::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pModelData)
-{
-}
+////=============================================================================
+////passingpenguinクラスのモデルの描画処理
+////=============================================================================
+//void CPassingPenguin::DrawModel(void)
+//{
+//	
+//}
+//
+////=============================================================================
+////passingpenguinクラスのシェーダーの設定処理
+////=============================================================================
+//void CPassingPenguin::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pModelData)
+//{
+//}
