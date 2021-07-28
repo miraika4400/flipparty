@@ -23,6 +23,13 @@ class CMotion;
 class CPassingPenguin :public CModelHierarchy
 {
 public:
+	typedef enum
+	{
+		MOVE_DIRECTION_LEFT = 0,
+		MOVE_DIRECTION_RIGHT,
+		MOVE_DIRECTION_MAX
+	}MOVE_DIRECTION;
+
 	CPassingPenguin();
 	~CPassingPenguin();
 	static CPassingPenguin *Create(D3DXVECTOR3 pos);
@@ -35,15 +42,15 @@ public:
 	void Draw(void);
 
 private:
-	//void DrawModel(void);// モデルの描画
-	//void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
-
+	void DrawModel(void);// モデルの描画
+	void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
 
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
 	static int m_nPartsNum;	//モデルパーツ数
 	static char m_achAnimPath[64];   // モーションテキストのパス格納用
 	CMotion *m_pMotion;              // モーションポインタ
-
+	int m_facePattern;
+	MOVE_DIRECTION m_moveDirection;	//移動方向
 };
 #endif 
