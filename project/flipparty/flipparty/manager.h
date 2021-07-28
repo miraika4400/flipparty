@@ -28,6 +28,7 @@ class CResult;
 class CFade;
 class CTutorial;
 class CPause;
+class CCamera;
 
 //=============================
 // クラス定義
@@ -76,6 +77,8 @@ public:
 	static void SetActivePause(bool bPause) { m_bPause = bPause; }         // ポーズのセット
 	static bool GetActivePause(void) { return m_bPause; }                  // フェードの取得処理
 
+	static CCamera *GetCamera(void) { return m_pCamera; }                // カメラポインタ
+	static void SetCamera(CCamera * pCamera);             // カメラクラスのセット処理
 private:
 	//============
 	// メンバ変数
@@ -93,7 +96,9 @@ private:
 	static CFade*m_pFade;                    // フェードポインタ
 	static CTutorial*m_pTutorial;            // チュートリアル
 	static CPause*m_pPause;                  // ポーズポインタ
+	static CCamera*m_pCamera;                // カメラ
 	static bool m_bPause;                    // ポーズフラグ
+	
 };
 
 #endif

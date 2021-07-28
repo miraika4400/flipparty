@@ -153,7 +153,7 @@ void CFlyGamePlayer::ManageState(void)
 
 		if (m_nCntState == 0) 
 		{
-			SetMotion(MOTION_MINIRESULT_3);
+			SetMotion(MOTION_THUNDER);
 			SetMoveFlag(false);
 			SetFacePattern(FACE_PATTERN_NO_GOOD);
 		}

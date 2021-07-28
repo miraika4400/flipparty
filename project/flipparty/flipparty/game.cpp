@@ -41,7 +41,6 @@
 //=============================
 // 静的メンバ変数宣言
 //=============================
-CCamera *CGame::m_pCamera = {};       // カメラクラスポインタ
 CLight  *CGame::m_pLight = NULL;      // ライトクラスポインタ
 CRuleManager* CGame::m_pRuleManager = NULL; // ルールマネージャークラス
 
@@ -113,10 +112,11 @@ HRESULT CGame::Init(void)
 void CGame::Uninit(void)
 {
 	// カメラクラスの解放処理
-	if (m_pCamera != NULL)
+	CCamera * pCamera = CManager::GetCamera();
+	if (pCamera != NULL)
 	{
-		m_pCamera->Uninit();
-		m_pCamera = NULL;
+		CManager::SetCamera(NULL);
+		pCamera = NULL;
 	}
 	
 	// ライト
@@ -151,11 +151,11 @@ void CGame::Update(void)
 	}
 
 	// カメラクラス更新処理
-	if (m_pCamera != NULL)
+	CCamera * pCamera = CManager::GetCamera();
+	if (pCamera != NULL)
 	{
-		m_pCamera->Update();
+		pCamera->Update();
 	}
-
 
 #ifdef _DEBUG
 	// デバッグ用画面遷移コマンド
@@ -188,25 +188,10 @@ void CGame::Update(void)
 //=============================
 void CGame::Draw(void)
 {
+	CCamera * pCamera = CManager::GetCamera();
     // カメラのセット
-    if (m_pCamera != NULL)
+    if (pCamera != NULL)
     {
-        m_pCamera->SetCamera();
+		pCamera->SetCamera();
     }
-}
-
-//=============================
-// カメラクラスのセット処理
-//=============================
-void CGame::SetCamera(CCamera * pCamera)
-{
-	// カメラクラスの解放処理
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Uninit();
-		m_pCamera = NULL;
-	}
-
-	// セット
-	m_pCamera = pCamera;
 }

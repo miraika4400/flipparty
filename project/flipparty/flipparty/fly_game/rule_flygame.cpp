@@ -21,6 +21,7 @@
 #include "cloud.h"
 #include "thunder.h"
 #include "iceberg.h"
+#include "manager.h"
 
 //******************************
 // マクロ定義
@@ -70,7 +71,7 @@ HRESULT CRuleFly::Init(void)
 	//CBg::Create();
 
 	// カメラクラスの生成
-	CGame::SetCamera(CFlyGameCamera::Create());
+	CManager::SetCamera(CFlyGameCamera::Create());
 
 	// プレイヤー数の取得
 	int nPlayNum = CCountSelect::GetPlayerNum();
@@ -138,7 +139,7 @@ void CRuleFly::Update(void)
 		else
 		{
 			// カメラクラス
-			CGame::SetCamera(CFlyGameCamera::Create());
+			CManager::SetCamera(CFlyGameCamera::Create());
 		}
 	}
 }

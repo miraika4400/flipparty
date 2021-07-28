@@ -224,7 +224,7 @@ void CIceberg::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * p
 		// シェーダーに情報を渡す
 		D3DXMATRIX mat;
 		D3DXMatrixIdentity(&mat);
-		mat = pModelData->mtxWorld * (*CGame::GetCamera()->GetViewMtx())* (*CGame::GetCamera()->GetProjectionMtx());
+		mat = pModelData->mtxWorld * (*CManager::GetCamera()->GetViewMtx())* (*CManager::GetCamera()->GetProjectionMtx());
 		// ワールドプロジェクション
 		pEffect->SetMatrix("WorldViewProj", &mat);
 		// ワールド座標
@@ -233,7 +233,7 @@ void CIceberg::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * p
 		D3DXVECTOR3 lightDir = CGame::GetLight()->GetDir();
 		pEffect->SetFloatArray("LightDirection", (float*)&D3DXVECTOR3(lightDir.x, -lightDir.y, -lightDir.z), 3);
 		// 視点位置
-		D3DXVECTOR3 eye = CGame::GetCamera()->GetPos();
+		D3DXVECTOR3 eye = CManager::GetCamera()->GetPos();
 		pEffect->SetFloatArray("Eye", (float*)&eye, 3);
 
 	}

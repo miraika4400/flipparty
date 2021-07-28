@@ -23,6 +23,7 @@
 #define FLIPPER_NUM 2 // 手の数
 #define RIGHT_FLIPPER_PARTS_NUM 5 // 右羽のパーツ番号
 #define LEFT_FLIPPER_PARTS_NUM  4 // 左羽のパーツ番号
+#define PLAYER_HEAD_PARTS_NUM 2
 #define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-60.0f)           // 右羽を上げたときの角度
 #define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)            // 右羽を下げたときの角度
 #define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
@@ -56,7 +57,9 @@ public:
 		MOTION_MINIRESULT_2, // ミニリザルト2位
 		MOTION_MINIRESULT_3, // ミニリザルト3位
 		MOTION_MINIRESULT_4, // ミニリザルト最下位
-		MOTION_FLY,          // アイドル
+		MOTION_FLY,          // 飛び
+		MOTION_THUNDER,      // 雷
+		MOTION_FALL,         // 転ぶ
 		MOTION_MAX
 	}MOTION_TYPE;
 

@@ -35,6 +35,7 @@
 #define FACE_PARTS_NUMBER 3  // 表情パーツのパーツ番号
 #define FACE_PATTERN 3       // 表情パターン数
 #define FACE_TEX_V (1.0f/(float)FACE_PATTERN) * (float)m_facePattern
+#define PLAYER_RESULT_WORST_ROT_X D3DXToRadian(70.0f) // 最下位の時の回転軸のXの値
 
 //*****************************
 // 静的メンバ変数宣言
@@ -43,12 +44,15 @@ CResourceModel::Model CPlayer::m_model[MAX_PARTS_NUM] = {};
 int CPlayer::m_nPartsNum = 0;
 char CPlayer::m_achAnimPath[MOTION_MAX][64]
 {
-	{ "./data/Texts/motion/idol.txt" },          // 待機アニメーション
+	{ "./data/Texts/motion/idol.txt" },         // 待機アニメーション
 	{ "./data/Texts/motion/miniresult_1.txt" }, // 一位アニメーション
 	{ "./data/Texts/motion/miniresult_2.txt" }, // 二位アニメーション
 	{ "./data/Texts/motion/miniresult_3.txt" }, // 三位アニメーション
 	{ "./data/Texts/motion/miniresult_4.txt" }, // 最下位アニメーション
 	{ "./data/Texts/motion/fly.txt" },          // flyアニメーション
+	{ "./data/Texts/motion/thunder.txt" },      // 雷アニメーション
+	{ "./data/Texts/motion/fall.txt" },         // 転ぶ アニメーション
+	
 
 };
 
@@ -266,6 +270,21 @@ void CPlayer::Update(void)
 	if (m_pPlayerNumIcon != NULL)
 	{
 		m_pPlayerNumIcon->SetPos(PLAYER_NUMBER_ICON_POS);
+	}
+
+	// アクティブモーションの管理
+	if (m_pActiveMotion != NULL && !m_pActiveMotion->GetActiveMotion())
+	{
+		if (m_pActiveMotion == m_apMotion[MOTION_FALL])
+		{
+			SetMotion(MOTION_MINIRESULT_4);
+			D3DXVECTOR3 rot = GetRot();
+			m_pActiveMotion->Update();
+		}
+		else
+		{
+			m_pActiveMotion = NULL;
+		}
 	}
 
 #ifdef _DEBUG
@@ -557,16 +576,16 @@ void CPlayer::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pM
 		// シェーダーに情報を渡す
 		D3DXMATRIX mat;
 		D3DXMatrixIdentity(&mat);
-		mat = pModelData->mtxWorld * (*CGame::GetCamera()->GetViewMtx())* (*CGame::GetCamera()->GetProjectionMtx());
+		mat = pModelData->mtxWorld * (*CManager::GetCamera()->GetViewMtx())* (*CManager::GetCamera()->GetProjectionMtx());
 		// ワールドプロジェクション
 		pEffect->SetMatrix("WorldViewProj", &mat);
 		// ワールド座標
 		pEffect->SetMatrix("World", &pModelData->mtxWorld);
 		// ライトディレクション
-		D3DXVECTOR3 lightDir = CGame::GetLight()->GetDir();
+		D3DXVECTOR3 lightDir = LIGHT_DIR_BASE;
 		pEffect->SetFloatArray("LightDirection", (float*)&D3DXVECTOR3(lightDir.x, -lightDir.y, -lightDir.z), 3);
 		// 視点位置
-		D3DXVECTOR3 eye = CGame::GetCamera()->GetPos();
+		D3DXVECTOR3 eye = CManager::GetCamera()->GetPos();
 		pEffect->SetFloatArray("Eye", (float*)&eye, 3);
 	}
 }

@@ -197,7 +197,7 @@ void CRuleManager::SetRule(RULE_TYPE ruleNext)
 {
 	ReConnection();
 	CManager::GetGame()->ReConnection();
-	
+	CManager::SetCamera(NULL);
 	ReleaseAll();
 
 	SetPriority(OBJTYPE_SYSTEM);

@@ -14,11 +14,13 @@
 //*****************************
 #include "main.h"
 #include "scene.h"
+#include "rule_base.h"
 
 //=============================
 // 前方宣言
 //=============================
 class CPolygon;
+class CPlayer;
 
 //*****************************
 //クラス定義
@@ -45,7 +47,9 @@ private:
 	//============
 	// メンバ変数
 	//============
-	CPolygon *m_pPolygon;                 // ポリゴン
+	CPolygon *m_pPolygon;                // ポリゴン
+	CPlayer * m_apPlayer[MAX_PLAYER_NUM]; // プレイヤーポインタ
+	int m_nCntFallTime;                  // プレイヤーがこけるタイミングのカウント用
 };
 
 #endif

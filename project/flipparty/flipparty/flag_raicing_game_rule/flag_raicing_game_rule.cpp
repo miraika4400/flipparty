@@ -99,7 +99,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	m_bPlay = true;
 	m_nRandTime = TIME_SET;
 	//カメラの生成
-	CGame::SetCamera(CFlagRaicingGameCamera::Create());
+	CManager::SetCamera(CFlagRaicingGameCamera::Create());
 
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
