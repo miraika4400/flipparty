@@ -18,8 +18,9 @@
 //*****************************************************************************
 class CSnow : CScene2d
 {
-public:
+    static CSnow * m_pInstance;// インスタンスへのポインタ
     CSnow();
+public:
     ~CSnow();
 
     static CSnow* Create(void);
@@ -30,6 +31,10 @@ public:
     void Draw(void);
 
     void Scroll(void);
+
+    // Get関数
+    static CSnow* GetInstancce(void) { return m_pInstance; }        // インスタンスのゲッタ
+
 private:
     D3DXVECTOR2 m_Speed;            // uvの移動スピード
     D3DXVECTOR2 m_vtx[NUM_VERTEX];  // UV座標

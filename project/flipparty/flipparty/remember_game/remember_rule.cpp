@@ -40,7 +40,7 @@
 // 静的メンバ変数
 //*****************************************************************************
 CRememjber_rule* CRememjber_rule::m_pinstace = nullptr;// インスタンスへのポインタ
-CRememjber_rule::UI_DATA CRememjber_rule::UIData[MAX_UI_REMEMBER] = 
+CRememjber_rule::UI_DATA CRememjber_rule::m_UIData[MAX_UI_REMEMBER] = 
 {
     { D3DXVECTOR3(500, 100.0f, 0.0f), D3DXVECTOR3(64.f, 16.f, 0.0f) ,CResourceTexture::TEXTURE_UI_000 },
     { D3DXVECTOR3(700, 100.0f, 0.0f), D3DXVECTOR3(128.f, 32.f, 0.0f) ,CResourceTexture::TEXTURE_UI_001 }
@@ -59,8 +59,8 @@ CRememjber_rule::CRememjber_rule()
     m_nInputCount = 0;      // 入力を受け付けないカウント
     ZeroMemory(&m_pPolygon, sizeof(m_pPolygon));        // ポリゴンへのポインタ
     m_IsinputEnd = false;                               // プレイヤーが入力し終わったかのフラグ
-    ZeroMemory(&FlipperData, sizeof(FlipperData));      // 見本データの配列
-    ZeroMemory(&PlayerInput, sizeof(PlayerInput));      // プレイヤーの入力情報
+    ZeroMemory(&m_FlipperData, sizeof(m_FlipperData));      // 見本データの配列
+    ZeroMemory(&m_PlayerInput, sizeof(m_PlayerInput));      // プレイヤーの入力情報
 
     m_pPlayer.clear();// プレイヤーの初期化
 }
@@ -108,8 +108,8 @@ HRESULT CRememjber_rule::Init(void)
     m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
     m_nInputCount = 0;      // プレイヤーが入力できるようになるまでのカウント
 
-    ZeroMemory(&FlipperData, sizeof(FlipperData));      // 見本データの配列
-    ZeroMemory(&PlayerInput, sizeof(PlayerInput));      // プレイヤーの入力情報
+    ZeroMemory(&m_FlipperData, sizeof(m_FlipperData));      // 見本データの配列
+    ZeroMemory(&m_PlayerInput, sizeof(m_PlayerInput));      // プレイヤーの入力情報
     ZeroMemory(&m_apAnswer, sizeof(m_apAnswer));        // 回答のポリゴン表示
     m_IsPlay = true;                // ゲームをプレイ中かどうか
     m_IsSnow = false;       // 吹雪が出ているかどうか
@@ -129,7 +129,7 @@ HRESULT CRememjber_rule::Init(void)
     // プレイヤーの人数分プレイヤー生成
     for (int nCntPlayer = 0; nCntPlayer < m_nNumPlayer; nCntPlayer++)
     {
-        float posX = 0 + ((float)(nCntPlayer)*PLAYER_SPACE) / 2;// 位置の調整
+        float posX = 0 + ((float)(nCntPlayer)*PLAYER_SPACE) / 2 * -1;// 位置の調整
         // プレイヤーの生成
         CPlayerRemember* pPlayer;
         pPlayer = CPlayerRemember::Create(D3DXVECTOR3(posX, -35.0f, 0.0f), nCntPlayer);
@@ -144,8 +144,8 @@ HRESULT CRememjber_rule::Init(void)
 
     for (int nCntUI = 0; nCntUI < MAX_UI_REMEMBER; nCntUI++)
     {
-        m_pPolygon[nCntUI] = CPolygon::Create(UIData[nCntUI].pos, UIData[nCntUI].size, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
-        m_pPolygon[nCntUI]->BindTexture(CResourceTexture::GetTexture(UIData[nCntUI].pTexture));
+        m_pPolygon[nCntUI] = CPolygon::Create(m_UIData[nCntUI].pos, m_UIData[nCntUI].size, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
+        m_pPolygon[nCntUI]->BindTexture(CResourceTexture::GetTexture(m_UIData[nCntUI].pTexture));
     }
 
     ChangeTurnUI();
@@ -237,39 +237,28 @@ void CRememjber_rule::InputPlayer(void)
     // プレイヤーがターン数と同じ数入力したら
     if (m_nNumInput == m_nTurn + 1)
     {
-        FlipperData[m_nTurn] = PlayerInput[m_nTurn];    // プレイヤーの入力を見本データに保存
         m_nNumInput = 0;                                // 入力回数をリセット
         m_nTurn++;                                      // ターン数を増やす
         TurnChange();                                   // プレイヤーのターン変更
     }
-    else if(m_pPlayer[m_nTurnPlayer]->GetIsLoss())
+    else if (m_pPlayer[m_nTurnPlayer]->GetIsLoss())
     {
         TurnChange();                                   // プレイヤーのターン変更
     }
 
-    //プレイヤーの入力内容を比較用データに保存
-    // 右を押したとき
-    if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lRz <= -10 ||
-        CManager::GetKeyboard()->GetKeyTrigger(DIK_UP))
-    {
-        PlayerInput[m_nNumInput] = CFlipper::FLIPPER_TYPE_RIGHT;
-        m_nInputCount = INPUT_COUNT;
-        // 右手を上げる
-        ControllFlipper(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
-        Comparison();                                   // 入力内容の比較
-        m_nNumInput++;
+    // 条件の定義
+    // 右手を上げる条件
+    bool IsRight = CManager::GetJoypad()->GetStick(m_nTurnPlayer).lRz <= -10 || CManager::GetKeyboard()->GetKeyTrigger(DIK_UP);
+    // 左手をあげる条件
+    bool IsLeft = CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 || CManager::GetKeyboard()->GetKeyTrigger(DIK_W);
 
+    if (IsRight)
+    {    // 右を上げたとき
+        SetRememberData(CFlipper::FLIPPER_TYPE_RIGHT);
     }
-    // 左を押したとき
-    else if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 ||
-        CManager::GetKeyboard()->GetKeyTrigger(DIK_W))
-    {
-        PlayerInput[m_nNumInput] = CFlipper::FLIPPER_TYPE_LEFT;
-        m_nInputCount = INPUT_COUNT;
-        // 左手を上げる
-        ControllFlipper(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
-        Comparison();                                   // 入力内容の比較
-        m_nNumInput++;
+    else if (IsLeft)
+    {    // 左を上げたとき
+        SetRememberData(CFlipper::FLIPPER_TYPE_LEFT);
     }
 }
 
@@ -312,7 +301,7 @@ void CRememjber_rule::TurnChange(void)
     m_pPlayer[m_nTurnPlayer]->SetMoveFlag(true);
 
     // カメラの位置変更
-    CCameraRemember::GetInsutance()->SetDest(CAMERA_POS * m_nTurnPlayer);
+    CCameraRemember::GetInsutance()->SetDest(CAMERA_POS * m_nTurnPlayer*-1);
 
    // テクスチャ変更
    ChangeTurnUI();
@@ -341,18 +330,17 @@ void CRememjber_rule::PlayerChange(int nPlayerNum)
 //=============================================================================
 void CRememjber_rule::Comparison(void)
 {
-
-    // データの比較
-        if (FlipperData[m_nNumInput] != PlayerInput[m_nNumInput])
+    // 見本と入力したデータの比較
+        if (m_FlipperData[m_nNumInput] != m_PlayerInput[m_nNumInput])
         {
             // 外れた場合×を表示
             m_apAnswer->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
+
             // ミスしたプレイヤーの順位をつける
             Ranking();
-            return;
         }
         else
-        {
+        {   // 正解の場合〇を表示
             m_apAnswer->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_MARU));
         }
 }
@@ -375,8 +363,27 @@ void CRememjber_rule::Ranking(void)
             m_pPlayer[m_aTurn[nRank]]->SetRank(nRank);
         }
         m_IsPlay = false;
+        CSnow::GetInstancce()->CSnow::Uninit();
         CMiniResult::Create();
     }
+}
+
+//=============================================================================
+// [SetRememberData] 入力した後の処理
+//=============================================================================
+void CRememjber_rule::SetRememberData(CFlipper::FLIPPER_TYPE type)
+{
+    m_PlayerInput[m_nNumInput] = type;                 // 入力した情報を保存
+
+    // 入力した回数がターンと同じとき
+    if (m_nNumInput == m_nTurn)
+        m_FlipperData[m_nTurn] = m_PlayerInput[m_nTurn];    // プレイヤーの入力を見本データに保存
+
+    Comparison();                                   // 入力内容の比較
+
+    m_nInputCount = INPUT_COUNT;                     // 再入力できるまでの時間をセット
+    ControllFlipper(type, CFlipper::FLIPPERSTATE_UP);// 手をあげるモーションにする
+    m_nNumInput++;                                   // 入力した回数の追加
 }
 
 //=============================================================================

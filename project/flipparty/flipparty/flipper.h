@@ -27,6 +27,7 @@ public:
 	//============
 	typedef enum
 	{
+
 		FLIPPER_TYPE_LEFT = 0,  // ç∂
 		FLIPPER_TYPE_RIGHT,     // âE
 		FLIPPER_TYPE_MAX
