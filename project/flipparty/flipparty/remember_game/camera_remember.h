@@ -19,12 +19,13 @@
 class CCameraRemember : public CCamera
 {
     static CCameraRemember* m_pInsutance;// オブジェクトのポインタ
+    CCameraRemember();
+
 public:
 
     //============
     // メンバ関数
     //============
-    CCameraRemember();
     ~CCameraRemember();
 
     static CCameraRemember *Create(void);
