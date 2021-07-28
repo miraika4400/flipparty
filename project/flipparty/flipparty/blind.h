@@ -33,7 +33,7 @@ public:
 	CBlind();
 	~CBlind();
 
-	static CBlind *Create(int nTime);
+	static CBlind *Create(int nTime,int nStartTime);
 
 	HRESULT Init(void);
 	void Uninit(void);
@@ -44,6 +44,7 @@ public:
 	BLIND_STATE GetState(void) { return m_state; }
 private:
 	int m_nTime;	//タイマー
+	int m_nMoveStartTime;	//移動開始タイム
 	BLIND_STATE m_state;	//ブラインドの状態
 };
 

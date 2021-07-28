@@ -43,7 +43,7 @@ CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 #define FLAG_CAPTAIN_POS_X_NUM 0.0f		// キャプテンのX座標
 #define FLAG_CAPTAIN_POS_Y_NUM -30.0f	// キャプテンのY座標
 #define FLAG_CAPTAIN_POS_Z_NUM -150.0f	// キャプテンのZ座標
-
+#define PASSING_PENGUIN_POS D3DXVECTOR3(400.0f, -30.0f, -100.0f)
 #define RAND_FLAG rand() % 180 + 50		// フラッグの上げる間隔の設定
 
 //======================================================
@@ -61,6 +61,7 @@ CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 	m_pTimeLimit = NULL;
 	m_bPlay = true;
 	m_pBlind = NULL;
+	m_pPassingPenguin = NULL;
 }
 
 //======================================================
@@ -118,9 +119,10 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	m_pTimeLimit = CTimeLimit::Create(TRUN_SET);
 	
 	//ブラインドの生成
-	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit());
+	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit(), (TRUN_SET / 2));
 
-	CPassingPenguin::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM+100.0f, FLAG_CAPTAIN_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM));
+	//通過ペンギンの生成
+	m_pPassingPenguin = CPassingPenguin::Create(PASSING_PENGUIN_POS);
 	return S_OK;
 }
 
@@ -156,9 +158,13 @@ void CFlagRaicingGame_rule::Update(void)
 			m_nCntTime = 0;				// タイムの初期化
 			FlagPoint();				// ポイント追加
 		}
+
+		//制限時間を取得
+		int nTimeLimit = m_pTimeLimit->GetTimeLimit();
+
 		// 上限のターン数を上回ったらゲームを終了させる
 		// 制限時間が0以下の時
-		if (m_pTimeLimit->GetTimeLimit() <= 0)
+		if (nTimeLimit <= 0)
 		{
 			JudgeRank();
 		}
@@ -166,9 +172,23 @@ void CFlagRaicingGame_rule::Update(void)
 		//ブラインドに現在タイムを与える
 		if (m_pBlind)
 		{
-			m_pBlind->SetTime(m_pTimeLimit->GetTimeLimit());
+			m_pBlind->SetTime(nTimeLimit);
+		}
+
+		if (nTimeLimit > (TRUN_SET / 2))
+		{
+			if (nTimeLimit == 35)
+			{
+				m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_LEFT);
+			}
+			else if (nTimeLimit == 25)
+			{
+				m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_RIGHT);
+			}
 		}
 	}
+
+	
 }
 
 //======================================================

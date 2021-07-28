@@ -9,6 +9,7 @@
 // インクルードファイル
 //*****************************************************************************
 #include "passingpenguin.h"
+#include "manager.h"
 #include "renderer.h"
 #include "motion.h"
 #include "resource_texture.h"
@@ -17,7 +18,7 @@
 #include "camera_base.h"
 #include "light.h"
 #ifdef _DEBUG
-#include "manager.h"
+
 #include "keyboard.h"
 #endif
 
@@ -28,7 +29,10 @@
 #define FACE_PARTS_NUMBER 3  // 表情パーツのパーツ番号
 #define FACE_PATTERN 3       // 表情パターン数
 #define FACE_TEX_V (1.0f/(float)FACE_PATTERN) * (float)m_facePattern
-#define MOVE_SPEED 2.0f	//移動速度
+#define MOVE_SPEED 3.0f	//移動速度
+#define LEFT_START_POS_X -320.0f
+#define RIGHT_START_POS_X 320.0f
+
 //=============================================================================
 //静的メンバ変数宣言
 //=============================================================================
@@ -44,6 +48,8 @@ CPassingPenguin::CPassingPenguin()
 	m_pMotion = NULL;
 	m_facePattern = 0;
 	m_moveDirection = MOVE_DIRECTION_LEFT;
+	m_state = STATE_WAIT;
+	m_move = VEC3_ZERO;
 }
 
 //=============================================================================
@@ -146,38 +152,11 @@ void CPassingPenguin::Uninit(void)
 //=============================================================================
 void CPassingPenguin::Update(void)
 {
-	D3DXVECTOR3 pos = GetPos();
-
-	pos.x += MOVE_SPEED;
-#ifdef _DEBUG
-	
-
-	//左
-	if (CManager::GetKeyboard()->GetKeyPress(DIK_NUMPAD4))
+	if (m_state == STATE_MOVE)
 	{
-		pos.x += 1.0f;
+		//移動
+		Move();
 	}
-	//右
-	if (CManager::GetKeyboard()->GetKeyPress(DIK_NUMPAD6))
-	{
-		pos.x -= 1.0f;
-	}
-
-	//手前
-	if (CManager::GetKeyboard()->GetKeyPress(DIK_NUMPAD2))
-	{
-		pos.z += 1.0f;
-	}
-	//奥
-	if (CManager::GetKeyboard()->GetKeyPress(DIK_NUMPAD8))
-	{
-		pos.z -= 1.0f;
-	}
-
-	
-#endif
-
-	SetPos(pos);
 }
 
 //=============================================================================
@@ -187,6 +166,70 @@ void CPassingPenguin::Draw(void)
 {
 	//階層構造付きモデルクラスの描画
 	CModelHierarchy::Draw();
+}
+
+//=============================================================================
+//passingpenguinクラスの移動方向の設定処理
+//=============================================================================
+void CPassingPenguin::SetMoveDirection(MOVE_DIRECTION moveDirection)
+{
+	//移動方向を設定
+	m_moveDirection = moveDirection;
+
+	//現在位置を取得
+	D3DXVECTOR3 pos = GetPos();
+
+	//向きを取得
+	D3DXVECTOR3 rot = GetRot();
+
+	switch (m_moveDirection)
+	{
+	case MOVE_DIRECTION_LEFT:
+		pos = D3DXVECTOR3(LEFT_START_POS_X, pos.y, pos.z);
+		m_move = D3DXVECTOR3(MOVE_SPEED, 0.0f, 0.0f);
+		//rot = D3DXVECTOR3(rot.x, D3DXToRadian(-90.0f), rot.z);
+
+		break;
+
+	case MOVE_DIRECTION_RIGHT:
+		pos = D3DXVECTOR3(RIGHT_START_POS_X, pos.y, pos.z);
+		m_move = D3DXVECTOR3(-MOVE_SPEED, 0.0f, 0.0f);
+		//rot = D3DXVECTOR3(rot.x, D3DXToRadian(90.0f), rot.z);
+	
+		break;
+	default:
+		break;
+	}
+	
+	//位置の設定
+	SetPos(pos);
+
+	//向きの設定
+	SetRot(rot);
+
+	//状態を移動へ設定
+	m_state = STATE_MOVE;
+}
+
+//=============================================================================
+//passingpenguinクラスの移動処理
+//=============================================================================
+void CPassingPenguin::Move(void)
+{
+	//位置の取得
+	D3DXVECTOR3 pos = GetPos();
+
+	//移動量を与える
+	pos += m_move;
+
+	//位置の設定
+	SetPos(pos);
+
+	if (pos.x <= LEFT_START_POS_X || pos.x >= RIGHT_START_POS_X)
+	{
+		//状態を待機に設定
+		m_state = STATE_WAIT;
+	}
 }
 
 //=============================================================================

@@ -23,12 +23,21 @@ class CMotion;
 class CPassingPenguin :public CModelHierarchy
 {
 public:
+	//移動方向の列挙型
 	typedef enum
 	{
-		MOVE_DIRECTION_LEFT = 0,
-		MOVE_DIRECTION_RIGHT,
+		MOVE_DIRECTION_LEFT = 0,	//左へ移動
+		MOVE_DIRECTION_RIGHT,		//右へ移動
 		MOVE_DIRECTION_MAX
 	}MOVE_DIRECTION;
+	
+	//状態の列挙型
+	typedef enum
+	{
+		STATE_WAIT = 0,	//待機
+		STATE_MOVE,		//移動
+		STATE_MAX
+	}STATE;
 
 	CPassingPenguin();
 	~CPassingPenguin();
@@ -41,7 +50,9 @@ public:
 	void Update(void);
 	void Draw(void);
 
+	void SetMoveDirection(MOVE_DIRECTION moveDirection);
 private:
+	void Move(void);
 	void DrawModel(void);// モデルの描画
 	void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
 
@@ -52,5 +63,7 @@ private:
 	CMotion *m_pMotion;              // モーションポインタ
 	int m_facePattern;
 	MOVE_DIRECTION m_moveDirection;	//移動方向
+	STATE m_state;	//状態
+	D3DXVECTOR3 m_move;	//移動量
 };
 #endif 
