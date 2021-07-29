@@ -80,7 +80,6 @@ void CSnow::Uninit(void)
     // インスタンスの破棄
     if (m_pInstance)
     {
-      delete m_pInstance;
       m_pInstance = nullptr;
     }
 }

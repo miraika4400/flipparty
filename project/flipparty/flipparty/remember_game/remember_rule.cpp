@@ -254,11 +254,12 @@ void CRememjber_rule::InputPlayer(void)
 
     if (IsRight)
     {    // âEÇè„Ç∞ÇΩÇ∆Ç´
-        SetRememberData(CFlipper::FLIPPER_TYPE_RIGHT);
+        SetRememberData(CFlipper::FLIPPER_TYPE_LEFT);
     }
     else if (IsLeft)
     {    // ç∂Çè„Ç∞ÇΩÇ∆Ç´
-        SetRememberData(CFlipper::FLIPPER_TYPE_LEFT);
+        
+        SetRememberData(CFlipper::FLIPPER_TYPE_RIGHT);
     }
 }
 
@@ -268,7 +269,7 @@ void CRememjber_rule::InputPlayer(void)
 void CRememjber_rule::ChangeTurnUI(void)
 {
     D3DXVECTOR2 Vtx[NUM_VERTEX];
-    float fv = 1.0/ MAX_PLAYER_NUM;
+    float fv = 1.0/ MAX_PLAYER_NUM;// 1ñáìñÇΩÇËÇÃëÂÇ´Ç≥
 
     Vtx[0] = {0.0,fv * m_nTurnPlayer};
     Vtx[1] = {1.0,fv * m_nTurnPlayer};
