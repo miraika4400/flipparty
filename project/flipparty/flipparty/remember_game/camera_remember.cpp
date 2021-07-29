@@ -18,7 +18,7 @@ CCameraRemember* CCameraRemember::m_pInsutance = nullptr;
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define CAMERA_POS_V_REMEMBER D3DXVECTOR3(0.0f,0.0f, -150.0f)  // 位置
+#define CAMERA_POS_V_REMEMBER D3DXVECTOR3(0.0f,0.0f, 150.0f)  // 位置
 #define CAMERA_POS_R_REMEMBER D3DXVECTOR3(0.0f, 30.0f, 0.0f) // 注視点
 
 #define CAMERA_MOVE_SPEED (20)// カメラの移動速度
@@ -45,11 +45,9 @@ CCameraRemember::~CCameraRemember()
 //=============================================================================
 CCameraRemember * CCameraRemember::Create(void)
 {
-    if (!m_pInsutance)
-    {
-        m_pInsutance = new CCameraRemember;
-        m_pInsutance->Init();
-    }
+    m_pInsutance = new CCameraRemember;
+    
+    m_pInsutance->Init();
 
     return m_pInsutance;
 }
@@ -88,7 +86,6 @@ void CCameraRemember::Update(void)
 //=============================================================================
 void CCameraRemember::SetCamera(void)
 {
-
     CCamera::SetCamera();
 }
 

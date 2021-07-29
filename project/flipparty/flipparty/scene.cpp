@@ -16,9 +16,10 @@
 //静的メンバ変数宣言
 //***********************************
 //CScene *CScene::m_apScene[MAX_SCENE] = {};
-CScene * CScene::m_pTop[PRIORITY_NUM] = {};                // 先頭
-CScene * CScene::m_pCur[PRIORITY_NUM] = {};                // 最後
+CScene * CScene::m_pTop[PRIORITY_NUM] = {};  // 先頭
+CScene * CScene::m_pCur[PRIORITY_NUM] = {};  // 最後
 int CScene::m_nIDAll = 0;
+
 //===================================
 // コンストラクタ
 //===================================

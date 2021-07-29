@@ -6,6 +6,10 @@
 //=============================================================================
 #include "player_remember.h"
 
+//*****************************************************************************
+// マクロ定義
+//*****************************************************************************
+#define REMEMBER_PLAYER_ROT D3DXToRadian(180)
 //=============================================================================
 // [CPlayerRemember]コンストラクタ
 //=============================================================================
@@ -34,7 +38,9 @@ CPlayerRemember * CPlayerRemember::Create(D3DXVECTOR3 pos, int nPlayerNum)
 
         pPlayer->SetPlayerNumber(nPlayerNum);   // プレイヤー番号のセット
         pPlayer->SetPos(pos);                   // プレイヤーの位置を設定
+        pPlayer->SetRot({0.0f, REMEMBER_PLAYER_ROT, 0.0f});// プレイヤーの角度設定
         pPlayer->SetPriority(OBJTYPE_PLAYER);   // オブジェクトタイプ
+
         // 初期化
         pPlayer->Init();
     }

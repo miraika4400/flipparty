@@ -52,16 +52,13 @@ public:
 
 	// 取得処理
 	static CLight*GetLight(void) { return m_pLight; }                    // ライトクラスのポインタ
-	static CCamera *GetCamera(void) { return m_pCamera; }                // カメラポインタ
 	static CRuleManager *GetRuleManager(void) { return m_pRuleManager; } // ルールマネージャーポインタ
-	static void SetCamera(CCamera * pCamera);             // カメラクラスのセット処理
 
 private:
 
 	//*****************************
 	// メンバ変数
 	//*****************************
-	static CCamera*m_pCamera;            // カメラ
 	static CLight*m_pLight;              // ライトポインタ
 	static CRuleManager* m_pRuleManager; // ルールマネージャー
 };

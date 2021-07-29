@@ -20,6 +20,7 @@
 #include "timelimit.h"
 #include "blind.h"
 #include "bg.h"
+#include "iceberg.h"
 #include "passingpenguin.h"
 
 //======================================================
@@ -93,13 +94,14 @@ CFlagRaicingGame_rule * CFlagRaicingGame_rule::Create(void)
 //======================================================
 HRESULT CFlagRaicingGame_rule::Init(void)
 {
+	CIceberg::Create(D3DXVECTOR3(0.0f, -100.0f, -1200.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
 	// 背景の生成
 	CBg::Create();
 
 	m_bPlay = true;
 	m_nRandTime = TIME_SET;
 	//カメラの生成
-	CGame::SetCamera(CFlagRaicingGameCamera::Create());
+	CManager::SetCamera(CFlagRaicingGameCamera::Create());
 
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();

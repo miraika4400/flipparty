@@ -39,7 +39,7 @@
 #define BLACKOUT_POS   D3DXVECTOR3(0.0f, 0.0f, 50.0f)
 #define PLAYER_RESULT_WORST_ROT_X D3DXToRadian(70.0f) // 最下位の時の回転軸のXの値
 #define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
-#define PLAYER_HEAD_PARTS_NUM 2
+
 //=============================
 // コンストラクタ
 //=============================
@@ -74,7 +74,7 @@ HRESULT CMiniResult::Init(void)
 	// カメラの切り替え
 	CCamera * pCamera = CCamera::Create();
 	// カメラクラスの生成
-	CGame::SetCamera(pCamera);
+	CManager::SetCamera(pCamera);
 	pCamera->SetCamera();
 
 	// デバイスの取得
@@ -82,7 +82,7 @@ HRESULT CMiniResult::Init(void)
 
 	// 背景を暗くするよう
 	CScene3d * p3DPolygon = CScene3d::Create(BLACKOUT_POS, BLACKOUT_SIZE);
-	p3DPolygon -> SetColor(BLACKOUT_COLOR);      //色の設定
+	p3DPolygon->SetColor(BLACKOUT_COLOR);      //色の設定
 	p3DPolygon->SetPriority(OBJTYPE_MINIRESULT_OBJ); // プライオリティの設定
 
 	// プレイヤー数の取得
@@ -93,7 +93,6 @@ HRESULT CMiniResult::Init(void)
 
 	// 最下位の順位
 	int nWorstRank = pPlayer->GetRank();
-	
 	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
 	{
 		// 最下位の順位
@@ -122,7 +121,7 @@ HRESULT CMiniResult::Init(void)
 		pResultPlayer->SetMoveFlag(false);
 
 		// カメラの方向に体を向ける
-		D3DXVECTOR3 cemeraPos = CGame::GetCamera()->GetPos();
+		D3DXVECTOR3 cemeraPos = CManager::GetCamera()->GetPos();
 		float fRotY = atan2f(createPlayerPos.x - cemeraPos.x, createPlayerPos.z - cemeraPos.z);
 
 		// 角度の調整
@@ -139,14 +138,14 @@ HRESULT CMiniResult::Init(void)
 		{// 最下位
 			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_4);
 			// 角度の調整
-			pResultPlayer->SetRot(D3DXVECTOR3(PLAYER_RESULT_WORST_ROT_X, fRotY, 0.0f));
+			pResultPlayer->SetPos(D3DXVECTOR3(createPlayerPos.x, createPlayerPos.y - 20, createPlayerPos.z));
 			// 表情の設定
 			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
 			pResultPlayer->Draw();
 			D3DXVECTOR3 headPos;
 			headPos.x = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
 			headPos.y = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
-			headPos.z = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 5;
+			headPos.z = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 10;
 			CTearsManager::Create(headPos);
 		}
 		else if (pPlayer->GetRank() == 1)
@@ -168,7 +167,6 @@ HRESULT CMiniResult::Init(void)
 
 		pPlayer = (CPlayer*)pPlayer->GetNext();
 	}
-
 	
 	return S_OK;
 }
@@ -206,6 +204,6 @@ void CMiniResult::Draw(void)
 	// カメラの切り替え
 	CCamera * pCamera = CCamera::Create();
 	// カメラクラスの生成
-	CGame::SetCamera(pCamera);
+	CManager::SetCamera(pCamera);
 	pCamera->SetCamera();
 }

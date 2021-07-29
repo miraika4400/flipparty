@@ -18,7 +18,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MAX_TARN (10)// 最大ターン数(見本データの上限にもなる)
+#define MAX_TARN (128)// 最大ターン数(見本データの上限にもなる)
 #define MAX_UI_REMEMBER (2)     // 使用するUIの数
 
 //*****************************************************************************
@@ -64,6 +64,8 @@ public:
     void Comparison(void);      // 入力内容の比較
     void Ranking(void);         // 順位の設定
 
+    void SetRememberData(CFlipper::FLIPPER_TYPE type);
+
     // Get関数
     CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
 
@@ -73,14 +75,15 @@ private:
     // メンバ関数
     //---------------------
     void ControllFlipper(CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state);
+    bool IsSnowstormTurn(void);
 
     //---------------------
     // メンバ変数
     //---------------------
     // 見本の保存用
-    static UI_DATA UIData[MAX_UI_REMEMBER];     // UIの情報
-    CFlipper::FLIPPER_TYPE FlipperData[MAX_TARN];// 見本データ
-    CFlipper::FLIPPER_TYPE PlayerInput[MAX_TARN];// プレイヤーの入力内容
+    static UI_DATA m_UIData[MAX_UI_REMEMBER];     // UIの情報
+    CFlipper::FLIPPER_TYPE m_FlipperData[MAX_TARN];// 見本データ
+    CFlipper::FLIPPER_TYPE m_PlayerInput[MAX_TARN];// プレイヤーの入力内容
 
     std::vector<CPlayerRemember*> m_pPlayer;     // プレイヤーへのポインタ
     CCamera *m_pCamera;         // カメラへのポインタ
@@ -91,13 +94,14 @@ private:
     int m_aTurn[MAX_PLAYER_NUM];// 順位用
     int m_nTurnPlayer;          // 現在自分の番のプレイヤー番号
     unsigned int m_nInputCount; // 入力を受け付けないカウント
+    unsigned int m_nInputTime;  // 入力の制限時間
     bool m_IsinputEnd;          // プレイヤーの入力が終了しているか
     bool m_IsPlay;              // ゲームをプレイ中かどうか
 
-    CPolygon *m_pPolygon[MAX_UI_REMEMBER];// ポリゴンクラスのポインタ
+    bool m_IsSnow;              // 吹雪が出ているかどうか
 
-    // デバッグ用変数
-    CPolygon *m_apAnswer[MAX_TARN];// 答えの表示用ポリゴン
+    CPolygon *m_pPolygon[MAX_UI_REMEMBER];// ポリゴンクラスのポインタ
+    CPolygon *m_apAnswer;// 答えの表示用ポリゴン
 
 
 };

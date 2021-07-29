@@ -31,6 +31,7 @@
 #include "resource_shader.h"
 #include "player.h"
 #include "Captain.h"
+#include "camera_base.h"
 #include "passingpenguin.h"
 
 //=============================
@@ -47,7 +48,8 @@ CTitle          *CManager::m_pTitle = NULL;          // タイトル
 CResult         *CManager::m_pResult = NULL;         // リザルト
 CFade           *CManager::m_pFade = NULL;           // フェード
 CTutorial       *CManager::m_pTutorial = NULL;       // チュートリアル
-CPause          *CManager::m_pPause = NULL;            // ポーズポインタ
+CPause          *CManager::m_pPause = NULL;          // ポーズポインタ
+CCamera         *CManager::m_pCamera = NULL;         // カメラクラス
 bool             CManager::m_bPause = false;         // ポーズフラグ
 
 //=============================
@@ -369,4 +371,20 @@ void CManager::SetMode(MODE mode)
 	default:
 		break;
 	}
+}
+
+//=============================
+// カメラクラスのセット処理
+//=============================
+void CManager::SetCamera(CCamera * pCamera)
+{
+	// カメラクラスの解放処理
+	if (m_pCamera != NULL)
+	{
+		m_pCamera->Uninit();
+		m_pCamera = NULL;
+	}
+
+	// セット
+	m_pCamera = pCamera;
 }

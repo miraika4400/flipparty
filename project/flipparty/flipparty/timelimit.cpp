@@ -84,7 +84,7 @@ HRESULT CTimeLimit::Init(void)
 	m_nCntTime = 0;
 
 	//更新フラグの初期化
-	m_bIsTimeCount = false;
+	m_bIsTimeCount = true;
 	return S_OK;
 }
 
@@ -114,7 +114,6 @@ void CTimeLimit::Uninit(void)
 //==================================
 void CTimeLimit::Update(void)
 {
-
 	if (m_nLimitTime > 0)
 	{
 		//trueの時のみカウントを進める

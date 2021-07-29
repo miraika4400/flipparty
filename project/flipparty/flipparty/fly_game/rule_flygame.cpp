@@ -20,6 +20,8 @@
 #include "bg.h"
 #include "cloud.h"
 #include "thunder.h"
+#include "iceberg.h"
+#include "manager.h"
 
 //******************************
 // マクロ定義
@@ -64,11 +66,12 @@ CRuleFly * CRuleFly::Create(void)
 //******************************
 HRESULT CRuleFly::Init(void)
 {
+	CIceberg::Create(D3DXVECTOR3(0.0f, 0.0f, -1000.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
 	// 背景の生成
-	CBg::Create();
+	//CBg::Create();
 
 	// カメラクラスの生成
-	CGame::SetCamera(CFlyGameCamera::Create());
+	CManager::SetCamera(CFlyGameCamera::Create());
 
 	// プレイヤー数の取得
 	int nPlayNum = CCountSelect::GetPlayerNum();
@@ -136,7 +139,7 @@ void CRuleFly::Update(void)
 		else
 		{
 			// カメラクラス
-			CGame::SetCamera(CFlyGameCamera::Create());
+			CManager::SetCamera(CFlyGameCamera::Create());
 		}
 	}
 }

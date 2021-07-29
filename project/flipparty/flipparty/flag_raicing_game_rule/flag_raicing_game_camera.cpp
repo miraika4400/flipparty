@@ -72,11 +72,3 @@ HRESULT CFlagRaicingGameCamera::Init(void)
 void CFlagRaicingGameCamera::Update(void)
 {
 }
-
-//******************************
-// カメラのセット
-//******************************
-void CFlagRaicingGameCamera::SetCamera(void)
-{
-	CCamera::SetCamera();
-}
