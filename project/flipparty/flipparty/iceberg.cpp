@@ -9,7 +9,7 @@
 //=============================
 // インクルード
 //=============================
-#include "cloud.h"
+#include "Iceberg.h"
 #include "manager.h"
 #include "renderer.h"
 #include "resource_model.h"
@@ -18,9 +18,6 @@
 #include "light.h"
 #include "resource_shader.h"
 #include "resource_texture.h"
-#include "thunder.h"
-#include "rule_flygame.h"
-#include "player_flygame.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -29,86 +26,72 @@
 //**********************************
 // マクロ定義
 //**********************************
-#define MAX_SIZE  D3DXVECTOR3(1.0f, 1.0f, 1.0f)
-#define SIZE_RATE 0.07f
-#define CLOUD_COLOR D3DXCOLOR(0.95f, 0.95f, 1.0f, m_fAlpha)
-#define LIFE 70
-#define THUNDER_CREATE_COUNT_MIN 20
-#define THUNDER_CREATE_COUNT_MAX LIFE
-
-#define THUNDER_POS_Y -60
-#define CLOUD_POS_Y   150
 
 //=============================
 // コンストラクタ
 //=============================
-CCloud::CCloud() :CModel(OBJTYPE_MAP)
+CIceberg::CIceberg() :CModel(OBJTYPE_MAP)
 {
-	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_nCntAction = 0;
-	m_fAlpha = 0.0f;
-	m_nPlayerNum = 0;
-	m_playerPosSave = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_bThunder = false;
+
 }
 
 //=============================
 // デストラクタ
 //=============================
-CCloud::~CCloud()
+CIceberg::~CIceberg()
 {
 }
 
 //=============================
 // クリエイト
 //=============================
-CCloud * CCloud::Create(int nPlayerNum)
+CIceberg * CIceberg::Create(D3DXVECTOR3 pos, ICEBERG_TYPE type)
 {
 	// メモリの確保
-	CCloud *pCloud = new CCloud;
-	
-	pCloud->m_nPlayerNum = nPlayerNum;
-	// 初期化
-	pCloud->Init();
-	
+	CIceberg *pIceberg = new CIceberg;
 
-	return pCloud;
+	// タイプの設定
+	pIceberg->m_type = type;
+	// 初期化
+	pIceberg->Init();
+	// 座標の設定
+	pIceberg->SetPos(pos);
+
+	return pIceberg;
 }
 
 //=============================
 // 初期化処理
 //=============================
-HRESULT CCloud::Init(void)
+HRESULT CIceberg::Init(void)
 {
 	// モデルクラスの初期化
 	CModel::Init();
 
-	// 座標の設定
-	D3DXVECTOR3 pos = CRuleFly::GetPlayer(m_nPlayerNum)->GetPos();
-	SetPos(D3DXVECTOR3(pos.x, pos.y + CLOUD_POS_Y, 30.0f));
-
 	// モデルの割り当て
-	BindModel(CResourceModel::GetModel(CResourceModel::MODEL_CLOUD));
+	switch (m_type)
+	{
+	case ICEBERG_Y:
+		BindModel(CResourceModel::GetModel(CResourceModel::MODEL_ICEBERG_Y));
+		break;
+	case ICEBERG_M:
+		BindModel(CResourceModel::GetModel(CResourceModel::MODEL_ICEBERG_M));
+		break;
+	case ICEBERG_K:
+		BindModel(CResourceModel::GetModel(CResourceModel::MODEL_ICEBERG_K));
+		break;
+	default:
+		break;
+	}
+	
 
-	// サイズの初期化
-	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	SetSize(m_size);
-
-	// カウントの初期化
-	m_nCntAction = 0;
-	// アルファ値の初期化
-	m_fAlpha = 0.0f;
-	// プレイヤー座標保存変数
-	m_playerPosSave = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	// 雷フラグ
-	m_bThunder = false;
 	return S_OK;
 }
 
 //=============================
 // 終了処理
 //=============================
-void CCloud::Uninit(void)
+void CIceberg::Uninit(void)
 {
 	CModel::Uninit();
 }
@@ -117,56 +100,14 @@ void CCloud::Uninit(void)
 //=============================
 // 更新処理
 //=============================
-void CCloud::Update(void)
+void CIceberg::Update(void)
 {
-	m_nCntAction++;
-	if (m_nCntAction >= LIFE)
-	{
-		// サイズの変更
-		m_size += (D3DXVECTOR3(0.0f, 0.0f, 0.0f) - m_size)*SIZE_RATE;
-		m_fAlpha += (-0.1f - m_fAlpha)*SIZE_RATE;
-		
-	}
-	else
-	{
-		// サイズの変更
-		m_size += (MAX_SIZE - m_size)*SIZE_RATE;
-		m_fAlpha += (1.0f - m_fAlpha)*SIZE_RATE;
-	}
-
-	// 雷を落とすかの判定
-	if (m_nCntAction == THUNDER_CREATE_COUNT_MIN)
-	{
-		// 座標の保存
-		m_playerPosSave = CRuleFly::GetPlayer(m_nPlayerNum)->GetPos();
-	}
-	if (m_nCntAction >= THUNDER_CREATE_COUNT_MIN&&m_nCntAction <= THUNDER_CREATE_COUNT_MAX)
-	{
-		// 保存していた座標と違う時&&雷をまだ落としていないとき
-		if(m_playerPosSave!= CRuleFly::GetPlayer(m_nPlayerNum)->GetPos()&& !m_bThunder)
-		{
-			// 雷の生成
-			D3DXVECTOR3 pos = GetPos();
-			CThunder::Create(D3DXVECTOR3(pos.x, pos.y + THUNDER_POS_Y, pos.z), m_nPlayerNum);
-			// 雷を落とした状態にする
-			m_bThunder = true;
-		}
-	}
-
-	// サイズのセット
-	SetSize(m_size);
-
-	// 寿命処理
-	if (m_fAlpha <= 0.0f)
-	{
-		Uninit();
-	}
 }
 
 //=============================
 // 描画処理
 //=============================
-void CCloud::Draw(void)
+void CIceberg::Draw(void)
 {
 	CModel::Draw();
 }
@@ -174,7 +115,7 @@ void CCloud::Draw(void)
 //=============================
 // モデル描画
 //=============================
-void CCloud::DrawModel(void)
+void CIceberg::DrawModel(void)
 {
 	//デバイス情報の取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
@@ -182,7 +123,7 @@ void CCloud::DrawModel(void)
 	D3DMATERIAL9 matDef; //現在のマテリアル保持用
 	D3DXMATERIAL*pMat;   //マテリアルデータへのポインタ
 
-	// モデルデータの取得
+						 // モデルデータの取得
 	CResourceModel::Model * pModelData = GetModelData();
 
 	//ワールドマトリックスの設定
@@ -192,7 +133,7 @@ void CCloud::DrawModel(void)
 	pDevice->GetMaterial(&matDef);
 
 	// シェーダー情報の取得
-	CResourceShader::Shader shader = CResourceShader::GetShader(CResourceShader::SHADER_CLOUD);
+	CResourceShader::Shader shader = CResourceShader::GetShader(CResourceShader::SHADER_ICEBERG);
 
 	if (shader.pEffect != NULL)
 	{
@@ -221,9 +162,10 @@ void CCloud::DrawModel(void)
 					pDevice->SetTexture(0, pModelData->apTexture[nCntMat]);
 
 					// テクスチャをシェーダーに送る
-					shader.pEffect->SetTexture("ToonTex", CResourceTexture::GetTexture(CResourceTexture::TEXTURE_TOONSHADOW_CLOUD));
+					shader.pEffect->SetTexture("Tex", pModelData->apTexture[nCntMat]);
+					shader.pEffect->SetTexture("ToonTex", CResourceTexture::GetTexture(CResourceTexture::TEXTURE_TOONSHADOW_ICEBERG));
 					// 色
-					shader.pEffect->SetFloatArray("DiffuseColor", (float*)&CLOUD_COLOR, 4);
+					shader.pEffect->SetFloatArray("DiffuseColor", (float*)&pMat[nCntMat].MatD3D.Diffuse, 4);
 					// シェーダパスの描画開始
 					shader.pEffect->BeginPass(nCntEffect);
 					//モデルパーツの描画
@@ -247,7 +189,7 @@ void CCloud::DrawModel(void)
 //=============================
 // ワールドマトリックスの設定
 //=============================
-void CCloud::SetWorldmtx(void)
+void CIceberg::SetWorldmtx(void)
 {
 
 	D3DXMATRIX  mtxRot;   // 回転行列
@@ -275,7 +217,7 @@ void CCloud::SetWorldmtx(void)
 //=============================
 // シェーダーに値を送る
 //=============================
-void CCloud::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pModelData)
+void CIceberg::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pModelData)
 {
 	if (pEffect != NULL)
 	{
@@ -293,5 +235,6 @@ void CCloud::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pMo
 		// 視点位置
 		D3DXVECTOR3 eye = CManager::GetCamera()->GetPos();
 		pEffect->SetFloatArray("Eye", (float*)&eye, 3);
+
 	}
 }

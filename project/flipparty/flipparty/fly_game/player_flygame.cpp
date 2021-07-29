@@ -96,15 +96,15 @@ void CFlyGamePlayer::Update(void)
 	// 状態管理
 	ManageState();
 
+	// フリッパー更新前の移動状態
+	CFlipper::FLIPPER_STATE leftStateOld = GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_LEFT);
+	CFlipper::FLIPPER_STATE rightStateOld = GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_RIGHT);
+
+	// プレイヤークラスの更新処理
+	CPlayer::Update();
+
 	if (GetMoveFlag())
 	{
-		// フリッパー更新前の移動状態
-		CFlipper::FLIPPER_STATE leftStateOld = GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_LEFT);
-		CFlipper::FLIPPER_STATE rightStateOld = GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_RIGHT);
-
-		// プレイヤークラスの更新処理
-		CPlayer::Update();
-
 		// 飛ぶ処理
 		Fly(GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_LEFT), leftStateOld);
 		Fly(GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_RIGHT), rightStateOld);
@@ -153,7 +153,7 @@ void CFlyGamePlayer::ManageState(void)
 
 		if (m_nCntState == 0) 
 		{
-			SetMotion(MOTION_MINIRESULT_3);
+			SetMotion(MOTION_THUNDER);
 			SetMoveFlag(false);
 			SetFacePattern(FACE_PATTERN_NO_GOOD);
 		}

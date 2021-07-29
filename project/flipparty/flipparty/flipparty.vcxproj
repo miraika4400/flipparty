@@ -165,12 +165,14 @@
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_camera.cpp" />
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp" />
+    <ClCompile Include="flag_raicing_game_rule\passingpenguin.cpp" />
     <ClCompile Include="flipper.cpp" />
     <ClCompile Include="fly_game\camera_flygame.cpp" />
     <ClCompile Include="fly_game\player_flygame.cpp" />
     <ClCompile Include="fly_game\rule_flygame.cpp" />
     <ClCompile Include="fly_game\thunder.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="iceberg.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="joypad.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -208,6 +210,7 @@
     <ClCompile Include="timelimit.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="tutorial.cpp" />
+    <ClCompile Include="z_tex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h" />
@@ -223,12 +226,15 @@
     <ClInclude Include="fade.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_camera.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h" />
+    <ClInclude Include="flag_raicing_game_rule\passingpenguin.h" />
     <ClInclude Include="flipper.h" />
     <ClInclude Include="fly_game\camera_flygame.h" />
     <ClInclude Include="fly_game\player_flygame.h" />
     <ClInclude Include="fly_game\rule_flygame.h" />
     <ClInclude Include="fly_game\thunder.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="iceberg.h" />
+    <ClInclude Include="z_tex.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />
     <ClInclude Include="keyboard.h" />

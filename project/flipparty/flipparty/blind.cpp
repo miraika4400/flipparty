@@ -21,7 +21,6 @@
 #define BLIND_SIZE D3DXVECTOR3(100.0f, 60.0f, 0.0f)			//ブラインドのサイズ
 
 #define BLIND_MOVE 5.0f										//移動量
-#define MOVE_START_TIME 20									//移動開始タイム
 
 //===================================
 // コンストラクタ
@@ -30,6 +29,7 @@ CBlind::CBlind()
 {
 	m_nTime = 0;
 	m_state = BLIND_STATE_MOVE;
+	m_nMoveStartTime = 0;
 }
 
 //===================================
@@ -42,7 +42,7 @@ CBlind::~CBlind()
 //===================================
 // クリエイト関数
 //===================================
-CBlind * CBlind::Create(int nTime)
+CBlind * CBlind::Create(int nTime, int nStartTime)
 {
 	// ポインタ変数
 	CBlind *pBlind = NULL;
@@ -55,6 +55,7 @@ CBlind * CBlind::Create(int nTime)
 		//初期化処理
 		pBlind->Init();
 		pBlind->SetTime(nTime);
+		pBlind->m_nMoveStartTime = nStartTime;
 	}
 
 	return pBlind;
@@ -103,7 +104,7 @@ void CBlind::Update(void)
 	if (m_state == BLIND_STATE_MOVE)
 	{
 		//移動開始タイムより小さくなった時
-		if (m_nTime <= MOVE_START_TIME)
+		if (m_nTime <= m_nMoveStartTime)
 		{
 			//位置取得
 			D3DXVECTOR3 pos = GetPos();

@@ -20,6 +20,8 @@
 #include "timelimit.h"
 #include "blind.h"
 #include "bg.h"
+#include "iceberg.h"
+#include "passingpenguin.h"
 
 //======================================================
 //	静的メンバ変数宣言初期化
@@ -42,7 +44,7 @@ CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 #define FLAG_CAPTAIN_POS_X_NUM 0.0f		// キャプテンのX座標
 #define FLAG_CAPTAIN_POS_Y_NUM -30.0f	// キャプテンのY座標
 #define FLAG_CAPTAIN_POS_Z_NUM -150.0f	// キャプテンのZ座標
-
+#define PASSING_PENGUIN_POS D3DXVECTOR3(400.0f, -30.0f, -100.0f)
 #define RAND_FLAG rand() % 180 + 50		// フラッグの上げる間隔の設定
 
 //======================================================
@@ -60,6 +62,7 @@ CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 	m_pTimeLimit = NULL;
 	m_bPlay = true;
 	m_pBlind = NULL;
+	m_pPassingPenguin = NULL;
 }
 
 //======================================================
@@ -91,17 +94,19 @@ CFlagRaicingGame_rule * CFlagRaicingGame_rule::Create(void)
 //======================================================
 HRESULT CFlagRaicingGame_rule::Init(void)
 {
+	CIceberg::Create(D3DXVECTOR3(0.0f, -100.0f, -1200.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
 	// 背景の生成
 	CBg::Create();
 
 	m_bPlay = true;
 	m_nRandTime = TIME_SET;
 	//カメラの生成
-	CGame::SetCamera(CFlagRaicingGameCamera::Create());
+	CManager::SetCamera(CFlagRaicingGameCamera::Create());
 
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
 	float posX = 0 + ((float)(nPlayerNum - 1) * PLAYER_SPACE) / 2;// 位置の調整
+
 	// プレイヤーの人数分プレイヤー生成
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
 	{
@@ -111,11 +116,15 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	}
 	// キャプテンの生成
 	m_pCaptain = CCaptain::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_CAPTAIN_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM));
+	
 	// 制限時間の生成
 	m_pTimeLimit = CTimeLimit::Create(TRUN_SET);
 	
 	//ブラインドの生成
-	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit());
+	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit(), (TRUN_SET / 2));
+
+	//通過ペンギンの生成
+	m_pPassingPenguin = CPassingPenguin::Create(PASSING_PENGUIN_POS);
 	return S_OK;
 }
 
@@ -132,37 +141,60 @@ void CFlagRaicingGame_rule::Uninit(void)
 //======================================================
 void CFlagRaicingGame_rule::Update(void)
 {
-	// プレイヤーを必要時以外動けなくするようにする処理
-	if (m_bPlay)
+	bool btest = true;
+	if (btest == true)
 	{
-		// 乱数の初期化
-		srand((unsigned int)time(NULL));
-		// 時間計算処理
-		++m_nCntTime;
-		// 判別処理
-		FlagJudge();
+		// プレイヤーを必要時以外動けなくするようにする処理
+		if (m_bPlay)
+		{
+			// 乱数の初期化
+			srand((unsigned int)time(NULL));
+			// 時間計算処理
+			++m_nCntTime;
+			// 判別処理
+			FlagJudge();
 
-		// 時間経過で次の動作に入る
-		if (m_nCntTime == m_nRandTime)
-		{
-			m_nRandTime = RAND_FLAG;	// ランダムで旗の上げるタイミングを設定
-			m_nTarn++;					// ターンを進める
-			SetGameLoop(CAPTAIN_TRUN);	// キャプテンのターンに変更
-			m_nCntTime = 0;				// タイムの初期化
-			FlagPoint();				// ポイント追加
-		}
-		// 上限のターン数を上回ったらゲームを終了させる
-		// 制限時間が0以下の時
-		if (m_pTimeLimit->GetTimeLimit() <= 0)
-		{
-			JudgeRank();
+			// 時間経過で次の動作に入る
+			if (m_nCntTime == m_nRandTime)
+			{
+				m_nRandTime = RAND_FLAG;	// ランダムで旗の上げるタイミングを設定
+				m_nTarn++;					// ターンを進める
+				SetGameLoop(CAPTAIN_TRUN);	// キャプテンのターンに変更
+				m_nCntTime = 0;				// タイムの初期化
+				FlagPoint();				// ポイント追加
+			}
+
+			//制限時間を取得
+			int nTimeLimit = m_pTimeLimit->GetTimeLimit();
+
+			// 上限のターン数を上回ったらゲームを終了させる
+			// 制限時間が0以下の時
+			if (nTimeLimit <= 0)
+			{
+				JudgeRank();
+			}
+
+			//ブラインドに現在タイムを与える
+			if (m_pBlind)
+			{
+				m_pBlind->SetTime(nTimeLimit);
+			}
+
+			if (nTimeLimit > (TRUN_SET / 2))
+			{
+				if (nTimeLimit == 35)
+				{
+					//左へ通過するよう設定
+					m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_LEFT);
+				}
+				else if (nTimeLimit == 25)
+				{
+					//右へ通過するように設定
+					m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_RIGHT);
+				}
+			}
 		}
 
-		//ブラインドに現在タイムを与える
-		if (m_pBlind)
-		{
-			m_pBlind->SetTime(m_pTimeLimit->GetTimeLimit());
-		}
 	}
 }
 

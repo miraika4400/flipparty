@@ -33,6 +33,7 @@ CTimeLimit::CTimeLimit() :CScene(OBJTYPE_UI)
 	memset(m_apNumber, 0, sizeof(m_apNumber));
 	m_nLimitTime = 0;
 	m_nCntTime = 0;
+	m_bIsTimeCount = false;
 }
 
 //==================================
@@ -82,6 +83,8 @@ HRESULT CTimeLimit::Init(void)
 	// カウント初期化
 	m_nCntTime = 0;
 
+	//更新フラグの初期化
+	m_bIsTimeCount = true;
 	return S_OK;
 }
 
@@ -113,22 +116,25 @@ void CTimeLimit::Update(void)
 {
 	if (m_nLimitTime > 0)
 	{
-		// カウントを進める
-		m_nCntTime++;
-		// カウントが言って以上の時
-		if (m_nCntTime >= ONE_SECOND_COUNT)
+		//trueの時のみカウントを進める
+		if (m_bIsTimeCount)
 		{
-			// カウントの初期化
-			m_nCntTime = 0;
-			// 制限時間を減らす
-			m_nLimitTime--;
-
-			if (m_nLimitTime <= 0)
+			// カウントを進める
+			m_nCntTime++;
+			// カウントが一定以上の時
+			if (m_nCntTime >= ONE_SECOND_COUNT)
 			{
-				m_nLimitTime = 0;
+				// カウントの初期化
+				m_nCntTime = 0;
+				// 制限時間を減らす
+				m_nLimitTime--;
+
+				if (m_nLimitTime <= 0)
+				{
+					m_nLimitTime = 0;
+				}
 			}
 		}
-
 		// 最大分ループ
 		for (int nCntDigit = 0; nCntDigit < MAX_TIME_NUM; nCntDigit++)
 		{
@@ -139,6 +145,7 @@ void CTimeLimit::Update(void)
 			m_apNumber[nCntDigit]->SetNumber((m_nLimitTime % (int)(powf(10.0f, (MAX_TIME_NUM - nCntDigit)))) / (float)(powf(10.0, (MAX_TIME_NUM - nCntDigit - 1))));
 		}
 	}
+
 }
 
 //==================================

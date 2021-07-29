@@ -23,6 +23,7 @@
 #define FLIPPER_NUM 2 // 手の数
 #define RIGHT_FLIPPER_PARTS_NUM 5 // 右羽のパーツ番号
 #define LEFT_FLIPPER_PARTS_NUM  4 // 左羽のパーツ番号
+#define PLAYER_HEAD_PARTS_NUM 2
 #define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-60.0f)           // 右羽を上げたときの角度
 #define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)            // 右羽を下げたときの角度
 #define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
@@ -56,7 +57,9 @@ public:
 		MOTION_MINIRESULT_2, // ミニリザルト2位
 		MOTION_MINIRESULT_3, // ミニリザルト3位
 		MOTION_MINIRESULT_4, // ミニリザルト最下位
-		MOTION_FLY,          // アイドル
+		MOTION_FLY,          // 飛び
+		MOTION_THUNDER,      // 雷
+		MOTION_FALL,         // 転ぶ
 		MOTION_MAX
 	}MOTION_TYPE;
 
@@ -113,17 +116,17 @@ private:
 	void ManageFlipperAngle(void);         // 羽の角度管理
 
 	// メンバ変数
-	static CResourceModel::Model m_model[MAX_PARTS_NUM];  // モデル構造体
-	static int m_nPartsNum;             // モデルパーツ数
-	int m_nPlayerNum;                   // プレイヤー番号
-	CFlipper * m_pFlipper;              // フリッパークラス
-	CFlipper * m_pFlipperMoveState;     // フリッパーの移動状態
-	float m_fFlipperDist[FLIPPER_NUM];  // フリッパーの角度目標値
-	CBillboard * m_pPlayerNumIcon;      // プレイヤー番号のアイコン
-	bool m_bMove;                       // 動けるかどうかのフラグ
-	int m_nRank;                        // 順位
-	FACE_PATTERN  m_facePattern;               // 表情切り替え用
-	int m_nPoint;
+	static CResourceModel::Model m_model[MAX_PARTS_NUM]; // モデル構造体
+	static int m_nPartsNum;                              // モデルパーツ数
+	int m_nPlayerNum;                                    // プレイヤー番号
+	CFlipper * m_pFlipper;                               // フリッパークラス
+	CFlipper * m_pFlipperMoveState;                      // フリッパーの移動状態
+	float m_fFlipperDist[FLIPPER_NUM];                   // フリッパーの角度目標値
+	CBillboard * m_pPlayerNumIcon;                       // プレイヤー番号のアイコン
+	bool m_bMove;                                        // 動けるかどうかのフラグ
+	int m_nRank;                                         // 順位
+	FACE_PATTERN  m_facePattern;                         // 表情切り替え用
+	int m_nPoint;                                        // ポイント
 
 	// モーション用変数
 	static char m_achAnimPath[MOTION_MAX][64];   // アニメーションテキストのパス格納用

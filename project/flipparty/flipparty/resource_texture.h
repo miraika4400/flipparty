@@ -45,6 +45,7 @@ public:
 		TEXTURE_COUNT_SELECT_4,  // 人数選択UI4人
 		TEXTURE_TOONSHADOW,      // トゥーンシャドウ
 		TEXTURE_TOONSHADOW_CLOUD,// トゥーンシャドウ*雲
+		TEXTURE_TOONSHADOW_ICEBERG,// トゥーンシャドウ*氷山
         TEXTURE_UI_UP,           // UI「あげて」
         TEXTURE_UI_DOWN,         // UI「さげて」
         TEXTURE_UI_MARU,         // UI「〇」

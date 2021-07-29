@@ -189,8 +189,17 @@
     <ClCompile Include="remember_game\snow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="z_tex.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="iceberg.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="remember_game\camera_remember.cpp">
       <Filter>remember_game</Filter>
+    </ClCompile>
+    <ClCompile Include="flag_raicing_game_rule\passingpenguin.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -362,8 +371,17 @@
     <ClInclude Include="remember_game\snow.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="z_tex.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="iceberg.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="remember_game\camera_remember.h">
       <Filter>remember_game</Filter>
+    </ClInclude>
+    <ClInclude Include="flag_raicing_game_rule\passingpenguin.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

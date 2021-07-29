@@ -121,7 +121,7 @@ HRESULT CRememjber_rule::Init(void)
     CBg::Create();
 
     // カメラの生成
-    CGame::SetCamera(CCameraRemember::Create());
+	CManager::SetCamera(CCameraRemember::Create());
 
     // プレイヤーの人数取得
     m_nNumPlayer = CCountSelect::GetPlayerNum();

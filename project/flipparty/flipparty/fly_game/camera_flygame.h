@@ -34,8 +34,6 @@ public:
 
 	HRESULT Init(void);   // 初期化
 	void Update(void);	  // 更新
-	void SetCamera(void); // カメラのセット
-
 private:
 };
 

@@ -30,7 +30,7 @@ class CCamera;
 class CTimeLimit;
 class CBlind;
 class CBillboard;
-
+class CPassingPenguin;
 //======================================================
 //	クラス定義
 //======================================================
@@ -79,6 +79,7 @@ private:
 	bool m_bPlay;					// プレイヤーが動くか動かないかの判別
 	static TRUN m_eLoop;			// 上げるか上げないかの判別
 	CTimeLimit * m_pTimeLimit;		// 制限時間クラス
+	CPassingPenguin *m_pPassingPenguin;	//通過ペンギンクラス
 };
 
 
