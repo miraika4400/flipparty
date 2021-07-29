@@ -17,10 +17,6 @@
 #include "game.h"
 #include "camera_base.h"
 #include "light.h"
-#ifdef _DEBUG
-
-#include "keyboard.h"
-#endif
 
 //=============================================================================
 //マクロ定義
@@ -164,8 +160,12 @@ void CPassingPenguin::Update(void)
 //=============================================================================
 void CPassingPenguin::Draw(void)
 {
-	//階層構造付きモデルクラスの描画
-	CModelHierarchy::Draw();
+	if (m_state != STATE_WAIT)
+	{
+		//階層構造付きモデルクラスの描画
+		CModelHierarchy::Draw();
+	}
+	
 }
 
 //=============================================================================
@@ -187,14 +187,14 @@ void CPassingPenguin::SetMoveDirection(MOVE_DIRECTION moveDirection)
 	case MOVE_DIRECTION_LEFT:
 		pos = D3DXVECTOR3(LEFT_START_POS_X, pos.y, pos.z);
 		m_move = D3DXVECTOR3(MOVE_SPEED, 0.0f, 0.0f);
-		//rot = D3DXVECTOR3(rot.x, D3DXToRadian(-90.0f), rot.z);
+		rot = D3DXVECTOR3(rot.x, D3DXToRadian(-90.0f), rot.z);
 
 		break;
 
 	case MOVE_DIRECTION_RIGHT:
 		pos = D3DXVECTOR3(RIGHT_START_POS_X, pos.y, pos.z);
 		m_move = D3DXVECTOR3(-MOVE_SPEED, 0.0f, 0.0f);
-		//rot = D3DXVECTOR3(rot.x, D3DXToRadian(90.0f), rot.z);
+		rot = D3DXVECTOR3(rot.x, D3DXToRadian(90.0f), rot.z);
 	
 		break;
 	default:

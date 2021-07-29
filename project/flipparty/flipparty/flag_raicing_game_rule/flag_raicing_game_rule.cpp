@@ -139,56 +139,61 @@ void CFlagRaicingGame_rule::Uninit(void)
 //======================================================
 void CFlagRaicingGame_rule::Update(void)
 {
-	// プレイヤーを必要時以外動けなくするようにする処理
-	if (m_bPlay)
+	bool btest = true;
+	if (btest == true)
 	{
-		// 乱数の初期化
-		srand((unsigned int)time(NULL));
-		// 時間計算処理
-		++m_nCntTime;
-		// 判別処理
-		FlagJudge();
-
-		// 時間経過で次の動作に入る
-		if (m_nCntTime == m_nRandTime)
+		// プレイヤーを必要時以外動けなくするようにする処理
+		if (m_bPlay)
 		{
-			m_nRandTime = RAND_FLAG;	// ランダムで旗の上げるタイミングを設定
-			m_nTarn++;					// ターンを進める
-			SetGameLoop(CAPTAIN_TRUN);	// キャプテンのターンに変更
-			m_nCntTime = 0;				// タイムの初期化
-			FlagPoint();				// ポイント追加
-		}
+			// 乱数の初期化
+			srand((unsigned int)time(NULL));
+			// 時間計算処理
+			++m_nCntTime;
+			// 判別処理
+			FlagJudge();
 
-		//制限時間を取得
-		int nTimeLimit = m_pTimeLimit->GetTimeLimit();
-
-		// 上限のターン数を上回ったらゲームを終了させる
-		// 制限時間が0以下の時
-		if (nTimeLimit <= 0)
-		{
-			JudgeRank();
-		}
-
-		//ブラインドに現在タイムを与える
-		if (m_pBlind)
-		{
-			m_pBlind->SetTime(nTimeLimit);
-		}
-
-		if (nTimeLimit > (TRUN_SET / 2))
-		{
-			if (nTimeLimit == 35)
+			// 時間経過で次の動作に入る
+			if (m_nCntTime == m_nRandTime)
 			{
-				m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_LEFT);
+				m_nRandTime = RAND_FLAG;	// ランダムで旗の上げるタイミングを設定
+				m_nTarn++;					// ターンを進める
+				SetGameLoop(CAPTAIN_TRUN);	// キャプテンのターンに変更
+				m_nCntTime = 0;				// タイムの初期化
+				FlagPoint();				// ポイント追加
 			}
-			else if (nTimeLimit == 25)
+
+			//制限時間を取得
+			int nTimeLimit = m_pTimeLimit->GetTimeLimit();
+
+			// 上限のターン数を上回ったらゲームを終了させる
+			// 制限時間が0以下の時
+			if (nTimeLimit <= 0)
 			{
-				m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_RIGHT);
+				JudgeRank();
+			}
+
+			//ブラインドに現在タイムを与える
+			if (m_pBlind)
+			{
+				m_pBlind->SetTime(nTimeLimit);
+			}
+
+			if (nTimeLimit > (TRUN_SET / 2))
+			{
+				if (nTimeLimit == 35)
+				{
+					//左へ通過するよう設定
+					m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_LEFT);
+				}
+				else if (nTimeLimit == 25)
+				{
+					//右へ通過するように設定
+					m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_RIGHT);
+				}
 			}
 		}
+
 	}
-
-	
 }
 
 //======================================================

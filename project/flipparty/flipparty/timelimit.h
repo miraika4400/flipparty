@@ -50,6 +50,8 @@ public:
 	// 制限時間の取得
 	int GetTimeLimit(void) { return m_nLimitTime; }
 	int GetTimeCount(void) { return m_nCntTime; }
+
+	void SetTimeFlag(bool bIsTimeCount) { m_bIsTimeCount = bIsTimeCount; }	//カウントの更新するかどうかの設定
 private:
 	//============
 	// メンバ変数
@@ -57,6 +59,7 @@ private:
 	int m_nLimitTime;                  // 制限時間
 	CNumber* m_apNumber[MAX_TIME_NUM]; // タイム描画用のポリゴン
 	int m_nCntTime;                    // 時間カウント用
+	bool m_bIsTimeCount;				//時間をカウントするかどうか
 };
 
 #endif
