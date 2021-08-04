@@ -31,7 +31,7 @@
 #define FLIPPER_UP_RIGHT D3DXToRadian(-70.0f)
 #define CAMERA_POS (150)                  // カメラの基準位置
 #define SNOWSTORM_TURN (m_nNumPlayer * 2) // 吹雪の登場ターン
-#define MAX_INPUT_TIME (5 * 60)           // 入力の制限時間
+#define MAX_INPUT_TIME (3 * 60)           // 入力の制限時間
 
 #define ANSWER_UI_POS  D3DXVECTOR3(SCREEN_WIDTH / 2.0f, 200.0f, 0.0f)    // 答えのUIの位置
 #define ANSWER_UI_SIZE D3DXVECTOR3(30.0f,30.0f,0.0f)    // 答えのUIのサイズ
@@ -57,6 +57,7 @@ CRememjber_rule::CRememjber_rule()
     m_nTurnPlayer = 0;      // どのプレイヤーのターンか
     m_nNumInput = 0;        //  プレイヤーが入力した回数
     m_nInputCount = 0;      // 入力を受け付けないカウント
+    m_nInputTime = 0;       // 入力の制限時間
     ZeroMemory(&m_pPolygon, sizeof(m_pPolygon));        // ポリゴンへのポインタ
     m_IsinputEnd = false;                               // プレイヤーが入力し終わったかのフラグ
     ZeroMemory(&m_FlipperData, sizeof(m_FlipperData));      // 見本データの配列
@@ -107,7 +108,7 @@ HRESULT CRememjber_rule::Init(void)
     m_nNumInput = 0;        // プレイヤーが入力した回数
     m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
     m_nInputCount = 0;      // プレイヤーが入力できるようになるまでのカウント
-
+    m_nInputTime = MAX_INPUT_TIME;                   // 入力できる制限時間の回復
     ZeroMemory(&m_FlipperData, sizeof(m_FlipperData));      // 見本データの配列
     ZeroMemory(&m_PlayerInput, sizeof(m_PlayerInput));      // プレイヤーの入力情報
     ZeroMemory(&m_apAnswer, sizeof(m_apAnswer));        // 回答のポリゴン表示
@@ -261,6 +262,14 @@ void CRememjber_rule::InputPlayer(void)
         
         SetRememberData(CFlipper::FLIPPER_TYPE_RIGHT);
     }
+
+    // 入力できる制限時間を過ぎたら脱落
+    m_nInputTime--;
+    if ((m_nInputTime == 0))
+    {
+        Ranking();
+        m_nInputTime = MAX_INPUT_TIME;                   // 入力できる制限時間の回復
+    }
 }
 
 //=============================================================================
@@ -383,6 +392,7 @@ void CRememjber_rule::SetRememberData(CFlipper::FLIPPER_TYPE type)
     Comparison();                                   // 入力内容の比較
 
     m_nInputCount = INPUT_COUNT;                     // 再入力できるまでの時間をセット
+    m_nInputTime = MAX_INPUT_TIME;                   // 入力できる制限時間の回復
     ControllFlipper(type, CFlipper::FLIPPERSTATE_UP);// 手をあげるモーションにする
     m_nNumInput++;                                   // 入力した回数の追加
 }
