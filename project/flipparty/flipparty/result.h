@@ -87,6 +87,7 @@ private:
 	int m_nCntFallTime;                    // プレイヤーがこけるタイミングのカウント用
 	int m_nActionRank;                     // コケる等のアクションを起こす順位
 	bool m_bShow;                          // 順位発表フラグ
+	bool m_bBoard;                         // リザルトボードフラグ
 };
 
 #endif

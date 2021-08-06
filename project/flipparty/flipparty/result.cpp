@@ -32,6 +32,7 @@
 #define PLAYER_POS_Z 100.0f // プレイヤーのZ位置
 #define PLAYER_FALL_COUNT 300 // プレイヤーがこけるカウント数
 #define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
+#define RESULT_BOARD_SPACE 320.0f
 
 //**********************************
 // 静的メンバ変数宣言
@@ -47,6 +48,7 @@ CResult::CResult()
 	m_nCntFallTime = 0;
 	m_nActionRank = 0;
 	m_bShow = true;
+	m_bBoard = false;
 }
 
 //=============================
@@ -112,6 +114,8 @@ HRESULT CResult::Init(void)
 	// 点数計算
 	CalculationRank();
 
+	// ボードフラグ
+	m_bBoard = false;
 	return S_OK;
 }
 
@@ -160,8 +164,26 @@ void CResult::Update(void)
 			CManager::GetMouse()->GetMouseTrigger(0) ||
 			CManager::GetJoypad()->GetJoystickTrigger(3, 0))
 		{
-			CResultBoard::Create(1, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
-			//CManager::GetFade()->SetFade(CManager::MODE_TITLE);
+			if (!m_bBoard)
+			{// リザルトボードの生成
+				
+				// プレイヤー数の取得
+				int nPlayerNum = CCountSelect::GetPlayerNum();
+
+				D3DXVECTOR3 boardPos = D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f);
+				boardPos.x = boardPos.x - (RESULT_BOARD_SPACE*(nPlayerNum - 1)) / 2;
+
+				for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
+				{
+					CResultBoard::Create(nCntPlayer, boardPos);
+					boardPos.x += RESULT_BOARD_SPACE;
+				}
+				m_bBoard = true;
+			}
+			else
+			{// 画面遷移
+				CManager::GetFade()->SetFade(CManager::MODE_TITLE);
+			}
 
 			return;
 		}
@@ -359,7 +381,7 @@ void CResult::JudgePlayerRank(bool bSamePointRank)
 		}
 		else
 		{
-			if (nCntPlayer == 1)
+			if (nCntPlayer != 0)
 			{
 
 				// ポイントが同じなら同じ順位にする

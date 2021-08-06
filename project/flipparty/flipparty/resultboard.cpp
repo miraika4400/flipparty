@@ -318,9 +318,13 @@ void CResultBoard::CreateGameRank(void)
 void CResultBoard::CreateScore(void)
 {
 	float posX = 0 - (SCORE_SPACE*(POINT_MAX_DIGIT - 1)) / 2;
+	int nScore = nScore = CResult::GetResultPoint(m_nPlayerNum).nPoint;
+
 	for (int nCntDigit = 0; nCntDigit < POINT_MAX_DIGIT; nCntDigit++)
 	{
 		m_apScoreNumber[nCntDigit] = CNumber::Create(0, D3DXVECTOR3(m_pos.x + posX, SCORE_POS_Y, 0.0f), SIZE_SCORE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		posX += SCORE_SPACE;
+
+		m_apScoreNumber[nCntDigit]->SetNumber((int)((nScore % (int)(powf(10.0f, (POINT_MAX_DIGIT - nCntDigit)))) / (float)(powf(10, (POINT_MAX_DIGIT - nCntDigit - 1)))));
 	}
 }
