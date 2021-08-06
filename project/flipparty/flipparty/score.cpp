@@ -58,7 +58,7 @@ HRESULT CScore::Init(void)
 	for (int nCntDigit = 0; nCntDigit < MAX_SCORE_DIGIT; nCntDigit++)
 	{
 		m_apNumber[nCntDigit] = CNumber::Create(0,
-			D3DXVECTOR3((float)(1000 + nCntDigit * 20 * 2), 50.0f, 0.0f),
+			D3DXVECTOR3((float)(1000 + nCntDigit * 40), 50.0f, 0.0f),
 			D3DXVECTOR3(20, 20, 0),
 			D3DXCOLOR(0.8f, 0.3f, 0.8f, 1.0f));
 	}

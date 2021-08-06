@@ -201,6 +201,9 @@
     <ClCompile Include="flag_raicing_game_rule\passingpenguin.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="resultboard.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bg.h">
@@ -381,6 +384,9 @@
       <Filter>remember_game</Filter>
     </ClInclude>
     <ClInclude Include="flag_raicing_game_rule\passingpenguin.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="resultboard.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

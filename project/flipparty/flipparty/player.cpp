@@ -50,10 +50,8 @@ char CPlayer::m_achAnimPath[MOTION_MAX][64]
 	{ "./data/Texts/motion/miniresult_3.txt" }, // 三位アニメーション
 	{ "./data/Texts/motion/miniresult_4.txt" }, // 最下位アニメーション
 	{ "./data/Texts/motion/fly.txt" },          // flyアニメーション
-	{ "./data/Texts/motion/thunder.txt" },      // 雷アニメーション
+	{ "./data/Texts/motion/thunder3.txt" },     // 雷アニメーション
 	{ "./data/Texts/motion/fall.txt" },         // 転ぶ アニメーション
-	
-
 };
 
 //******************************
@@ -274,15 +272,15 @@ void CPlayer::Update(void)
 
 	// アクティブモーションの管理
 	if (m_pActiveMotion != NULL && !m_pActiveMotion->GetActiveMotion())
-	{
+	{// アクティブのモーションが終了したとき
 		if (m_pActiveMotion == m_apMotion[MOTION_FALL])
-		{
+		{// 転ぶモーションからは転がるモーションに移行
 			SetMotion(MOTION_MINIRESULT_4);
 			D3DXVECTOR3 rot = GetRot();
 			m_pActiveMotion->Update();
 		}
 		else
-		{
+		{// アクティブのモーションをNULLにする
 			m_pActiveMotion = NULL;
 		}
 	}
@@ -490,7 +488,6 @@ void CPlayer::ControllFlipper(void)
 		}
 #endif // _DEBUG
 	// コントローラー操作
-	
 	// 右羽を操作
 	if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lRz <= -10)
 	{// 上げる
@@ -588,4 +585,12 @@ void CPlayer::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * pM
 		D3DXVECTOR3 eye = CManager::GetCamera()->GetPos();
 		pEffect->SetFloatArray("Eye", (float*)&eye, 3);
 	}
+}
+
+//******************************
+// モーションのアクティブ状態の取得
+//******************************
+bool CPlayer::GetMotionActive(MOTION_TYPE type)
+{
+	return m_apMotion[type]->GetActiveMotion();
 }

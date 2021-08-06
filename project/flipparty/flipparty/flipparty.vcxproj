@@ -198,6 +198,7 @@
     <ClCompile Include="resource_model.cpp" />
     <ClCompile Include="resource_shader.cpp" />
     <ClCompile Include="result.cpp" />
+    <ClCompile Include="resultboard.cpp" />
     <ClCompile Include="rule_manager.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="scene2d.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="fly_game\thunder.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="iceberg.h" />
+    <ClInclude Include="resultboard.h" />
     <ClInclude Include="z_tex.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />

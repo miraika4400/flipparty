@@ -27,6 +27,7 @@
 #include "remember_rule.h"
 #include "flag_raicing_game_rule.h"
 #include "rule_manager.h"
+#include "result.h"
 
 //=============================
 // マクロ定義
@@ -76,6 +77,9 @@ CGame * CGame::Create(void)
 //=============================
 HRESULT CGame::Init(void)
 {
+	// 集計ポイントを初期化しておく
+	CResult::ResetResultPoint();
+
 	// ポーズの初期化
 	CManager::SetActivePause(false);
 

@@ -22,6 +22,8 @@
 #include "thunder.h"
 #include "iceberg.h"
 #include "manager.h"
+#include "result.h"
+#include "rule_manager.h"
 
 //******************************
 // マクロ定義
@@ -178,7 +180,7 @@ void CRuleFly::JudgeRank(void)
 		pPlayer = (CPlayer*)pPlayer->GetNext();
 	}
 
-	// ダブルポインタをY座標の高い順にソート
+	// Y座標の高い順にソート
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerIndex; nCntPlayer++)
 	{
 		for (int nCntSort = nCntPlayer + 1; nCntSort < nPlayerIndex; nCntSort++)
@@ -206,6 +208,9 @@ void CRuleFly::JudgeRank(void)
 				vectorPlayer[nCntPlayer]->SetRank(vectorPlayer[nCntPlayer - 1]->GetRank());
 			}
 		}
+
+		// ミニゲームに順位を送る
+		CResult::SetMiniGameRank(CRuleManager::RULE_FLY, vectorPlayer[nCntPlayer]->GetPlayerNumber(), vectorPlayer[nCntPlayer]->GetRank());
 	}
 
 	// リザルト生成

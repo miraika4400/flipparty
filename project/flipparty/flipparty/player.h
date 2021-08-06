@@ -99,6 +99,8 @@ public:
 	
 	// モーションのセット
 	void SetMotion(MOTION_TYPE type);
+	bool GetMotionActive(MOTION_TYPE type);
+
 	// 表情のセット
 	void SetFacePattern(FACE_PATTERN pattern) { m_facePattern = pattern; }
 

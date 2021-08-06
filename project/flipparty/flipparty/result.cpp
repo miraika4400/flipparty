@@ -22,26 +22,31 @@
 #include "bg.h"
 #include "count_selection.h"
 #include "tears_manager.h"
-
-//**********************************
-// 静的メンバ変数宣言
-//**********************************
+#include "rank_ui.h"
+#include "resultboard.h"
 
 //**********************************
 // マクロ定義
 //**********************************
 #define PLAYER_SPACE 150.0f //　プレイヤー位置の間隔
 #define PLAYER_POS_Z 100.0f // プレイヤーのZ位置
-#define PLAYER_FALL_COUNT 100 // プレイヤーがこけるカウント数
+#define PLAYER_FALL_COUNT 300 // プレイヤーがこけるカウント数
+#define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
+
+//**********************************
+// 静的メンバ変数宣言
+//**********************************
+CResult::ResultPoint CResult::m_resultPoint[MAX_PLAYER_NUM] = {};
 
 //=============================
 // コンストラクタ
 //=============================
 CResult::CResult()
 {
-	m_pPolygon = NULL;
 	ZeroMemory(&m_apPlayer, sizeof(m_apPlayer));
 	m_nCntFallTime = 0;
+	m_nActionRank = 0;
+	m_bShow = true;
 }
 
 //=============================
@@ -101,12 +106,12 @@ HRESULT CResult::Init(void)
 	// カウントの初期化
 	m_nCntFallTime = 0;
 
-	/*m_pPolygon = CPolygon::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f),
-		D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));*/
+	// アクションを起こす順位の初期化(最下位)
+	m_nActionRank = nPlayNum - 1;
 
-	//m_pPolygon->BindTexture();
-	
+	// 点数計算
+	CalculationRank();
+
 	return S_OK;
 }
 
@@ -123,15 +128,8 @@ void CResult::Uninit(void)
 		pCamera = NULL;
 	}
 
-	if (m_pPolygon != NULL)
-	{
-		// ポリゴンの終了処理
-		m_pPolygon->Uninit();
-
-		// メモリの解放
-		delete m_pPolygon;
-		m_pPolygon = NULL;
-	}
+	// 集計ポイントを初期化しておく
+	ResetResultPoint();
 
 	// 開放処理
 	Release();
@@ -143,7 +141,6 @@ void CResult::Uninit(void)
 //=============================
 void CResult::Update(void)
 {
-
 	// カメラクラスの更新v処理
 	CCamera * pCamera = CManager::GetCamera();
 	if (pCamera != NULL)
@@ -151,42 +148,28 @@ void CResult::Update(void)
 		pCamera->Update();
 	}
 
-	if (m_pPolygon != NULL)
-	{
-		// ポリゴンの更新処理
-		m_pPolygon->Update();
+	if (m_bShow)
+	{// 結果発表中
+		
+		// 結果発表時にプレイヤーのモーションを変える
+		ChagePlayerMotion();
+	}
+	else
+	{// 結果発表終了時
+		if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN) ||
+			CManager::GetMouse()->GetMouseTrigger(0) ||
+			CManager::GetJoypad()->GetJoystickTrigger(3, 0))
+		{
+			CResultBoard::Create(1, D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
+			//CManager::GetFade()->SetFade(CManager::MODE_TITLE);
+
+			return;
+		}
 	}
 
-	//// カウントを進める
-	//m_nCntFallTime++;
-	//if (PLAYER_FALL_COUNT <= m_nCntFallTime)
-	//{// 一定のカウントで
-	//	// カウントのリセット
-	//	m_nCntFallTime = 0;
-	//	// プレイヤー数の取得
-	//	int nPlayNum = CCountSelect::GetPlayerNum();
-	//
-	//	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
-	//	{
-	//		// コケるモーションの再生
-	//		m_apPlayer[nCntPlayer]->SetMotion(CPlayer::MOTION_FALL);
-	//
-	//		D3DXVECTOR3 headPos;
-	//		headPos.x = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
-	//		headPos.y = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
-	//		headPos.z = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 10;
-	//		CTearsManager::Create(headPos);
-	//	}
-	//}
-
-	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN) || 
-		CManager::GetMouse()->GetMouseTrigger(0) || 
-		CManager::GetJoypad()->GetJoystickTrigger(3, 0))
-	{
-		CManager::GetFade()->SetFade(CManager::MODE_TITLE);
-	}
+	// プレイヤーの位置の調整
+	AdjustPlayerPos();
 }
-
 
 //=============================
 // 描画処理
@@ -198,10 +181,213 @@ void CResult::Draw(void)
 	{
 		pCamera->SetCamera();
 	}
+}
 
-	if (m_pPolygon != NULL)
-	{
-		// ポリゴンの描画処理
-		m_pPolygon->Draw();
+//=============================
+// プレイヤーのモーションを変える
+//=============================
+void CResult::ChagePlayerMotion(void)
+{
+	// カウントを進める
+	m_nCntFallTime++;
+	if (PLAYER_FALL_COUNT <= m_nCntFallTime)
+	{// 一定のカウントで
+	 // カウントのリセット
+		m_nCntFallTime = 0;
+		// プレイヤー数の取得
+		int nPlayNum = CCountSelect::GetPlayerNum();
+
+		for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
+		{
+			if (m_nActionRank != 1)
+			{//3位以下
+				if (m_apPlayer[nCntPlayer]->GetRank() == m_nActionRank)
+				{
+					// コケるモーションの再生
+					m_apPlayer[nCntPlayer]->SetMotion(CPlayer::MOTION_FALL);
+					// 表情の変更
+					m_apPlayer[nCntPlayer]->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
+					//// 涙の生成
+					//D3DXVECTOR3 headPos;
+					//headPos.x = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
+					//headPos.y = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
+					//headPos.z = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 10;
+					//CTearsManager::Create(headPos);
+				}
+			}
+			else
+			{// 2位発表時と同時に一位も発表
+				if (m_apPlayer[nCntPlayer]->GetRank() == m_nActionRank)
+				{
+					// コケるモーションの再生
+					m_apPlayer[nCntPlayer]->SetMotion(CPlayer::MOTION_FALL);
+					// 表情の変更
+					m_apPlayer[nCntPlayer]->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
+					//// 涙の生成
+					//D3DXVECTOR3 headPos;
+					//headPos.x = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
+					//headPos.y = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
+					//headPos.z = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 10;
+					//CTearsManager::Create(headPos);
+				}
+				else if (m_apPlayer[nCntPlayer]->GetRank() == 0)
+				{
+					// 一位モーションの再生
+					m_apPlayer[nCntPlayer]->SetMotion(CPlayer::MOTION_MINIRESULT_1);
+				}
+
+			}
+		}
+
+		m_nActionRank--;
+		if (m_nActionRank <= 0)
+		{
+			m_bShow = false;
+
+			// 同ポイントを考慮して順位をつけなおす
+			JudgePlayerRank(true);
+		}
 	}
+}
+
+//=============================
+// 点数・順位の計算
+//=============================
+void CResult::CalculationRank(void)
+{
+	// プレイヤー数の取得
+	int nPlayerNum = CCountSelect::GetPlayerNum();
+
+	//////////////////////
+	// 総合点数の計算
+
+	// プレイヤー数でループ
+	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
+	{
+		// ルール数でループ
+		for (int nCntRule = 0; nCntRule < CRuleManager::RULE_MAX; nCntRule++)
+		{
+
+			// ポイントの加算
+			switch (m_resultPoint[nCntPlayer].nMiniGameRank[nCntRule])
+			{
+			case 0:
+				// 一位
+				m_resultPoint[nCntPlayer].nPoint += POINT_1ST;
+				break;
+
+			case 1:
+				// 二位
+				m_resultPoint[nCntPlayer].nPoint += POINT_2ND;
+				break;
+
+			case 2:
+				// 三位
+				m_resultPoint[nCntPlayer].nPoint += POINT_3RD;
+				break;
+
+			case 3:
+				// 四位
+				m_resultPoint[nCntPlayer].nPoint += POINT_4TH;
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+
+	//////////////////////////////////
+	// ポイントをプレイヤーに反映
+	
+	// プレイヤー数でループ
+	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
+	{
+		// ポイントの反映
+		m_apPlayer[nCntPlayer]->SetPoint(m_resultPoint[nCntPlayer].nPoint);
+	}
+
+	// 同じ点数でも順位を分けて順位付け
+	JudgePlayerRank(false);
+}
+
+//=============================
+// 順位付け
+//=============================
+void CResult::JudgePlayerRank(bool bSamePointRank)
+{
+	// プレイヤー数の取得
+	int nPlayerNum = CCountSelect::GetPlayerNum();
+
+	////////////////////////////////
+	// 順位付け
+
+	// ポイントの高い順にソート
+	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
+	{
+		for (int nCntSort = nCntPlayer + 1; nCntSort < nPlayerNum; nCntSort++)
+		{
+			if (m_apPlayer[nCntPlayer]->GetPoint() < m_apPlayer[nCntSort]->GetPoint())
+			{
+				CPlayer * pSave = m_apPlayer[nCntPlayer];
+				m_apPlayer[nCntPlayer] = m_apPlayer[nCntSort];
+				m_apPlayer[nCntSort] = pSave;
+			}
+		}
+	}
+
+	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
+	{
+		// 配列の順番がそのまま順位に
+		m_apPlayer[nCntPlayer]->SetRank(nCntPlayer);
+
+		if (bSamePointRank)
+		{
+			if (nCntPlayer != 0)
+			{
+
+				// ポイントが同じなら同じ順位にする
+				if (m_apPlayer[nCntPlayer]->GetPoint() == m_apPlayer[nCntPlayer - 1]->GetPoint())
+				{
+					m_apPlayer[nCntPlayer]->SetRank(m_apPlayer[nCntPlayer - 1]->GetRank());
+				}
+			}
+
+			D3DXVECTOR3 playerPos = m_apPlayer[nCntPlayer]->GetPos();
+			// ランクUIの生成
+			CRankUI::Create(D3DXVECTOR3(playerPos.x, playerPos.y + RANK_UI_HEGHT, playerPos.z), m_apPlayer[nCntPlayer]->GetRank());
+		}
+		else
+		{
+			if (nCntPlayer == 1)
+			{
+
+				// ポイントが同じなら同じ順位にする
+				if (m_apPlayer[nCntPlayer]->GetPoint() == m_apPlayer[nCntPlayer - 1]->GetPoint())
+				{
+					m_apPlayer[nCntPlayer]->SetRank(m_apPlayer[nCntPlayer - 1]->GetRank());
+				}
+			}
+		}
+	}
+}
+
+//=============================
+// プレイヤーの位置の調整
+//=============================
+void CResult::AdjustPlayerPos(void)
+{
+	// プレイヤー数の取得
+	int nPlayerNum = CCountSelect::GetPlayerNum();
+	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
+	{
+		if (m_apPlayer[nCntPlayer]->GetMotionActive(CPlayer::MOTION_FALL))
+		{// コケるモーションの時
+			D3DXVECTOR3 playerPos = m_apPlayer[nCntPlayer]->GetPos();
+			playerPos.y += ((-PLAYER_CENTER_HEIGHT - 20) - playerPos.y)*0.05f;
+
+			m_apPlayer[nCntPlayer]->SetPos(playerPos);
+		}
+	}
+
 }

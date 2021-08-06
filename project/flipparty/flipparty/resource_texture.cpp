@@ -57,6 +57,10 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/left_flag.png",	// UI　左下げ
 	"./data/Textures/thunder.png",      // 雷エフェクト
 	"./data/Textures/snow.png",         // 吹雪エフェクト
+	"./data/Textures/Icon_FlagRacing.png", // 旗揚げゲームアイコン
+	"./data/Textures/Icon_Fly.png",        // 連打ゲームアイコン
+	"./data/Textures/Icon_Remenber.png",   // 記憶ゲームアイコン
+	"./data/Textures/resultboard_back.png", // リザルトボード背景
 };
 
 //===================================

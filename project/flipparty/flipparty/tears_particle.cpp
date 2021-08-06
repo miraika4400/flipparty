@@ -22,8 +22,6 @@
 #define LIFE  60                                  // 寿命
 #define MOVE_Y_DIST -2                           // 移動量Y軸の目標値
 #define MOVE_Y_RATE 0.05f                         // 移動量Y軸の係数
-#define MOVE_Y_MIN 2                             // Y軸速度の最小
-#define MOVE_Y_AMPLITUDE 5                       // Y軸速度の振幅
 #define SPEED_MIN 1                              // 速度の最小
 #define SPEED_AMPLITUDE 10                        // 速度の振幅
 #define SPEED_ADJUST 10.0f                        // スピード調整値
@@ -87,8 +85,10 @@ HRESULT CTearsParticle::Init(void)
 	randSize.x = 4;
 	randSize.y = 4;
 	randSize.z = 0.0f;
-
+	
+	// 寿命
 	m_nLife = LIFE;
+
 	for (int nCntTears = 0; nCntTears < TEARS_NUM; nCntTears++)
 	{
 		// パーティクル生成

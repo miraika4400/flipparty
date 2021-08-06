@@ -82,7 +82,7 @@ HRESULT CMiniResult::Init(void)
 
 	// 背景を暗くするよう
 	CScene3d * p3DPolygon = CScene3d::Create(BLACKOUT_POS, BLACKOUT_SIZE);
-	p3DPolygon->SetColor(BLACKOUT_COLOR);      //色の設定
+	p3DPolygon->SetColor(BLACKOUT_COLOR);            //色の設定
 	p3DPolygon->SetPriority(OBJTYPE_MINIRESULT_OBJ); // プライオリティの設定
 
 	// プレイヤー数の取得
