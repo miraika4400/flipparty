@@ -21,6 +21,7 @@
 #include "mini_result.h"
 #include "snow.h"
 #include "number.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -163,6 +164,7 @@ HRESULT CRememjber_rule::Init(void)
     m_pNumber = CNumber::Create(TIME_LIMIT, TIME_LIMIT_UI_POS, TIME_LIMIT_UI_SIZE, TIME_LIMIT_UI_COLOR);
 
     ChangeTurnUI();
+    CManager::GetSound()->Play(CSound::LABEL_BGM_REMEMBER_GAME);
 
     return S_OK;
 }
@@ -193,6 +195,7 @@ void CRememjber_rule::Uninit(void)
             m_pinstace = nullptr;
 
             m_pNumber->Uninit();
+            CManager::GetSound()->Stop();
 }
 
 //=============================================================================
@@ -368,13 +371,14 @@ void CRememjber_rule::Comparison(void)
         {
             // 外れた場合×を表示
             m_apAnswer->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
-
+            CManager::GetSound()->Play(CSound::LABEL_SE_MISS);
             // ミスしたプレイヤーの順位をつける
             Ranking();
         }
         else
         {   // 正解の場合〇を表示
             m_apAnswer->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_MARU));
+            CManager::GetSound()->Play(CSound::LABEL_SE_OK);
         }
 }
 
