@@ -187,15 +187,21 @@ void CRememjber_rule::Uninit(void)
         }
     }
 
-        // ƒ|ƒŠƒSƒ“‚Ì‰ð•ú
-            m_apAnswer->Uninit();
-            delete m_apAnswer;
-            m_apAnswer = nullptr;
+    // ƒ|ƒŠƒSƒ“‚Ì‰ð•ú
+    m_apAnswer->Uninit();
+    delete m_apAnswer;
+    m_apAnswer = nullptr;
 
-            m_pinstace = nullptr;
+    m_pinstace = nullptr;
 
-            m_pNumber->Uninit();
-            CManager::GetSound()->Stop();
+    if (m_pNumber)
+    {
+        m_pNumber->Uninit();
+        delete m_pNumber;
+        m_pNumber = nullptr;
+    }
+
+    CManager::GetSound()->Stop();
 }
 
 //=============================================================================
