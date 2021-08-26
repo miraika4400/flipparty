@@ -185,6 +185,7 @@
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="number.cpp" />
+    <ClCompile Include="object3d_shader.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
@@ -204,8 +205,10 @@
     <ClCompile Include="scene2d.cpp" />
     <ClCompile Include="scene3d.cpp" />
     <ClCompile Include="score.cpp" />
+    <ClCompile Include="sea.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="resource_texture.cpp" />
+    <ClCompile Include="stage.cpp" />
     <ClCompile Include="tears_manager.cpp" />
     <ClCompile Include="tears_particle.cpp" />
     <ClCompile Include="timelimit.cpp" />
@@ -235,7 +238,10 @@
     <ClInclude Include="fly_game\thunder.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="iceberg.h" />
+    <ClInclude Include="object3d_shader.h" />
     <ClInclude Include="resultboard.h" />
+    <ClInclude Include="sea.h" />
+    <ClInclude Include="stage.h" />
     <ClInclude Include="z_tex.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="joypad.h" />

@@ -24,6 +24,8 @@
 #include "manager.h"
 #include "result.h"
 #include "rule_manager.h"
+#include "sea.h"
+#include "stage.h"
 
 //******************************
 // マクロ定義
@@ -68,9 +70,16 @@ CRuleFly * CRuleFly::Create(void)
 //******************************
 HRESULT CRuleFly::Init(void)
 {
+	// 氷山の生成
 	CIceberg::Create(D3DXVECTOR3(0.0f, 0.0f, -1000.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
+
+	// 海の生成
+	CSea::Create(D3DXVECTOR3(0.0f, -30.0f, 0.0f), 0.002f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, -20.0f, 0.0f), 0.005f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, -10.0f, 0.0f), 0.008f, CSea::TYPE_NORMAL);
+
 	// 背景の生成
-	//CBg::Create();
+	CBg::Create();
 
 	// カメラクラスの生成
 	CManager::SetCamera(CFlyGameCamera::Create());
@@ -85,6 +94,10 @@ HRESULT CRuleFly::Init(void)
 	{
 		m_pPlayer[nCntPlayer] = CFlyGamePlayer::Create(D3DXVECTOR3(posX, 0.0f, 0.0f), nCntPlayer);
 		m_pPlayer[nCntPlayer]->SetRot(D3DXVECTOR3(0.0f, D3DXToRadian(180.0f), 0.0f));
+
+		// ステージの生成
+		CStage::Create(D3DXVECTOR3(posX, 0.0f, 0.0f));
+
 		posX -= PLAYER_SPACE;
 	}
 

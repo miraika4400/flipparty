@@ -42,6 +42,7 @@ public:
 		OBJTYPE_PLAYER,        // プレイヤー
 		OBJTYPE_CPU,           // CPU
 		OBJTYPE_MAP,           // マップ
+		OBJTYPE_SEA,           // 海
 		OBJTYPE_PARTICLE,      // パーティクル
 		OBJTYPE_MOTION,        // モーション
 		OBJTYPE_UI,            // UI

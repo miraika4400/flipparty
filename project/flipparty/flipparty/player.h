@@ -134,10 +134,6 @@ private:
 	static char m_achAnimPath[MOTION_MAX][64];   // アニメーションテキストのパス格納用
 	CMotion *m_apMotion[MOTION_MAX];  // アニメーションポインタ
 	CMotion *m_pActiveMotion;         // 現在再生中のモーション
-#ifdef _DEBUG
-	// デバッグ用変数
-	CPolygon * m_pPolygon[FLIPPER_NUM];// ポリゴンクラスのポインタ
-#endif // _DEBUG
 
 };
 

@@ -19,7 +19,7 @@
 //******************************
 // マクロ定義
 //******************************
-#define CAMERA_POS_V D3DXVECTOR3(0.0f,0.0f, 500.0f)  // 位置
+#define CAMERA_POS_V D3DXVECTOR3(0.0f, 50.0f, 500.0f)  // 位置
 #define CAMERA_POS_R D3DXVECTOR3(0.0f, 150.0f, 0.0f) // 注視点
 
 //******************************
