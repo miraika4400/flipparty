@@ -16,6 +16,7 @@
 #include "flag_raicing_game_rule.h"
 #include "fade.h"
 #include "game.h"
+
 //=============================
 // ƒ}ƒNƒ’è‹`
 //=============================

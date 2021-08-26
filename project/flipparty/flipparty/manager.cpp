@@ -33,6 +33,7 @@
 #include "Captain.h"
 #include "camera_base.h"
 #include "passingpenguin.h"
+#include "sea.h"
 
 //=============================
 // 静的メンバ変数宣言
@@ -134,6 +135,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	CPlayer::Load();   // プレイヤー
 	CCaptain::Load();  // キャプテン
 	CPassingPenguin::Load();	//通過ペンギン
+	CSea::Load();     // 海
 
 	// ポーズ状態の時
 	return S_OK;
@@ -159,6 +161,7 @@ void CManager::Uninit(void)
 	CPlayer::Unload();   // プレイヤー
 	CCaptain::Unload();  // キャプテン
 	CPassingPenguin::Unload();	//通過ペンギン
+	CSea::Unload();      // 海
 
 	if (m_pSound != NULL)
 	{

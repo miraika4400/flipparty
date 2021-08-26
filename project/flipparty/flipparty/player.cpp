@@ -70,11 +70,6 @@ CPlayer::CPlayer() :CModelHierarchy(OBJTYPE_PLAYER)
 	m_pActiveMotion = NULL;
 	m_facePattern = FACE_PATTERN_NORMAL;
 	m_nPoint = 0;
-
-#ifdef _DEBUG
-	// デバッグ用変数
-	ZeroMemory(&m_pPolygon, sizeof(m_pPolygon));// ポリゴンクラスのポインタ
-#endif // _DEBUG
 }
 
 //******************************
@@ -196,9 +191,6 @@ HRESULT CPlayer::Init(void)
 
 #ifdef _DEBUG
 	m_bMove = true;
-	// デバッグ用
-	m_pPolygon[CFlipper::FLIPPER_TYPE_LEFT] = CPolygon::Create(D3DXVECTOR3(50.0f, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));// ポリゴンクラスのポインタ
-	m_pPolygon[CFlipper::FLIPPER_TYPE_RIGHT] = CPolygon::Create(D3DXVECTOR3(SCREEN_WIDTH - 50.0f, 100.0f, 0.0f), D3DXVECTOR3(50.0f, 50.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));// ポリゴンクラスのポインタ
 #endif // _DEBU
 	return S_OK;
 }
@@ -231,18 +223,6 @@ void CPlayer::Uninit(void)
 		delete m_pPlayerNumIcon;
 		m_pPlayerNumIcon = NULL;
 	}
-
-#ifdef _DEBUG
-	for (int nCntPolygon = 0; nCntPolygon < 2; nCntPolygon++)
-	{
-		if (m_pPolygon[nCntPolygon] != NULL)
-		{			  
-			m_pPolygon[nCntPolygon]->Uninit();
-			delete m_pPolygon[nCntPolygon];
-			m_pPolygon[nCntPolygon] = NULL;
-		}
-	}
-#endif // _DEBU
 }
 
 //******************************
@@ -284,37 +264,6 @@ void CPlayer::Update(void)
 			m_pActiveMotion = NULL;
 		}
 	}
-
-#ifdef _DEBUG
-
-	for (int nCntPolygon = 0; nCntPolygon < FLIPPER_NUM; nCntPolygon++)
-	{
-		CFlipper::FLIPPER_STATE flipperState = m_pFlipper->GetState((CFlipper::FLIPPER_TYPE)nCntPolygon);
-
-		switch (flipperState)
-		{
-		case CFlipper::FLIPPERSTATE_UP:
-			m_pPolygon[nCntPolygon]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UP));
-			break;
-		case CFlipper::FLIPPERSTATE_DOWN:
-			m_pPolygon[nCntPolygon]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_DOWN));
-			break;
-		case CFlipper::FLIPPER_STATE_NONE:
-
-			if (nCntPolygon == CFlipper::FLIPPER_TYPE_LEFT)
-			{
-				m_pPolygon[nCntPolygon]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_LEFT));
-			}
-			else
-			{
-				m_pPolygon[nCntPolygon]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_RIGHT));
-			}
-			break;
-		default:
-			break;
-		}
-	}
-#endif // _DEBU
 }
 
 //******************************
@@ -328,11 +277,6 @@ void CPlayer::Draw(void)
 	{
 		m_pPlayerNumIcon->Draw();
 	}
-
-#ifdef _DEBUG
-	m_pPolygon[CFlipper::FLIPPER_TYPE_LEFT]->Draw();
-	m_pPolygon[CFlipper::FLIPPER_TYPE_RIGHT]->Draw();
-#endif // _DEBUG
 }
 
 //******************************

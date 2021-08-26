@@ -24,7 +24,7 @@ public:
 	{
 		LABEL_BGM_TITLE = 0,   // タイトルBGM
 		LABEL_BGM_GAME,        // ゲームBGM
-		SOUND_LABEL_MAX,     // サウンド最大数
+		SOUND_LABEL_MAX,       // サウンド最大数
 	}LABEL;
 
 	//============

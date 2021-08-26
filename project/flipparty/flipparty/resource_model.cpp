@@ -29,7 +29,7 @@ const std::string CResourceModel::m_aModelPath[CResourceModel::MODEL_MAX]
 	"data/Models/test_player.x",  // テストモデル
 	"data/Models/bg.x",           // 背景モデル
 	"data/Models/cloud.x",        // 雲モデル
-	"data/Models/stage_large.x",  // ステージモデル(大)
+	"data/Models/stage.x",        // ステージモデル
 	"data/Models/iceberg_m01.x",  // 氷山(増澤)
 	"data/Models/iceberg_y01.x",  // 氷山(山田)
 	"data/Models/iceberg_k01.x",  // 氷山(工藤)

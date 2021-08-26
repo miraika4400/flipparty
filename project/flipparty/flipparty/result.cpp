@@ -385,9 +385,9 @@ void CResult::JudgePlayerRank(bool bSamePointRank)
 			{
 
 				// ƒ|ƒCƒ“ƒg‚ª“¯‚¶‚È‚ç“¯‚¶‡ˆÊ‚É‚·‚é
-				if (m_apPlayer[nCntPlayer]->GetPoint() == m_apPlayer[nCntPlayer - 1]->GetPoint())
+				if (m_apPlayer[nCntPlayer]->GetPoint() == m_apPlayer[0]->GetPoint())
 				{
-					m_apPlayer[nCntPlayer]->SetRank(m_apPlayer[nCntPlayer - 1]->GetRank());
+					m_apPlayer[nCntPlayer]->SetRank(m_apPlayer[0]->GetRank());
 				}
 			}
 		}
