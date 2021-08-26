@@ -20,21 +20,32 @@
 #include "camera_tps.h"
 #include "mini_result.h"
 #include "snow.h"
+#include "number.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 #define PLAYER_SPACE (300.0f)             //　プレイヤー位置の間隔
 #define INPUT_COUNT  (30)                 // 入力してから再入力できるまでの待ち時間
-#define FLIPPER_NONE D3DXToRadian(0.0f)
-#define FLIPPER_UP_LEFT D3DXToRadian(70.0f)
-#define FLIPPER_UP_RIGHT D3DXToRadian(-70.0f)
-#define CAMERA_POS (150)                  // カメラの基準位置
-#define SNOWSTORM_TURN (m_nNumPlayer * 2) // 吹雪の登場ターン
-#define MAX_INPUT_TIME (3 * 60)           // 入力の制限時間
 
-#define ANSWER_UI_POS  D3DXVECTOR3(SCREEN_WIDTH / 2.0f, 200.0f, 0.0f)    // 答えのUIの位置
-#define ANSWER_UI_SIZE D3DXVECTOR3(30.0f,30.0f,0.0f)    // 答えのUIのサイズ
+#define CAMERA_POS (150)                        // カメラの基準位置
+#define SNOWSTORM_TURN (m_nNumPlayer * 2)       // 吹雪の登場ターン
+
+// 羽の角度の設定
+#define FLIPPER_NONE D3DXToRadian(0.0f)         // デフォルトのとき
+#define FLIPPER_UP_RIGHT D3DXToRadian(-70.0f)   // 右を上げているとき
+#define FLIPPER_UP_LEFT D3DXToRadian(70.0f)     // 左をあげているとき
+
+// 答えのUIの設定
+#define ANSWER_UI_POS  D3DXVECTOR3(SCREEN_WIDTH / 2.0f, 600.0f, 0.0f)    // 位置
+#define ANSWER_UI_SIZE D3DXVECTOR3(128,64,0.0f)                     // サイズ
+
+// 制限時間の設定
+#define TIME_LIMIT (3)                                    // 制限時間
+#define MAX_INPUT_TIME (TIME_LIMIT * 60)                  // 制限時間(フレーム)
+#define TIME_LIMIT_UI_POS {SCREEN_WIDTH / 2.0f,200,0}     // UIの位置
+#define TIME_LIMIT_UI_SIZE {50,50,0}                      // UIのサイズ
+#define TIME_LIMIT_UI_COLOR {1.0,1.0,1.0,1.0}             // UIの色
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -62,7 +73,7 @@ CRememjber_rule::CRememjber_rule()
     m_IsinputEnd = false;                               // プレイヤーが入力し終わったかのフラグ
     ZeroMemory(&m_FlipperData, sizeof(m_FlipperData));      // 見本データの配列
     ZeroMemory(&m_PlayerInput, sizeof(m_PlayerInput));      // プレイヤーの入力情報
-
+    m_pNumber = nullptr;
     m_pPlayer.clear();// プレイヤーの初期化
 }
 
@@ -149,6 +160,8 @@ HRESULT CRememjber_rule::Init(void)
         m_pPolygon[nCntUI]->BindTexture(CResourceTexture::GetTexture(m_UIData[nCntUI].pTexture));
     }
 
+    m_pNumber = CNumber::Create(TIME_LIMIT, TIME_LIMIT_UI_POS, TIME_LIMIT_UI_SIZE, TIME_LIMIT_UI_COLOR);
+
     ChangeTurnUI();
 
     return S_OK;
@@ -179,6 +192,7 @@ void CRememjber_rule::Uninit(void)
 
             m_pinstace = nullptr;
 
+            m_pNumber->Uninit();
 }
 
 //=============================================================================
@@ -198,6 +212,7 @@ void CRememjber_rule::Update(void)
         m_IsSnow = true;// フラグをオンにする
         CSnow::Create();// 生成
     }
+
 }
 
 //=============================================================================
@@ -214,6 +229,12 @@ void CRememjber_rule::Draw(void)
     if (m_nInputCount)
     {
         m_apAnswer->Draw();
+    }
+
+    // 制限時間の描画
+    if (m_pNumber)
+    {
+    m_pNumber->Draw();
     }
 
 }
@@ -265,6 +286,8 @@ void CRememjber_rule::InputPlayer(void)
 
     // 入力できる制限時間を過ぎたら脱落
     m_nInputTime--;
+    m_pNumber->SetNumber(((int)m_nInputTime / 60)+1);
+
     if ((m_nInputTime == 0))
     {
         Ranking();

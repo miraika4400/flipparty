@@ -27,6 +27,7 @@
 class CPolygon;
 class CPlayerRemember;
 class CCamera;
+class CNumber;
 
 //*****************************************************************************
 // クラス定義
@@ -101,8 +102,8 @@ private:
     bool m_IsSnow;              // 吹雪が出ているかどうか
 
     CPolygon *m_pPolygon[MAX_UI_REMEMBER];// ポリゴンクラスのポインタ
-    CPolygon *m_apAnswer;// 答えの表示用ポリゴン
-
+    CPolygon *m_apAnswer;                 // 答えの表示用ポリゴン
+    CNumber *m_pNumber;                   // 制限時間の秒数ポインタ
 
 };
 
