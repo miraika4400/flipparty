@@ -67,8 +67,8 @@ samplerCUBE SamplerCube = sampler_state {
 float4 PS(VS_OUTPUT In) :COLOR
 {
 	float2 uv = In.TexCoord;
-	uv.x += fWaveMove / 6;
-	uv.y += fWaveMove/5;
+	uv.x = uv.x + fWaveMove / 5;
+	uv.y = uv.y + fWaveMove/5;
 
 	// バンプマップの設定
 	float3 BNormal = normalize(cross(In.Normal, In.Tangent));
@@ -84,9 +84,10 @@ float4 PS(VS_OUTPUT In) :COLOR
 	float Bump2 = max(0, dot(b2, LightDirection));
 
 	float fBump = Bump2 + ((Bump - Bump2)*fWaveRate);
+
 	// 乗算
 	//float4 fOut = ((texCUBE(SamplerCube, In.CubeTexCoord)/1) * In.Color )  * Bump;
-	float4 fOut = ((texCUBE(SamplerCube, In.CubeTexCoord) / fCubeRate) * In.Color ) * fBump;
+	float4 fOut = ((texCUBE(SamplerCube, In.CubeTexCoord) / fCubeRate) * In.Color) * fBump;
 	fOut.a = 0.5f;
 
 	return fOut;

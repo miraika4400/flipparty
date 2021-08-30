@@ -21,6 +21,8 @@
 #include "mini_result.h"
 #include "snow.h"
 #include "number.h"
+#include "stage.h"
+#include "sea.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`
@@ -146,6 +148,7 @@ HRESULT CRememjber_rule::Init(void)
         CPlayerRemember* pPlayer;
         pPlayer = CPlayerRemember::Create(D3DXVECTOR3(posX, -35.0f, 0.0f), nCntPlayer);
 
+		CStage::Create(D3DXVECTOR3(posX, -35.0f, 0.0f), CStage::STAGE_TYPE_NORMAL);
         m_pPlayer.push_back(pPlayer);
     }
 
@@ -163,6 +166,11 @@ HRESULT CRememjber_rule::Init(void)
     m_pNumber = CNumber::Create(TIME_LIMIT, TIME_LIMIT_UI_POS, TIME_LIMIT_UI_SIZE, TIME_LIMIT_UI_COLOR);
 
     ChangeTurnUI();
+
+	// äCÇÃê∂ê¨
+	CSea::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT - 14.0f, 0.0f), 0.001f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT - 12.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT - 10.0f, 0.0f), 0.004f, CSea::TYPE_NORMAL);
 
     return S_OK;
 }

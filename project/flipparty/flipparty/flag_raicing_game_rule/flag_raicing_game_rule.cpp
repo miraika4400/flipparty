@@ -22,6 +22,8 @@
 #include "bg.h"
 #include "iceberg.h"
 #include "passingpenguin.h"
+#include "stage.h"
+#include "sea.h"
 
 //======================================================
 //	静的メンバ変数宣言初期化
@@ -112,6 +114,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	{
 		// プレイヤーの生成
 		m_pPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
+
 		posX -= PLAYER_SPACE;
 	}
 	// キャプテンの生成
@@ -125,6 +128,15 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 
 	//通過ペンギンの生成
 	m_pPassingPenguin = CPassingPenguin::Create(PASSING_PENGUIN_POS);
+
+	// ステージの生成
+	CStage::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_PLAYER_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM), CStage::STAGE_TYPE_LARGE);
+
+	// 海の生成
+	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -14.0f, 0.0f), 0.001f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -12.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -10.0f, 0.0f), 0.004f, CSea::TYPE_NORMAL);
+
 	return S_OK;
 }
 
