@@ -65,6 +65,7 @@ HRESULT CCameraRemember::Init(void)
     // à íuÇÃê›íË
     m_posV = CAMERA_POS_V_REMEMBER;
     m_posR = CAMERA_POS_R_REMEMBER;
+
     return S_OK;
 }
 

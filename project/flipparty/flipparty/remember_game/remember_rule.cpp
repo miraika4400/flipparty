@@ -23,6 +23,7 @@
 #include "number.h"
 #include "stage.h"
 #include "sea.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -166,6 +167,7 @@ HRESULT CRememjber_rule::Init(void)
     m_pNumber = CNumber::Create(TIME_LIMIT, TIME_LIMIT_UI_POS, TIME_LIMIT_UI_SIZE, TIME_LIMIT_UI_COLOR);
 
     ChangeTurnUI();
+    CManager::GetSound()->Play(CSound::LABEL_BGM_REMEMBER_GAME);
 
 	// 海の生成
 	CSea::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT - 14.0f, 0.0f), 0.001f, CSea::TYPE_NORMAL);
@@ -193,14 +195,21 @@ void CRememjber_rule::Uninit(void)
         }
     }
 
-        // ポリゴンの解放
-            m_apAnswer->Uninit();
-            delete m_apAnswer;
-            m_apAnswer = nullptr;
+    // ポリゴンの解放
+    m_apAnswer->Uninit();
+    delete m_apAnswer;
+    m_apAnswer = nullptr;
 
-            m_pinstace = nullptr;
+    m_pinstace = nullptr;
 
-            m_pNumber->Uninit();
+    if (m_pNumber)
+    {
+        m_pNumber->Uninit();
+        delete m_pNumber;
+        m_pNumber = nullptr;
+    }
+
+    CManager::GetSound()->Stop();
 }
 
 //=============================================================================
@@ -376,13 +385,14 @@ void CRememjber_rule::Comparison(void)
         {
             // 外れた場合×を表示
             m_apAnswer->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_BATU));
-
+            CManager::GetSound()->Play(CSound::LABEL_SE_MISS);
             // ミスしたプレイヤーの順位をつける
             Ranking();
         }
         else
         {   // 正解の場合〇を表示
             m_apAnswer->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_MARU));
+            CManager::GetSound()->Play(CSound::LABEL_SE_OK);
         }
 }
 
