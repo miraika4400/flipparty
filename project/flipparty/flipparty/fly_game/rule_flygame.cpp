@@ -122,7 +122,6 @@ void CRuleFly::Uninit(void)
 //******************************
 void CRuleFly::Update(void)
 {
-#ifdef _DEBUG
 
 	////////////////////////////////////////
 	// ‰¼’u‚«
@@ -137,9 +136,6 @@ void CRuleFly::Update(void)
 	}
 
 	/////////////////////////////////////////
-
-#endif // _DEBUG
-
 
 	if (m_pTimeLimit->GetTimeLimit() <= 0)
 	{
