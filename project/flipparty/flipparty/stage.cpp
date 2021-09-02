@@ -32,7 +32,7 @@
 //=============================
 CStage::CStage() :CModel(OBJTYPE_MAP)
 {
-
+	m_type = STAGE_TYPE_NORMAL;
 }
 
 //=============================
@@ -45,13 +45,17 @@ CStage::~CStage()
 //=============================
 // クリエイト
 //=============================
-CStage * CStage::Create(D3DXVECTOR3 pos)
+CStage * CStage::Create(D3DXVECTOR3 pos , STAGE_TYPE type)
 {
 	// メモリの確保
 	CStage *pStage = new CStage;
 
+	// タイプ
+	pStage->m_type = type;
+
 	// 初期化
 	pStage->Init();
+
 	// 座標の設定
 	pStage->SetPos(pos);
 
@@ -66,8 +70,15 @@ HRESULT CStage::Init(void)
 	// モデルクラスの初期化
 	CModel::Init();
 
-	// モデルの割り当て
-	BindModel(CResourceModel::GetModel(CResourceModel::MODEL_STAGE));
+	if (m_type == STAGE_TYPE_NORMAL)
+	{
+		// モデルの割り当て
+		BindModel(CResourceModel::GetModel(CResourceModel::MODEL_STAGE));
+	}
+	else
+	{
+		BindModel(CResourceModel::GetModel(CResourceModel::MODEL_STAGE_LARGE));
+	}
 
 	return S_OK;
 }

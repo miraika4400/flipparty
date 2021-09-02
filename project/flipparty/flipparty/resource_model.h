@@ -56,7 +56,8 @@ public:
 		MODEL_TEST,               // テストモデル
 		MODEL_BG,                 // 背景モデル
 		MODEL_CLOUD,              // 雲モデル
-		MODEL_STAGE,              // ステージ(大)
+		MODEL_STAGE,              // ステージ
+		MODEL_STAGE_LARGE,        // ステージ(大)
 		MODEL_ICEBERG_M,          // 氷山(増澤)
 		MODEL_ICEBERG_Y,          // 氷山(山田)
 		MODEL_ICEBERG_K,          // 氷山(工藤)

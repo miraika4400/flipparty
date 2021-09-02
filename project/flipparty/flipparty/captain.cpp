@@ -45,7 +45,8 @@
 #define FLAG_LEFT_POS D3DXVECTOR3(50.0f,0.0f,100.0f)
 #define FLAG_RIGHT_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)
 #define FLAG_LEFT_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)
-
+#define ROT D3DXVECTOR3( 0.0f, D3DXToRadian(180.0f), 0.0f)
+#define SIZE D3DXVECTOR3(1.4f,1.4f,1.4f)
 //*****************************
 // 静的メンバ変数宣言
 //*****************************
@@ -173,6 +174,12 @@ HRESULT CCaptain::Init(void)
 	
 	//左挙げ指示ビルボードの作成
 	m_falgTexVal.apFlagTex[FLAG_TEX_LEFT] = CBillboard::Create(FLAG_LEFT_POS, FLAG_LEFT_SIZE);
+
+	// 回転
+	SetRot(ROT);
+
+	// サイズ
+	SetSize(SIZE);
 
 	return S_OK;
 }

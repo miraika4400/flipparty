@@ -90,7 +90,7 @@ HRESULT CResult::Init(void)
 	float posX = 0 + ((float)(nPlayNum - 1) * PLAYER_SPACE) / 2;
 	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
 	{
-		m_apPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, -PLAYER_CENTER_HEIGHT, PLAYER_POS_Z), nCntPlayer);
+		m_apPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, 2000.0f - PLAYER_CENTER_HEIGHT, PLAYER_POS_Z), nCntPlayer);
 
 		// ƒJƒƒ‰‚Ì•ûŒü‚É‘Ì‚ðŒü‚¯‚é
 		D3DXVECTOR3 cemeraPos = CManager::GetCamera()->GetPos();

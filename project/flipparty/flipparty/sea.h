@@ -68,5 +68,7 @@ private:
 	float m_fWaveaRate; // ”g‚ÌŒW”
 	float m_fWaveSpeed; // ”g‚Ì‘¬“x
 	SEA_TYPE m_seaType; // ŠCƒ^ƒCƒv
+	D3DXVECTOR3 m_basePos;
+	float m_fHeight;      // ‚‚³‚ğ•Ï‚¦‚é—p
 };
 #endif

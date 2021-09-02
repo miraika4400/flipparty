@@ -22,6 +22,9 @@
 #include "bg.h"
 #include "iceberg.h"
 #include "passingpenguin.h"
+#include "stage.h"
+#include "sea.h"
+#include "result.h"
 
 //======================================================
 //	静的メンバ変数宣言初期化
@@ -42,8 +45,8 @@ CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 #define FLAG_PLAYER_POS_Z_NUM -50.0f	// プレイヤーのZ座標
 
 #define FLAG_CAPTAIN_POS_X_NUM 0.0f		// キャプテンのX座標
-#define FLAG_CAPTAIN_POS_Y_NUM -30.0f	// キャプテンのY座標
-#define FLAG_CAPTAIN_POS_Z_NUM -150.0f	// キャプテンのZ座標
+#define FLAG_CAPTAIN_POS_Y_NUM -98.0f	// キャプテンのY座標
+#define FLAG_CAPTAIN_POS_Z_NUM -220.0f	// キャプテンのZ座標
 #define PASSING_PENGUIN_POS D3DXVECTOR3(400.0f, -30.0f, -100.0f)
 #define RAND_FLAG rand() % 180 + 50		// フラッグの上げる間隔の設定
 
@@ -112,6 +115,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	{
 		// プレイヤーの生成
 		m_pPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
+
 		posX -= PLAYER_SPACE;
 	}
 	// キャプテンの生成
@@ -125,6 +129,15 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 
 	//通過ペンギンの生成
 	m_pPassingPenguin = CPassingPenguin::Create(PASSING_PENGUIN_POS);
+
+	// ステージの生成
+	CStage::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_PLAYER_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM), CStage::STAGE_TYPE_LARGE);
+
+	// 海の生成
+	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -14.0f, 0.0f), 0.001f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -12.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -10.0f, 0.0f), 0.004f, CSea::TYPE_NORMAL);
+
 	return S_OK;
 }
 
@@ -290,6 +303,9 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 		// 順番を入れ替えてリザルトに表示させる
 		m_pPlayer[nCnt]->SetRank(nCnt);
 		m_pPlayer[nCnt]->SetMoveFlag(false);
+
+		// ミニゲームに順位を送る
+		CResult::SetMiniGameRank(CRuleManager::RULE_FLY, m_pPlayer[nCnt]->GetPlayerNumber(), m_pPlayer[nCnt]->GetRank());
 	}
 	// 仮のリザルト表示
 	CMiniResult::Create();

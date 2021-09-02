@@ -21,8 +21,11 @@
 #include "mini_result.h"
 #include "snow.h"
 #include "number.h"
+#include "stage.h"
+#include "sea.h"
 #include "sound.h"
 #include "tutorial.h"
+#include "result.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -148,6 +151,7 @@ HRESULT CRememjber_rule::Init(void)
         CPlayerRemember* pPlayer;
         pPlayer = CPlayerRemember::Create(D3DXVECTOR3(posX, -35.0f, 0.0f), nCntPlayer);
 
+		CStage::Create(D3DXVECTOR3(posX, -35.0f, 0.0f), CStage::STAGE_TYPE_NORMAL);
         m_pPlayer.push_back(pPlayer);
     }
 
@@ -166,6 +170,11 @@ HRESULT CRememjber_rule::Init(void)
 
     ChangeTurnUI();
     CManager::GetSound()->Play(CSound::LABEL_BGM_REMEMBER_GAME);
+
+	// 海の生成
+	CSea::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT - 14.0f, 0.0f), 0.001f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT - 12.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT - 10.0f, 0.0f), 0.004f, CSea::TYPE_NORMAL);
 
     return S_OK;
 }
@@ -405,6 +414,9 @@ void CRememjber_rule::Ranking(void)
         for (int nRank = 0; nRank < m_nNumPlayer; nRank++)
         {
             m_pPlayer[m_aTurn[nRank]]->SetRank(nRank);
+
+			// ミニゲームに順位を送る
+			CResult::SetMiniGameRank(CRuleManager::RULE_FLY, m_pPlayer[m_aTurn[nRank]]->GetPlayerNumber(), m_pPlayer[m_aTurn[nRank]]->GetRank());
         }
 
         m_IsPlay = false;

@@ -31,13 +31,21 @@ public:
 	// 列挙
 	//============
 
+	// ステージタイプ
+	typedef enum
+	{
+		STAGE_TYPE_NORMAL = 0, // ノーマル
+		STAGE_TYPE_LARGE,      // 大きい
+		STAGE_TYPE_MAX         // タイプ最大数
+	}STAGE_TYPE;
+
 	//============
 	// メンバ関数
 	//============
 	CStage();
 	~CStage();
 
-	static CStage *Create(D3DXVECTOR3 pos); // クラス生成
+	static CStage *Create(D3DXVECTOR3 pos , STAGE_TYPE type); // クラス生成
 
 	HRESULT Init(void); // 初期化
 	void Uninit(void);  // 終了
@@ -52,7 +60,7 @@ private:
 	//============
 	// メンバ変数
 	//============
-
+	STAGE_TYPE m_type;
 };
 
 #endif

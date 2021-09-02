@@ -18,9 +18,9 @@
 //*****************************
 #define BMP_TEX_PATH     "data/Textures/sea/BMP_water4.png"   // バンプマップテクスチャのパス
 #define BMP_TEX_PATH2    "data/Textures/sea/BMP_water4.png"   // バンプマップテクスチャのパス
-#define CUBE_TEX_PATH    "data/Textures/sea/cube_sky.dds"   // キューブテクスチャのパス
-#define SHADER_PATH      "data/HLSL/SeaShader.fx"        // HLSLファイルのパス
-#define SIZE D3DXVECTOR3(2500.0f,1.0f,2500.0f)
+#define CUBE_TEX_PATH    "data/Textures/sea/cube_sky.dds"     // キューブテクスチャのパス
+#define SHADER_PATH      "data/HLSL/SeaShader.fx"             // HLSLファイルのパス
+#define SIZE D3DXVECTOR3(1500.0f,1.0f,1500.0f)
 
 //#define COLOR D3DXCOLOR(1.0f,1.0f,1.0f,1.0f)               // カラー
 //#define COLOR D3DXCOLOR(0.3f,0.4f,1.0f,1.0f)             // カラー
@@ -32,7 +32,7 @@
 
 // カラー
 #define COLOR_DIRTY D3DXCOLOR( 0.5f,0.0f,0.3f,1.0f)   
-#define COLOR_NORMAL D3DXCOLOR(0.3f,0.4f,1.0f,1.0f)
+#define COLOR_NORMAL D3DXCOLOR(0.5f,0.6f,1.0f,1.0f)
 #define COLOR_EVENING D3DXCOLOR(1.0f,0.2f,0.1f,1.0f)
 
 //*****************************
@@ -49,6 +49,8 @@ CSea::CSea() :CObject3dShader(OBJTYPE_SEA)
 	m_fWaveaRate = 0.0f;
 	m_fWaveSpeed = 0.0f;
 	m_seaType = TYPE_DIRTY;
+	m_fHeight = 0.0f;
+	m_basePos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //******************************
@@ -74,7 +76,7 @@ CSea * CSea::Create(const D3DXVECTOR3 pos, const float fWaveSeed, SEA_TYPE seaTy
 
 	// 各値の代入・セット
 	pSea->SetPos(pos);               // 座標のセット
-
+	pSea->m_basePos = pos;
 	pSea->BindTexture(m_apBmpTex[0]);
 	pSea->m_fWaveSpeed = fWaveSeed;
 	return pSea;
@@ -175,6 +177,12 @@ void CSea::Update(void)
 {
 	//SetRot(D3DXVECTOR3(0.0001f,0.0f,0.01f));
 	m_fWaveaRate += m_fWaveSpeed;
+
+	// 座標の取得
+	D3DXVECTOR3 pos = GetPos();
+	m_fHeight += 0.02f;
+	pos.y = m_basePos.y + sin(m_fHeight)*5.0f;
+	SetPos(pos);
 }
 
 //******************************
