@@ -31,6 +31,7 @@ public:
     void Update(void);
     void Draw(void);
 
+    void ControllFlipper(void);    // ‰H‚Ì‘€ì
     // SetŠÖ”
     void SetIsLoss(bool IsLoss) { m_IsLoss = IsLoss; }  // ’E—‚µ‚½‚©‚Ç‚¤‚©
 

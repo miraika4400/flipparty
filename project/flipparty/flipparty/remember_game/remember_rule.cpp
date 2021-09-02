@@ -293,11 +293,11 @@ void CRememjber_rule::InputPlayer(void)
     // ¶è‚ğ‚ ‚°‚éğŒ
     bool IsLeft = CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 || CManager::GetKeyboard()->GetKeyTrigger(DIK_W);
 
-    if (IsRight)
+    if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lRz <= -10 || CManager::GetKeyboard()->GetKeyTrigger(DIK_UP))
     {    // ‰E‚ğã‚°‚½‚Æ‚«
         SetRememberData(CFlipper::FLIPPER_TYPE_LEFT);
     }
-    else if (IsLeft)
+    else if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 || CManager::GetKeyboard()->GetKeyTrigger(DIK_W))
     {    // ¶‚ğã‚°‚½‚Æ‚«
         
         SetRememberData(CFlipper::FLIPPER_TYPE_RIGHT);
@@ -420,7 +420,12 @@ void CRememjber_rule::Ranking(void)
         }
 
         m_IsPlay = false;
+
+        // á‚Ì”jŠü
+        if (CSnow::GetInstancce())
+        {
         CSnow::GetInstancce()->CSnow::Uninit();
+        }
 
         CMiniResult::Create();
     }
@@ -443,14 +448,6 @@ void CRememjber_rule::SetRememberData(CFlipper::FLIPPER_TYPE type)
     m_nInputTime = MAX_INPUT_TIME;                   // “ü—Í‚Å‚«‚é§ŒÀŠÔ‚Ì‰ñ•œ
     ControllFlipper(type, CFlipper::FLIPPERSTATE_UP);// è‚ğ‚ ‚°‚éƒ‚[ƒVƒ‡ƒ“‚É‚·‚é
     m_nNumInput++;                                   // “ü—Í‚µ‚½‰ñ”‚Ì’Ç‰Á
-}
-
-//=============================================================================
-// [ControllFlipper] ‰H‚ğ“®‚©‚·ˆ—
-//=============================================================================
-void CRememjber_rule::ControllFlipper(void)
-{
-
 }
 
 //=============================================================================

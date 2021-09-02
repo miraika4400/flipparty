@@ -66,7 +66,8 @@ public:
     void Ranking(void);         // 順位の設定
 
     void SetRememberData(CFlipper::FLIPPER_TYPE type);
-    void ControllFlipper(void);    // 羽の操作
+
+
     // Get関数
     CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
 
