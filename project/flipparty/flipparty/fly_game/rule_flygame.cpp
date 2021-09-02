@@ -36,8 +36,9 @@
 //******************************
 // 静的メンバ変数宣言
 //******************************
-CFlyGamePlayer * CRuleFly::m_pPlayer[4] = {};
+CFlyGamePlayer * CRuleFly::m_pPlayer[MAX_PLAYER_NUM] = {};
 bool CRuleFly::m_bPlay = true;
+
 //******************************
 // コンストラクタ
 //******************************

@@ -406,7 +406,7 @@ void CResult::AdjustPlayerPos(void)
 		if (m_apPlayer[nCntPlayer]->GetMotionActive(CPlayer::MOTION_FALL))
 		{// コケるモーションの時
 			D3DXVECTOR3 playerPos = m_apPlayer[nCntPlayer]->GetPos();
-			playerPos.y += ((-PLAYER_CENTER_HEIGHT - 20) - playerPos.y)*0.05f;
+			playerPos.y += ((2000.0f -PLAYER_CENTER_HEIGHT - 20) - playerPos.y)*0.05f;
 
 			m_apPlayer[nCntPlayer]->SetPos(playerPos);
 		}
