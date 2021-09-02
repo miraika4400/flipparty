@@ -46,7 +46,7 @@
 #define ANSWER_UI_SIZE D3DXVECTOR3(128,64,0.0f)                     // サイズ
 
 // 制限時間の設定
-#define TIME_LIMIT (3)                                    // 制限時間
+#define TIME_LIMIT (5)                                    // 制限時間
 #define MAX_INPUT_TIME (TIME_LIMIT * 60)                  // 制限時間(フレーム)
 #define TIME_LIMIT_UI_POS {SCREEN_WIDTH / 2.0f,200,0}     // UIの位置
 #define TIME_LIMIT_UI_SIZE {50,50,0}                      // UIのサイズ
@@ -303,10 +303,11 @@ void CRememjber_rule::InputPlayer(void)
         SetRememberData(CFlipper::FLIPPER_TYPE_RIGHT);
     }
 
-    // 入力できる制限時間を過ぎたら脱落
+    // 制限時間を減らす
     m_nInputTime--;
     m_pNumber->SetNumber(((int)m_nInputTime / 60)+1);
 
+    // 入力できる制限時間を過ぎたら脱落
     if ((m_nInputTime == 0))
     {
         Ranking();
