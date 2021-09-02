@@ -24,6 +24,7 @@
 #include "passingpenguin.h"
 #include "stage.h"
 #include "sea.h"
+#include "result.h"
 
 //======================================================
 //	静的メンバ変数宣言初期化
@@ -44,8 +45,8 @@ CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 #define FLAG_PLAYER_POS_Z_NUM -50.0f	// プレイヤーのZ座標
 
 #define FLAG_CAPTAIN_POS_X_NUM 0.0f		// キャプテンのX座標
-#define FLAG_CAPTAIN_POS_Y_NUM -30.0f	// キャプテンのY座標
-#define FLAG_CAPTAIN_POS_Z_NUM -150.0f	// キャプテンのZ座標
+#define FLAG_CAPTAIN_POS_Y_NUM -98.0f	// キャプテンのY座標
+#define FLAG_CAPTAIN_POS_Z_NUM -220.0f	// キャプテンのZ座標
 #define PASSING_PENGUIN_POS D3DXVECTOR3(400.0f, -30.0f, -100.0f)
 #define RAND_FLAG rand() % 180 + 50		// フラッグの上げる間隔の設定
 
@@ -302,6 +303,9 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 		// 順番を入れ替えてリザルトに表示させる
 		m_pPlayer[nCnt]->SetRank(nCnt);
 		m_pPlayer[nCnt]->SetMoveFlag(false);
+
+		// ミニゲームに順位を送る
+		CResult::SetMiniGameRank(CRuleManager::RULE_FLY, m_pPlayer[nCnt]->GetPlayerNumber(), m_pPlayer[nCnt]->GetRank());
 	}
 	// 仮のリザルト表示
 	CMiniResult::Create();

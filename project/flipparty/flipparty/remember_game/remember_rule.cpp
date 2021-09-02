@@ -24,6 +24,7 @@
 #include "stage.h"
 #include "sea.h"
 #include "sound.h"
+#include "result.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -412,6 +413,9 @@ void CRememjber_rule::Ranking(void)
         for (int nRank = 0; nRank < m_nNumPlayer; nRank++)
         {
             m_pPlayer[m_aTurn[nRank]]->SetRank(nRank);
+
+			// ミニゲームに順位を送る
+			CResult::SetMiniGameRank(CRuleManager::RULE_FLY, m_pPlayer[m_aTurn[nRank]]->GetPlayerNumber(), m_pPlayer[m_aTurn[nRank]]->GetRank());
         }
         m_IsPlay = false;
         CSnow::GetInstancce()->CSnow::Uninit();
