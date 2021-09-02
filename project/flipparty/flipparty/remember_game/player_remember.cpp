@@ -85,3 +85,11 @@ void CPlayerRemember::Draw(void)
     CPlayer::Draw();
 }
 
+//=============================================================================
+// [ControllFlipper]âHÇÃëÄçÏ
+//=============================================================================
+void CPlayerRemember::ControllFlipper(void)
+{
+    return;
+}
+

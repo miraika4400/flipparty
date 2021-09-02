@@ -151,7 +151,7 @@ void CGame::Update(void)
 	if (m_pRuleManager == NULL)
 	{
 		m_pRuleManager = CRuleManager::Create();
-		m_pRuleManager->SetRule(CRuleManager::RULE_FLAG_RACING);
+		m_pRuleManager->SetRule(CRuleManager::RULE_REMENBER);
 	}
 
 	// カメラクラス更新処理
