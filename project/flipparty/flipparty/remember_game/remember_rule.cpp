@@ -416,7 +416,7 @@ void CRememjber_rule::Ranking(void)
             m_pPlayer[m_aTurn[nRank]]->SetRank(nRank);
 
 			// ƒ~ƒjƒQ[ƒ€‚É‡ˆÊ‚ð‘—‚é
-			CResult::SetMiniGameRank(CRuleManager::RULE_FLY, m_pPlayer[m_aTurn[nRank]]->GetPlayerNumber(), m_pPlayer[m_aTurn[nRank]]->GetRank());
+			CResult::SetMiniGameRank(CRuleManager::RULE_REMENBER, m_pPlayer[m_aTurn[nRank]]->GetPlayerNumber(), m_pPlayer[m_aTurn[nRank]]->GetRank());
         }
 
         m_IsPlay = false;
