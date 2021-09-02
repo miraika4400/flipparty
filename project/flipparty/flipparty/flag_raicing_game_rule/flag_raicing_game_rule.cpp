@@ -47,7 +47,7 @@ CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 #define FLAG_CAPTAIN_POS_X_NUM 0.0f		// キャプテンのX座標
 #define FLAG_CAPTAIN_POS_Y_NUM -98.0f	// キャプテンのY座標
 #define FLAG_CAPTAIN_POS_Z_NUM -220.0f	// キャプテンのZ座標
-#define PASSING_PENGUIN_POS D3DXVECTOR3(400.0f, -30.0f, -100.0f)
+#define PASSING_PENGUIN_POS D3DXVECTOR3(400.0f, -90.0f, -100.0f)
 #define RAND_FLAG rand() % 180 + 50		// フラッグの上げる間隔の設定
 
 //======================================================

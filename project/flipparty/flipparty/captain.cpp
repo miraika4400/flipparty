@@ -74,7 +74,7 @@ CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_CPU)
 	m_bJudgWhite = false;
 
 	m_eColorRed = RED_FLAG_DOWN;
-	m_eColorWhite = WHITE_FLAG_DOWN;
+	m_eColorWhite = BLUE_FLAG_DOWN;
 
 	m_pMotion = NULL;
 	ZeroMemory(&m_falgTexVal, sizeof(m_falgTexVal));
@@ -224,13 +224,13 @@ void CCaptain::Update(void)
 	if (CFlagRaicingGame_rule::GetGameLoop() == CFlagRaicingGame_rule::CAPTAIN_TRUN)
 	{
 		// 全部下げている状態
-		Judge(RED_FLAG_DOWN, WHITE_FLAG_DOWN, WHITE_DOWN, RED_DOWN);
+		Judge(RED_FLAG_DOWN, BLUE_FLAG_DOWN, BLUE_DOWN, RED_DOWN);
 		// 白だけ上げている状態
-		Judge(RED_FLAG_DOWN, WHITE_FLAG_UP, WHITE_UP, RED_DOWN);
+		Judge(RED_FLAG_DOWN, BLUE_FLAG_UP, BLUE_UP, RED_DOWN);
 		// 赤だけ上げている状態
-		Judge(RED_FLAG_UP, WHITE_FLAG_DOWN, WHITE_DOWN, RED_UP);
+		Judge(RED_FLAG_UP, BLUE_FLAG_DOWN, BLUE_DOWN, RED_UP);
 		// どちらも上がっている状態
-		Judge(RED_FLAG_UP, WHITE_FLAG_UP, WHITE_UP, RED_UP);
+		Judge(RED_FLAG_UP, BLUE_FLAG_UP, BLUE_UP, RED_UP);
 
         // プレイヤーのターンに変更
 		CFlagRaicingGame_rule::SetGameLoop(CFlagRaicingGame_rule::PLAYER_TRUN);
@@ -344,26 +344,26 @@ void CCaptain::FlagJudge()
 	switch (m_nColor)
 	{
 		// 青上げ
-	case WHITE_UP:
+	case BLUE_UP:
 		if (!m_bJudgWhite)
 		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
+			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_DOWN));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
-			m_eColorWhite = WHITE_FLAG_UP;
+			m_eColorWhite = BLUE_FLAG_UP;
 			m_bJudgWhite = true;
 			m_falgTexVal.bFlagRight = true;
 			m_falgTexVal.bFlagLeft = false;
 		}
 		break;
 		// 青下げ
-	case WHITE_DOWN:
+	case BLUE_DOWN:
 		if (m_bJudgWhite)
 		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_DOWN));
+			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
-			m_eColorWhite = WHITE_FLAG_DOWN;
+			m_eColorWhite = BLUE_FLAG_DOWN;
 			m_bJudgWhite = false;
 			m_falgTexVal.bFlagRight = true;
 			m_falgTexVal.bFlagLeft = false;
@@ -373,7 +373,7 @@ void CCaptain::FlagJudge()
 	case RED_UP:
 		if (!m_bJudgRed)
 		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
+			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_DOWN));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 			m_eColorRed = RED_FLAG_UP;
@@ -386,7 +386,7 @@ void CCaptain::FlagJudge()
 	case RED_DOWN:
 		if (m_bJudgRed)
 		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_DOWN));
+			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
 			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 			m_eColorRed = RED_FLAG_DOWN;

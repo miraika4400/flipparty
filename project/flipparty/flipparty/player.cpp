@@ -189,9 +189,9 @@ HRESULT CPlayer::Init(void)
 
 	SetMotion(MOTION_IDOL);
 
-#ifdef _DEBUG
+
 	m_bMove = true;
-#endif // _DEBU
+
 	return S_OK;
 }
 

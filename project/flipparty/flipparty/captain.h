@@ -20,6 +20,7 @@
 // マクロ定義
 //*****************************
 #define MAX_FLAG_TEXTURRE 2
+
 //*****************************
 // 前方宣言
 //*****************************
@@ -38,9 +39,9 @@ public:
 	typedef enum
 	{
 		RED_FLAG_UP = 0,	// 赤上がっている状態
-		WHITE_FLAG_UP,		// 白上がっている状態
+		BLUE_FLAG_UP,		// 青上がっている状態
 		RED_FLAG_DOWN,		// 赤下がっている状態
-		WHITE_FLAG_DOWN,	// 白下がっている状態
+		BLUE_FLAG_DOWN,		// 青下がっている状態
 		FLAG_END
 	}FLAG;
 
@@ -61,8 +62,8 @@ public:
 	typedef enum
 	{
 		COLOR_NORMAL = 0,
-		WHITE_UP,			// 白上がっている状態
-		WHITE_DOWN,			// 白下がっている状態
+		BLUE_UP,			// 青上がっている状態
+		BLUE_DOWN,			// 青下がっている状態
 		RED_UP,				// 赤上がっている状態
 		RED_DOWN,			// 赤下がっている状態
 		COLOR_END

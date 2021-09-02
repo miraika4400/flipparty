@@ -448,6 +448,14 @@ void CRememjber_rule::SetRememberData(CFlipper::FLIPPER_TYPE type)
 //=============================================================================
 // [ControllFlipper] ‰H‚ğ“®‚©‚·ˆ—
 //=============================================================================
+void CRememjber_rule::ControllFlipper(void)
+{
+
+}
+
+//=============================================================================
+// [ControllFlipper] ‰H‚ğ“®‚©‚·ˆ—
+//=============================================================================
 void CRememjber_rule::ControllFlipper(CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state)
 {
     m_pPlayer[m_nTurnPlayer]->GetFlipper()->SetState(type, state);
