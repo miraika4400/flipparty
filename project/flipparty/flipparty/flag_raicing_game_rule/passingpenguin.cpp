@@ -26,8 +26,9 @@
 #define FACE_PATTERN 3       // 表情パターン数
 #define FACE_TEX_V (1.0f/(float)FACE_PATTERN) * (float)m_facePattern
 #define MOVE_SPEED 3.0f	//移動速度
-#define LEFT_START_POS_X -320.0f
-#define RIGHT_START_POS_X 320.0f
+#define LEFT_START_POS_X -330.0f
+#define RIGHT_START_POS_X 330.0f
+#define PASSING_SIZE D3DXVECTOR3(1.25f,1.25f,1.25f)
 
 //=============================================================================
 //静的メンバ変数宣言
@@ -129,6 +130,9 @@ HRESULT CPassingPenguin::Init(void)
 
 	//フェイスパターンの初期化
 	m_facePattern = 0;
+
+	// サイズ
+	SetSize(PASSING_SIZE);
 
 	return S_OK;
 }

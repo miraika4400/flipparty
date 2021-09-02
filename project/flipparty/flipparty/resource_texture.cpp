@@ -53,10 +53,10 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
     "./data/Textures/UI001.png",        // UI「のばんです」（記憶ゲームで使用）
 	"./data/Textures/ranking.png",      // UI「順位]
 	"./data/Textures/blind.jpg",		// ブラインド
-	"./data/Textures/right_flag.png",	// UI　右上げ
-	"./data/Textures/right_flag.png",	// UI　右下げ
-	"./data/Textures/left_flag.png", 	// UI　左上げ
-	"./data/Textures/left_flag.png",	// UI　左下げ
+	"./data/Textures/right_flag_up.png",	// UI　右上げ
+	"./data/Textures/right_flag_doun.png",	// UI　右下げ
+	"./data/Textures/left_flag_up.png", 	// UI　左上げ
+	"./data/Textures/left_flag_doun.png",	// UI　左下げ
 	"./data/Textures/thunder.png",      // 雷エフェクト
 	"./data/Textures/snow.png",         // 吹雪エフェクト
 	"./data/Textures/Icon_FlagRacing.png", // 旗揚げゲームアイコン

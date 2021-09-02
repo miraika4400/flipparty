@@ -17,9 +17,8 @@
 // マクロ定義
 //===================================
 #define BLIND_START_POS D3DXVECTOR3(0.0f, 220.0f, -100.0f)	//開始時のブラインドの位置
-#define BLIND_POS D3DXVECTOR3(0.0f, 15.0f, 0.0f)			//ブラインドの位置
+#define BLIND_POS D3DXVECTOR3(0.0f, -20.0f, 0.0f)			//ブラインドの位置
 #define BLIND_SIZE D3DXVECTOR3(100.0f, 60.0f, 0.0f)			//ブラインドのサイズ
-
 #define BLIND_MOVE 5.0f										//移動量
 
 //===================================
