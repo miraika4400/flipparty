@@ -180,6 +180,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="mini_result.cpp" />
+    <ClCompile Include="mini_tutorial.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="model_hierarchy.cpp" />
     <ClCompile Include="motion.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="fly_game\thunder.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="iceberg.h" />
+    <ClInclude Include="mini_tutorial.h" />
     <ClInclude Include="object3d_shader.h" />
     <ClInclude Include="resultboard.h" />
     <ClInclude Include="sea.h" />

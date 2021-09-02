@@ -54,7 +54,7 @@ CSnow * CSnow::Create(void)
 HRESULT CSnow::Init(void)
 {
 
-    m_Speed = D3DXVECTOR2(0.0f, 0.0f);// アニメーションようUV初期化
+    m_Speed = D3DXVECTOR2(0.0f, 0.0f);// アニメーション用UV初期化
 
 
     CScene2d::Init();
@@ -77,11 +77,14 @@ HRESULT CSnow::Init(void)
 //=============================================================================
 void CSnow::Uninit(void)
 {
+
+    CScene2d::Uninit();
     // インスタンスの破棄
     if (m_pInstance)
     {
       m_pInstance = nullptr;
     }
+
 }
 
 //=============================================================================

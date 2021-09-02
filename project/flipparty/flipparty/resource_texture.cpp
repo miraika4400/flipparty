@@ -24,7 +24,9 @@ CResourceTexture *CResourceTexture::m_pSingleTex = NULL; // テクスチャクラスのポ
 const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 {
 	"./data/Textures/title.png",        // タイトル背景
-	"./data/Textures/tutorial_1.png",   // チュートリアル
+	"./data/Textures/tutorial_0.png",   // チュートリアル
+    "./data/Textures/tutorial_1.png",   // チュートリアル
+    "./data/Textures/tutorial_2.png",   // チュートリアル
 	"./data/Textures/particle001.png",  // パーティクル*箱
 	"./data/Textures/Tears.png",        // パーティクル*涙
 	"./data/Textures/particle004.png",  // パーティクル*円

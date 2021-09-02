@@ -5,7 +5,6 @@
 //
 ////////////////////////////////////////////////////
 
-
 //=============================
 // インクルード
 //=============================
@@ -51,6 +50,7 @@ CTutorial * CTutorial::Create(void)
 {
 	// メモリの確保
 	CTutorial *pTitle = new CTutorial;
+
 	// 初期化
 	pTitle->Init();
 	return pTitle;
@@ -93,7 +93,6 @@ void CTutorial::Uninit(void)
 	Release();
 }
 
-
 //=============================
 // 更新処理
 //=============================
@@ -128,7 +127,6 @@ void CTutorial::Update(void)
 		m_pPolygon->BindTexture(m_pTexture[m_nNumTutorial]);
 	}
 }
-
 
 //=============================
 // 描画処理

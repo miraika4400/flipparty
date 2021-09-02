@@ -22,6 +22,7 @@
 #include "snow.h"
 #include "number.h"
 #include "sound.h"
+#include "tutorial.h"
 
 //*****************************************************************************
 // ƒ}ƒNƒ’è‹`
@@ -405,8 +406,10 @@ void CRememjber_rule::Ranking(void)
         {
             m_pPlayer[m_aTurn[nRank]]->SetRank(nRank);
         }
+
         m_IsPlay = false;
         CSnow::GetInstancce()->CSnow::Uninit();
+
         CMiniResult::Create();
     }
 }

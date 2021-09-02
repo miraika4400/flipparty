@@ -16,6 +16,7 @@
 #include "flag_raicing_game_rule.h"
 #include "fade.h"
 #include "game.h"
+#include "mini_tutorial.h"
 
 //=============================
 // マクロ定義
@@ -37,6 +38,7 @@ CRuleManager::CRuleManager() : CScene(OBJTYPE_SYSTEM)
 	m_ruleNext     = RULE_FLAG_RACING;           // ネクストルール
 	m_fadeState    = FADE_NONE;                  // フェード状態
 	m_polygonCol   = { 1.0f, 1.0f, 1.0f, 1.0f};  // カラー
+    m_MiniTutorial = nullptr;
 }
 
 //=============================
@@ -44,6 +46,7 @@ CRuleManager::CRuleManager() : CScene(OBJTYPE_SYSTEM)
 //=============================
 CRuleManager::~CRuleManager()
 {
+
 }
 
 //=============================
@@ -77,8 +80,7 @@ HRESULT CRuleManager::Init(void)
 		                              m_polygonCol);                                          // 色
 
 	// ルールネクスト
-	m_ruleNext = RULE_FLAG_RACING;           // ネクストルール
-
+	//m_ruleNext = RULE_FLAG_RACING;           // ネクストルール
 	return S_OK;
 }
 
@@ -112,70 +114,84 @@ void CRuleManager::Uninit(void)
 //=============================
 void CRuleManager::Update(void)
 {
-	if (m_fadeState == FADE_NONE)
-	{
-		// ルールクラスの更新処理
-		if (m_pGameRule != NULL)
-		{
-			m_pGameRule->Update();
-		}
-	}
-	else
-	{
-		//フェードイン
-		if (m_fadeState == FADE_IN)
-		{
-			m_polygonCol.a -= FADE_RATE;
+    if (m_fadeState == FADE_NONE)
+    {
+        // ルールクラスの更新処理
+        if (m_pGameRule != NULL)
+        {
+            m_pGameRule->Update();
+        }
 
-			if (m_polygonCol.a <= 0.0f)
-			{
-				m_polygonCol.a = 0.0f;
-				m_fadeState = FADE_NONE;
-			}
-		}
+        if (m_MiniTutorial)
+        {
+            //チュートリアル終了フラグがたったら
+            if (m_MiniTutorial->GetIsTutorialEnd())
+            {
+                // チュートリアル破棄
+                m_MiniTutorial->Uninit();
+                m_MiniTutorial = nullptr;
 
-		//フェードアウト
-		else if (m_fadeState == FADE_OUT)
-		{
-			m_polygonCol.a += FADE_RATE;
-			if (m_polygonCol.a >= 1.0f)
-			{
-				m_polygonCol.a = 1.0f;
-				m_fadeState = FADE_IN;
+                // ルールクラスの初期化
+                if (m_pGameRule != NULL)
+                {
+                    m_pGameRule->Uninit();
+                    delete m_pGameRule;
+                    m_pGameRule = NULL;
+                }
 
-				// ルールクラスの初期化
-				if (m_pGameRule != NULL)
-				{
-					m_pGameRule->Uninit();
-					delete m_pGameRule;
-					m_pGameRule = NULL;
-				}
+                // ルールの生成
+                switch (m_ruleNext)
+                {
+                case RULE_FLAG_RACING:
+                    // 旗揚げ
+                    m_pGameRule = CFlagRaicingGame_rule::Create();
+                    break;
+                case RULE_FLY:
+                    // フライ
+                    m_pGameRule = CRuleFly::Create();
+                    break;
+                case RULE_REMENBER:
+                    // 記憶
+                    m_pGameRule = CRememjber_rule::Create();
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        //フェードイン
+        if (m_fadeState == FADE_IN)
+        {
+            m_polygonCol.a -= FADE_RATE;
 
-				// ルールの生成
-				switch (m_ruleNext)
-				{
-				case RULE_FLAG_RACING: 
-					// 旗揚げ
-					m_pGameRule = CFlagRaicingGame_rule::Create();
-					break;
-				case RULE_FLY:
-					// フライ
-					m_pGameRule = CRuleFly::Create();
-					break;
-				case RULE_REMENBER:
-					// 記憶
-					m_pGameRule = CRememjber_rule::Create();
-					break;
-				default:
-					break;
-				}
-			}
-		}
+            if (m_polygonCol.a <= 0.0f)
+            {
+                m_polygonCol.a = 0.0f;
+                m_fadeState = FADE_NONE;
+                // チュートリアル生成
+                m_MiniTutorial = CMini_Tutorial::Create(CResourceTexture::TEXTURE_TUTORIAL);
+            }
+        }
 
-		// カラーのセット
-		m_pFadePolygon->SetColor(m_polygonCol);
-	}
-	
+        //フェードアウト
+        else if (m_fadeState == FADE_OUT)
+        {
+            m_polygonCol.a += FADE_RATE;
+            if (m_polygonCol.a >= 1.0f)
+            {
+                m_polygonCol.a = 1.0f;
+                m_fadeState = FADE_IN;
+            }
+        }
+
+ 
+        // カラーのセット
+        m_pFadePolygon->SetColor(m_polygonCol);
+    }
+
 }
 
 //=============================

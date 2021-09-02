@@ -25,7 +25,7 @@ CCameraRemember* CCameraRemember::m_pInsutance = nullptr;
 #define CAMERA_POS_X (150)
 
 //=============================================================================
-// [CreCCameraRememberate]オブジェクトの生成
+// [CCameraRemember]オブジェクトの生成
 //=============================================================================
 CCameraRemember::CCameraRemember()
 {
@@ -33,7 +33,7 @@ CCameraRemember::CCameraRemember()
 }
 
 //=============================================================================
-// [Create]オブジェクトの生成
+// [~CCameraRemember]デストラクタ
 //=============================================================================
 CCameraRemember::~CCameraRemember()
 {

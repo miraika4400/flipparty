@@ -27,7 +27,9 @@ public:
 	typedef enum
 	{
 		TEXTURE_TITLE = 0,       // タイトル
-		TEXTURE_TUTORIAL,        // チュートリアル
+		TEXTURE_TUTORIAL,        // チュートリアル(はたあげ)
+        TEXTURE_TUTORIAL_FRY,    // チュートリアル(連打)
+        TEXTURE_TUTORIAL_REMEMBER,// チュートリアル(記憶)
 		TEXTURE_PARTICLE_BOX,    // パーティクル*箱
 		TEXTURE_PARTICLE_TEARS,  // パーティクル*涙
 		TEXTURE_PARTICLE_CIRCLE, // パーティクル*円
@@ -64,7 +66,6 @@ public:
 		TESTURE_ICON_FLY,        // 連打ゲームアイコン
 		TESTURE_ICON_REMENBER,   // 記憶ゲームアイコン
 		TESTURE_RESULTBOARD_BACK,// リザルトボード背景
-
 		TEXTURE_MAX              // テクスチャ数
 	}TEXTURE_TYPE;
 	
