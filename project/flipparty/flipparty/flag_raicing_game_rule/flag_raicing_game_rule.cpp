@@ -305,7 +305,7 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 		m_pPlayer[nCnt]->SetMoveFlag(false);
 
 		// ミニゲームに順位を送る
-		CResult::SetMiniGameRank(CRuleManager::RULE_FLY, m_pPlayer[nCnt]->GetPlayerNumber(), m_pPlayer[nCnt]->GetRank());
+		CResult::SetMiniGameRank(CRuleManager::RULE_FLAG_RACING, m_pPlayer[nCnt]->GetPlayerNumber(), m_pPlayer[nCnt]->GetRank());
 	}
 	// 仮のリザルト表示
 	CMiniResult::Create();

@@ -58,7 +58,7 @@ public:
 private:
 	void Fly(CFlipper::FLIPPER_STATE stateNow, CFlipper::FLIPPER_STATE stateOld); // ”ò‚Ôˆ—
 	void ManageState(void);
-	void ControllFlipper(void);    // ‰H‚Ì‘€ì
+	//void ControllFlipper(void);    // ‰H‚Ì‘€ì
 
 	// ƒƒ“ƒo•Ï”
 	float m_fHeightDist; // ‚‚³‚Ì–Ú•W’l
