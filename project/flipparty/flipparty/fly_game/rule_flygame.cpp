@@ -154,7 +154,7 @@ void CRuleFly::Update(void)
 		else
 		{
 			// ƒJƒƒ‰ƒNƒ‰ƒX
-			CManager::SetCamera(CFlyGameCamera::Create());
+			//CManager::SetCamera(CFlyGameCamera::Create());
 		}
 	}
 }
