@@ -171,6 +171,15 @@ void CRuleManager::Update(void)
             {
                 m_polygonCol.a = 0.0f;
                 m_fadeState = FADE_NONE;
+
+				// ルールクラスの初期化
+				if (m_pGameRule != NULL)
+				{
+					m_pGameRule->Uninit();
+					delete m_pGameRule;
+					m_pGameRule = NULL;
+				}
+
                 // チュートリアル生成
                 m_MiniTutorial = CMini_Tutorial::Create(CResourceTexture::TEXTURE_TUTORIAL);
             }

@@ -46,6 +46,7 @@ private:
 	int m_nTime;	//タイマー
 	int m_nMoveStartTime;	//移動開始タイム
 	BLIND_STATE m_state;	//ブラインドの状態
+	CScene3d *m_pBlackPolygon;	//黒ポリゴン
 };
 
 #endif

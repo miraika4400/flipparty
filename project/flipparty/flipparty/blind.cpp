@@ -29,6 +29,7 @@ CBlind::CBlind()
 	m_nTime = 0;
 	m_state = BLIND_STATE_MOVE;
 	m_nMoveStartTime = 0;
+	m_pBlackPolygon = NULL;
 }
 
 //===================================
@@ -80,6 +81,17 @@ HRESULT CBlind::Init(void)
 	//テクスチャの設定
 	BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_BLIND));
 
+	//黒ポリゴンの生成
+	m_pBlackPolygon = CScene3d::Create(
+		D3DXVECTOR3(BLIND_START_POS.x, BLIND_START_POS.y, BLIND_START_POS.z - 1.0f), 
+		BLIND_SIZE);
+	
+	//黒ポリゴンの色設定
+	if (m_pBlackPolygon)
+	{
+		m_pBlackPolygon->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+	}
+
 	return S_OK;
 }
 
@@ -123,6 +135,12 @@ void CBlind::Update(void)
 
 			//位置の設定
 			SetPos(pos);
+
+			//黒ポリゴンの設定
+			if (m_pBlackPolygon)
+			{
+				m_pBlackPolygon->SetPos(D3DXVECTOR3(pos.x, pos.y, pos.z - 1.0f));
+			}
 		}
 	}
 }
@@ -154,7 +172,6 @@ void CBlind::Draw(void)
 		pDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);	//ステンシル・Zテストともに失敗した場合
 		pDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);	//ステンシルのみ成功した場合
 		pDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);	//両方とも成功した場合
-
 	}
 
 	//ポリゴンの描画
