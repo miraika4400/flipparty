@@ -26,7 +26,7 @@ CResourceTexture::TEXTURE_TYPE CMini_Tutorial::m_TextureData = CResourceTexture:
 //=============================================================================
 // [CMini_Tutorial]コンストラクタ
 //=============================================================================
-CMini_Tutorial::CMini_Tutorial() : CScene(OBJTYPE_SYSTEM)
+CMini_Tutorial::CMini_Tutorial() :CScene(OBJTYPE_UI)
 {
     m_pPolygon = NULL;
     m_IsTutorialEnd = false;

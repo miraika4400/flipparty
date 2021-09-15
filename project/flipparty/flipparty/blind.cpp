@@ -24,7 +24,7 @@
 //===================================
 // コンストラクタ
 //===================================
-CBlind::CBlind()
+CBlind::CBlind() : CScene3d(OBJTYPE_BG)
 {
 	m_nTime = 0;
 	m_state = BLIND_STATE_MOVE;
@@ -85,7 +85,9 @@ HRESULT CBlind::Init(void)
 	m_pBlackPolygon = CScene3d::Create(
 		D3DXVECTOR3(BLIND_START_POS.x, BLIND_START_POS.y, BLIND_START_POS.z - 1.0f), 
 		BLIND_SIZE);
-	
+	m_pBlackPolygon->SetPriority(OBJTYPE_BG);
+
+
 	//黒ポリゴンの色設定
 	if (m_pBlackPolygon)
 	{
