@@ -208,12 +208,18 @@ void CRememjber_rule::Uninit(void)
 
     m_pinstace = nullptr;
 
+    // §ŒÀŽžŠÔ”jŠü
     if (m_pNumber)
     {
         m_pNumber->Uninit();
         delete m_pNumber;
         m_pNumber = nullptr;
     }
+
+    // ƒvƒŒƒCƒ„[‚Ì‚ ‚°‚½Žè‚ÌUI
+    m_apFrip->Uninit();
+    delete m_apFrip;
+    m_apFrip = nullptr;
 
     CManager::GetSound()->Stop();
 }
