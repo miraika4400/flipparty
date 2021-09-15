@@ -27,7 +27,8 @@ public:
 	typedef enum
 	{
 		TEXTURE_TITLE = 0,       // タイトル
-		TEXTURE_TUTORIAL,        // チュートリアル(はたあげ)
+        TEXTURE_TUTORIAL,        // チュートリアル
+		TEXTURE_TUTORIAL_FLAG,   // チュートリアル(はたあげ)
         TEXTURE_TUTORIAL_FRY,    // チュートリアル(連打)
         TEXTURE_TUTORIAL_REMEMBER,// チュートリアル(記憶)
 		TEXTURE_PARTICLE_BOX,    // パーティクル*箱

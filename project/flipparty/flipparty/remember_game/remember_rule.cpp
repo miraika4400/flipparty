@@ -166,9 +166,13 @@ HRESULT CRememjber_rule::Init(void)
         m_pPolygon[nCntUI]->BindTexture(CResourceTexture::GetTexture(m_UIData[nCntUI].pTexture));
     }
 
+    m_apFrip = CPolygon::Create(ANSWER_UI_POS, ANSWER_UI_SIZE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));                 // プレイヤーが上げた手表示用ポリゴン
+
+    // 制限時間
     m_pNumber = CNumber::Create(TIME_LIMIT, TIME_LIMIT_UI_POS, TIME_LIMIT_UI_SIZE, TIME_LIMIT_UI_COLOR);
 
     ChangeTurnUI();
+    // BGMの再生
     CManager::GetSound()->Play(CSound::LABEL_BGM_REMEMBER_GAME);
 
 	// 海の生成
@@ -250,6 +254,8 @@ void CRememjber_rule::Draw(void)
         m_apAnswer->Draw();
     }
 
+    m_apFrip->Draw();
+
     // 制限時間の描画
     if (m_pNumber)
     {
@@ -293,14 +299,16 @@ void CRememjber_rule::InputPlayer(void)
     // 左手をあげる条件
     bool IsLeft = CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 || CManager::GetKeyboard()->GetKeyTrigger(DIK_W);
 
-    if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lRz <= -10 || CManager::GetKeyboard()->GetKeyTrigger(DIK_UP))
+    if (IsRight)
     {    // 右を上げたとき
         SetRememberData(CFlipper::FLIPPER_TYPE_LEFT);
+        m_apFrip->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
     }
-    else if (CManager::GetJoypad()->GetStick(m_nTurnPlayer).lY <= -10 || CManager::GetKeyboard()->GetKeyTrigger(DIK_W))
+    else if (IsLeft)
     {    // 左を上げたとき
         
         SetRememberData(CFlipper::FLIPPER_TYPE_RIGHT);
+        m_apFrip->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
     }
 
     // 制限時間を減らす

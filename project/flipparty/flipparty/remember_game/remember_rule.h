@@ -104,6 +104,7 @@ private:
 
     CPolygon *m_pPolygon[MAX_UI_REMEMBER];// ポリゴンクラスのポインタ
     CPolygon *m_apAnswer;                 // 答えの表示用ポリゴン
+    CPolygon *m_apFrip;                 // プレイヤーが上げた手表示用ポリゴン
     CNumber *m_pNumber;                   // 制限時間の秒数ポインタ
 
 };
