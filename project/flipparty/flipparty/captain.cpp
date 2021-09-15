@@ -41,8 +41,8 @@
 #define FACE_PATTERN 3       // 表情パターン数
 #define FACE_TEX_V (1.0f/(float)FACE_PATTERN) * (float)m_facePattern
 #define SCALE_VALUE 1.2f	//モデルのサイズ拡大係数
-#define FLAG_RIGHT_POS D3DXVECTOR3(-50.0f,0.0f,100.0f)
-#define FLAG_LEFT_POS D3DXVECTOR3(50.0f,0.0f,100.0f)
+#define FLAG_RIGHT_POS D3DXVECTOR3(-50.0f,35.0f,100.0f)
+#define FLAG_LEFT_POS D3DXVECTOR3(50.0f,35.0f,100.0f)
 #define FLAG_RIGHT_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)
 #define FLAG_LEFT_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)
 #define ROT D3DXVECTOR3( 0.0f, D3DXToRadian(180.0f), 0.0f)
@@ -154,13 +154,14 @@ HRESULT CCaptain::Init(void)
 	{
 		m_model[nCnt].size = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	}
-
 	// フリッパークラスの生成
 	m_pFlipper = CFlipper::Create();
 
 	// 羽の目標角度の初期化
-	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = 0.0f;
-	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = 0.0f;
+	// 左下がっている状態に初期化
+	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+	// 右下がっている状態に初期化
+	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
 
 	// 表情の初期化
 	m_facePattern = 0;

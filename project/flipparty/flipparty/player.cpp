@@ -149,8 +149,8 @@ HRESULT CPlayer::Init(void)
 	m_pFlipperMoveState = CFlipper::Create();
 
 	// 羽の目標角度の初期化
-	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = 0.0f;
-	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = 0.0f;
+	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
 
 	// プレイヤーアイコンの設定
 	m_pPlayerNumIcon = CBillboard::Create(PLAYER_NUMBER_ICON_POS, PLAYER_NUMBER_ICON_SIZE);
