@@ -45,6 +45,11 @@
 #define ANSWER_UI_POS  D3DXVECTOR3(SCREEN_WIDTH / 2.0f, 600.0f, 0.0f)    // 位置
 #define ANSWER_UI_SIZE D3DXVECTOR3(128,64,0.0f)                     // サイズ
 
+// プレイヤーの入力UIの設定
+#define FRIP_UI_POS  D3DXVECTOR3(SCREEN_WIDTH / 2.0f, 530.0f, 0.0f)    // 位置
+#define FRIP_UI_SIZE D3DXVECTOR3(64,64,0.0f)                     // サイズ
+
+
 // 制限時間の設定
 #define TIME_LIMIT (5)                                    // 制限時間
 #define MAX_INPUT_TIME (TIME_LIMIT * 60)                  // 制限時間(フレーム)
@@ -130,6 +135,7 @@ HRESULT CRememjber_rule::Init(void)
     ZeroMemory(&m_apAnswer, sizeof(m_apAnswer));        // 回答のポリゴン表示
     m_IsPlay = true;                // ゲームをプレイ中かどうか
     m_IsSnow = false;       // 吹雪が出ているかどうか
+    m_IsUIDraw = true;
 
     //-----------------------------
     // 各オブジェクト生成
@@ -166,7 +172,7 @@ HRESULT CRememjber_rule::Init(void)
         m_pPolygon[nCntUI]->BindTexture(CResourceTexture::GetTexture(m_UIData[nCntUI].pTexture));
     }
 
-    m_apFrip = CPolygon::Create(ANSWER_UI_POS, ANSWER_UI_SIZE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));                 // プレイヤーが上げた手表示用ポリゴン
+    m_apFrip = CPolygon::Create(FRIP_UI_POS, FRIP_UI_SIZE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));                 // プレイヤーが上げた手表示用ポリゴン
 
     // 制限時間
     m_pNumber = CNumber::Create(TIME_LIMIT, TIME_LIMIT_UI_POS, TIME_LIMIT_UI_SIZE, TIME_LIMIT_UI_COLOR);
@@ -249,26 +255,33 @@ void CRememjber_rule::Update(void)
 //=============================================================================
 void CRememjber_rule::Draw(void)
 {
-    // UIの描画
-    for (int nCntUI = 0; nCntUI < MAX_UI_REMEMBER; nCntUI++)
+    // UI表示フラグがtrueのとき
+    if (m_IsUIDraw)
     {
-        m_pPolygon[nCntUI]->Draw();
-    }
+
+        // UIの描画
+        for (int nCntUI = 0; nCntUI < MAX_UI_REMEMBER; nCntUI++)
+        {
+            m_pPolygon[nCntUI]->Draw();
+        }
         // あっているかのUI描画
-    if (m_nInputCount)
-    {
-        m_apAnswer->Draw();
+        if (m_nInputCount)
+        {
+            m_apAnswer->Draw();
+        }
+
+        if (m_nInputCount)
+        {
+            m_apFrip->Draw();
+        }
+        // 制限時間の描画
+        if (m_pNumber)
+        {
+            m_pNumber->Draw();
+        }
     }
-
-    m_apFrip->Draw();
-
-    // 制限時間の描画
-    if (m_pNumber)
-    {
-    m_pNumber->Draw();
-    }
-
 }
+
 
 //=============================================================================
 // [InputPlayer]プレイヤーの入力
@@ -441,6 +454,9 @@ void CRememjber_rule::Ranking(void)
         {
         CSnow::GetInstancce()->CSnow::Uninit();
         }
+
+        // UI表示フラグをfalseにする
+        m_IsUIDraw = false;
 
         CMiniResult::Create();
     }

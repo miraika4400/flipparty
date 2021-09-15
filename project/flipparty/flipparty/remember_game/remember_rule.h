@@ -101,6 +101,7 @@ private:
     bool m_IsPlay;              // ゲームをプレイ中かどうか
 
     bool m_IsSnow;              // 吹雪が出ているかどうか
+    bool m_IsUIDraw;            // UI表示するかのフラグ
 
     CPolygon *m_pPolygon[MAX_UI_REMEMBER];// ポリゴンクラスのポインタ
     CPolygon *m_apAnswer;                 // 答えの表示用ポリゴン
