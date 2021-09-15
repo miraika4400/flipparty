@@ -91,83 +91,85 @@ HRESULT CMiniResult::Init(void)
 	// プレイヤーオブジェクトの取得
 	CPlayer *pPlayer = (CPlayer *)CScene::GetTop(CScene::OBJTYPE_PLAYER);
 
-	// 最下位の順位
-	int nWorstRank = pPlayer->GetRank();
-	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
+	if (pPlayer != NULL)
 	{
 		// 最下位の順位
-		if (nWorstRank < pPlayer->GetRank())
+		int nWorstRank = pPlayer->GetRank();
+		for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
 		{
-			nWorstRank = pPlayer->GetRank();
+			// 最下位の順位
+			if (nWorstRank < pPlayer->GetRank())
+			{
+				nWorstRank = pPlayer->GetRank();
+			}
+			pPlayer = (CPlayer*)pPlayer->GetNext();
 		}
-		pPlayer = (CPlayer*)pPlayer->GetNext();
-	}
 
-	// プレイヤー情報の初期化
-	pPlayer = (CPlayer *)CScene::GetTop(CScene::OBJTYPE_PLAYER);
+		// プレイヤー情報の初期化
+		pPlayer = (CPlayer *)CScene::GetTop(CScene::OBJTYPE_PLAYER);
 
-	// 生成位置X軸の調整
-	float posX = 0 + ((float)(nPlayNum - 1) * PLAYER_SPACE) / 2;
-	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
-	{
-		// プレイヤー生成位置
-		D3DXVECTOR3 createPlayerPos = D3DXVECTOR3(posX, 2000.0f-PLAYER_CENTER_HEIGHT, 100.0f);
+		// 生成位置X軸の調整
+		float posX = 0 + ((float)(nPlayNum - 1) * PLAYER_SPACE) / 2;
+		for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
+		{
+			// プレイヤー生成位置
+			D3DXVECTOR3 createPlayerPos = D3DXVECTOR3(posX, 2000.0f - PLAYER_CENTER_HEIGHT, 100.0f);
 
-		// プレイヤーの生成
-		CPlayer * pResultPlayer = CPlayer::Create(createPlayerPos, nCntPlayer);
-		// オブジェクトタイプ
-		pResultPlayer->SetPriority(OBJTYPE_MINIRESULT_OBJ);
-		// 操作不可
-		pResultPlayer->SetMoveFlag(false);
+			// プレイヤーの生成
+			CPlayer * pResultPlayer = CPlayer::Create(createPlayerPos, nCntPlayer);
+			// オブジェクトタイプ
+			pResultPlayer->SetPriority(OBJTYPE_MINIRESULT_OBJ);
+			// 操作不可
+			pResultPlayer->SetMoveFlag(false);
 
-		// カメラの方向に体を向ける
-		D3DXVECTOR3 cemeraPos = CManager::GetCamera()->GetPos();
-		float fRotY = atan2f(createPlayerPos.x - cemeraPos.x, createPlayerPos.z - cemeraPos.z);
+			// カメラの方向に体を向ける
+			D3DXVECTOR3 cemeraPos = CManager::GetCamera()->GetPos();
+			float fRotY = atan2f(createPlayerPos.x - cemeraPos.x, createPlayerPos.z - cemeraPos.z);
 
-		// 角度の調整
-		pResultPlayer->SetRot(D3DXVECTOR3(0.0f, fRotY, 0.0f));
-
-		// モーションの分岐
-		if (pPlayer->GetRank() == 0)
-		{// 一位
-			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_1);
-			// 表情の設定
-			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_GOOD);
-		}
-		else if(pPlayer->GetRank() == nWorstRank)
-		{// 最下位
-			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_4);
 			// 角度の調整
-			pResultPlayer->SetPos(D3DXVECTOR3(createPlayerPos.x, createPlayerPos.y - 20, createPlayerPos.z));
-			// 表情の設定
-			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
-			pResultPlayer->Draw();
-			D3DXVECTOR3 headPos;
-			headPos.x = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
-			headPos.y = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
-			headPos.z = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 10;
-			CTearsManager::Create(headPos);
-		}
-		else if (pPlayer->GetRank() == 1)
-		{// 二位
-			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_2);
-		}
-		else if (pPlayer->GetRank() == 2)
-		{// 三位
-			pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_3);
-			// 表情の設定
-			pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
-		}
+			pResultPlayer->SetRot(D3DXVECTOR3(0.0f, fRotY, 0.0f));
 
-		// ランクUIの生成
-		CRankUI::Create(D3DXVECTOR3(createPlayerPos.x, createPlayerPos.y + RANK_UI_HEGHT, createPlayerPos.z), pPlayer->GetRank());
+			// モーションの分岐
+			if (pPlayer->GetRank() == 0)
+			{// 一位
+				pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_1);
+				// 表情の設定
+				pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_GOOD);
+			}
+			else if (pPlayer->GetRank() == nWorstRank)
+			{// 最下位
+				pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_4);
+				// 角度の調整
+				pResultPlayer->SetPos(D3DXVECTOR3(createPlayerPos.x, createPlayerPos.y - 20, createPlayerPos.z));
+				// 表情の設定
+				pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
+				pResultPlayer->Draw();
+				D3DXVECTOR3 headPos;
+				headPos.x = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
+				headPos.y = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
+				headPos.z = pResultPlayer->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 10;
+				CTearsManager::Create(headPos);
+			}
+			else if (pPlayer->GetRank() == 1)
+			{// 二位
+				pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_2);
+			}
+			else if (pPlayer->GetRank() == 2)
+			{// 三位
+				pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_3);
+				// 表情の設定
+				pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
+			}
 
-		// 位置をずらす
-		posX -= PLAYER_SPACE;
+			// ランクUIの生成
+			CRankUI::Create(D3DXVECTOR3(createPlayerPos.x, createPlayerPos.y + RANK_UI_HEGHT, createPlayerPos.z), pPlayer->GetRank());
 
-		pPlayer = (CPlayer*)pPlayer->GetNext();
+			// 位置をずらす
+			posX -= PLAYER_SPACE;
+
+			pPlayer = (CPlayer*)pPlayer->GetNext();
+		}
 	}
-	
 	return S_OK;
 }
 
