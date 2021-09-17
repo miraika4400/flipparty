@@ -25,6 +25,7 @@
 #include "stage.h"
 #include "sea.h"
 #include "result.h"
+#include "sound.h"
 
 //======================================================
 //	Ã“Iƒƒ“ƒo•Ï”éŒ¾‰Šú‰»
@@ -138,6 +139,9 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -12.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
 	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -10.0f, 0.0f), 0.004f, CSea::TYPE_NORMAL);
 
+	// BGMÄ¶
+	CManager::GetSound()->Play(CSound::LABEL_BGM_FLAG_GAME);
+
 	return S_OK;
 }
 
@@ -146,7 +150,8 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 //======================================================
 void CFlagRaicingGame_rule::Uninit(void)
 {
-
+	// BGM’âŽ~
+	CManager::GetSound()->Stop(CSound::LABEL_BGM_FLAG_GAME);
 }
 
 //======================================================
