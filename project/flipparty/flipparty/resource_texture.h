@@ -67,6 +67,7 @@ public:
 		TESTURE_ICON_FLY,        // 連打ゲームアイコン
 		TESTURE_ICON_REMENBER,   // 記憶ゲームアイコン
 		TESTURE_RESULTBOARD_BACK,// リザルトボード背景
+		TESTURE_WARNING,         // 警告
 		TEXTURE_MAX              // テクスチャ数
 	}TEXTURE_TYPE;
 	

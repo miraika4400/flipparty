@@ -26,6 +26,7 @@
 #include "rule_manager.h"
 #include "sea.h"
 #include "stage.h"
+#include "warning.h"
 
 //******************************
 // É}ÉNÉçíËã`
@@ -132,7 +133,9 @@ void CRuleFly::Update(void)
 	{
 		for (int nCntPlayer = 0; nCntPlayer < CCountSelect::GetPlayerNum(); nCntPlayer++)
 		{
-			CCloud::Create(nCntPlayer);
+			//CCloud::Create(nCntPlayer);
+
+			CWarningUI::Create(nCntPlayer);
 		}
 	}
 

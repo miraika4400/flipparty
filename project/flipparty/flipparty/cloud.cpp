@@ -31,10 +31,11 @@
 //**********************************
 #define MAX_SIZE  D3DXVECTOR3(1.0f, 1.0f, 1.0f)
 #define SIZE_RATE 0.07f
-#define CLOUD_COLOR D3DXCOLOR(0.95f, 0.95f, 1.0f, m_fAlpha)
-#define LIFE 70
+//#define CLOUD_COLOR_NORMAL D3DXCOLOR(0.95f, 0.95f, 0.95f, m_fAlpha)  // 雲の色*通常時
+#define CLOUD_COLOR_NORMAL D3DXCOLOR(0.3f , 0.3f , 0.3f , m_fAlpha)  // 雲の色*通常時
+#define CLOUD_COLOR_OUT    D3DXCOLOR(0.3f , 0.3f , 0.3f , m_fAlpha)  // 雲の色*アウト時
 #define THUNDER_CREATE_COUNT_MIN 20
-#define THUNDER_CREATE_COUNT_MAX LIFE
+#define THUNDER_CREATE_COUNT_MAX 50
 
 #define THUNDER_POS_Y -60
 #define CLOUD_POS_Y   150
@@ -50,6 +51,7 @@ CCloud::CCloud() :CModel(OBJTYPE_MAP)
 	m_nPlayerNum = 0;
 	m_playerPosSave = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_bThunder = false;
+	m_color = CLOUD_COLOR_NORMAL;
 }
 
 //=============================
@@ -102,6 +104,10 @@ HRESULT CCloud::Init(void)
 	m_playerPosSave = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	// 雷フラグ
 	m_bThunder = false;
+
+	// 色の初期化
+	m_color = CLOUD_COLOR_NORMAL;
+
 	return S_OK;
 }
 
@@ -120,7 +126,7 @@ void CCloud::Uninit(void)
 void CCloud::Update(void)
 {
 	m_nCntAction++;
-	if (m_nCntAction >= LIFE)
+	if (m_nCntAction >= THUNDER_CREATE_COUNT_MAX)
 	{
 		// サイズの変更
 		m_size += (D3DXVECTOR3(0.0f, 0.0f, 0.0f) - m_size)*SIZE_RATE;
@@ -133,6 +139,8 @@ void CCloud::Update(void)
 		m_size += (MAX_SIZE - m_size)*SIZE_RATE;
 		m_fAlpha += (1.0f - m_fAlpha)*SIZE_RATE;
 	}
+	// アルファ値の保管
+	m_color.a = m_fAlpha;
 
 	// 雷を落とすかの判定
 	if (m_nCntAction == THUNDER_CREATE_COUNT_MIN)
@@ -142,6 +150,9 @@ void CCloud::Update(void)
 	}
 	if (m_nCntAction >= THUNDER_CREATE_COUNT_MIN&&m_nCntAction <= THUNDER_CREATE_COUNT_MAX)
 	{
+		// 色の設定
+		m_color = CLOUD_COLOR_OUT;
+
 		// 保存していた座標と違う時&&雷をまだ落としていないとき
 		if(m_playerPosSave!= CRuleFly::GetPlayer(m_nPlayerNum)->GetPos()&& !m_bThunder)
 		{
@@ -150,9 +161,15 @@ void CCloud::Update(void)
 			CThunder::Create(D3DXVECTOR3(pos.x, pos.y + THUNDER_POS_Y, pos.z), m_nPlayerNum);
 			// 雷を落とした状態にする
 			m_bThunder = true;
+
+			m_nCntAction = THUNDER_CREATE_COUNT_MAX;
 		}
 	}
-
+	else
+	{
+		// 色の設定
+		m_color = CLOUD_COLOR_NORMAL;
+	}
 	// サイズのセット
 	SetSize(m_size);
 
@@ -223,7 +240,7 @@ void CCloud::DrawModel(void)
 					// テクスチャをシェーダーに送る
 					shader.pEffect->SetTexture("ToonTex", CResourceTexture::GetTexture(CResourceTexture::TEXTURE_TOONSHADOW_CLOUD));
 					// 色
-					shader.pEffect->SetFloatArray("DiffuseColor", (float*)&CLOUD_COLOR, 4);
+					shader.pEffect->SetFloatArray("DiffuseColor", (float*)&m_color, 4);
 					// シェーダパスの描画開始
 					shader.pEffect->BeginPass(nCntEffect);
 					//モデルパーツの描画

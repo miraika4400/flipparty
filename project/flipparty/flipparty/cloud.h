@@ -49,6 +49,7 @@ private:
 	// メンバ変数
 	//============
 	D3DXVECTOR3 m_size; // サイズ
+	D3DXCOLOR m_color;  // 色
 	int m_nCntAction;   // アクションカウント
 	float m_fAlpha;
 	int m_nPlayerNum;   // プレイヤー番号
