@@ -244,8 +244,8 @@ void CFlagRaicingGame_rule::FlagJudge(void)
 		pPlayerFlipper = m_pPlayer[nCount]->GetFlipper();
 
 		// “®‚«‚ª“¯‚¶‚¾‚Á‚½ê‡
-		if (pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT)
-			&& pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT))
+		if (pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT)
+			&& pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT))
 		{
 			// Å‰‚É“¯‚¶“®‚«‚É‚È‚Á‚½ƒvƒŒƒCƒ„[‚ğ’T‚·
 			if(PlayerFlagJudge(m_pPlayer[nCount]))
