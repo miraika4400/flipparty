@@ -18,12 +18,12 @@
 //=============================
 // マクロ定義
 //=============================
-#define UI_SIZE D3DXVECTOR3(15.0f,15.0f,0.0f) // UIサイズ
-#define UI_POS_Y 100                          // プレイヤーからどれくらい高い位置か
-#define UI_POS_Z 5                            // プレイヤーからどれくらい手前か
+#define UI_SIZE D3DXVECTOR3(15.0f,15.0f,0.0f)    // UIサイズ
+#define UI_POS_Y 105                             // プレイヤーからどれくらい高い位置か
+#define UI_POS_Z 5                               // プレイヤーからどれくらい手前か
 #define COLOR D3DXCOLOR(1.0f,1.0f,1.0f,m_fAlpha) // 色
-#define CLOUD_COUNT 60                        // 雲生成カウント
-#define LIFE CLOUD_COUNT + 60                 // 寿命
+#define CLOUD_COUNT 60                           // 雲生成カウント
+#define LIFE CLOUD_COUNT + 60                    // 寿命
 
 //=============================
 // 静的メンバ変数宣言

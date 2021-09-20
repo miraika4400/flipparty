@@ -17,6 +17,7 @@
 #include "fade.h"
 #include "game.h"
 #include "mini_tutorial.h"
+#include "sound.h"
 
 //=============================
 // マクロ定義
@@ -131,6 +132,9 @@ void CRuleManager::Update(void)
                 m_MiniTutorial->Uninit();
                 m_MiniTutorial = nullptr;
 
+				// BGM停止
+				CManager::GetSound()->Stop(CSound::LABEL_BGM_TUTORIAL);
+
                 // ルールクラスの初期化
                 if (m_pGameRule != NULL)
                 {
@@ -182,6 +186,9 @@ void CRuleManager::Update(void)
 
                 // チュートリアル生成
                 m_MiniTutorial = CMini_Tutorial::Create(CResourceTexture::TEXTURE_TUTORIAL);
+
+				// BGM再生
+				CManager::GetSound()->Play(CSound::LABEL_BGM_TUTORIAL);
             }
         }
 

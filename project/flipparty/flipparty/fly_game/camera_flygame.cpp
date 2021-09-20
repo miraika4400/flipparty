@@ -9,18 +9,14 @@
 // インクルード
 //******************************
 #include "camera_flygame.h"
-#include "manager.h"
-#include "renderer.h"
-#include "keyboard.h"
-#include "game.h"
-#include "mouse.h"
-#include "joypad.h"
+#include "player_flygame.h"
+#include "rule_flygame.h"
 
 //******************************
 // マクロ定義
 //******************************
-#define CAMERA_POS_V D3DXVECTOR3(0.0f, 50.0f, 500.0f)  // 位置
-#define CAMERA_POS_R D3DXVECTOR3(0.0f, 150.0f, 0.0f) // 注視点
+#define CAMERA_POS_V D3DXVECTOR3(0.0f, 50.0f, 500.0f) // 位置
+#define CAMERA_POS_R D3DXVECTOR3(0.0f, 100.0f, 0.0f)  // 注視点
 
 //******************************
 // 静的メンバ変数宣言
@@ -72,4 +68,15 @@ HRESULT CFlyGameCamera::Init(void)
 //******************************
 void CFlyGameCamera::Update(void)
 {
+	D3DXVECTOR3 playerPos = CRuleFly::GetPlayer(0)->GetPos();
+
+	for (int nCntPlayer = 1; nCntPlayer > MAX_PLAYER_NUM; nCntPlayer++)
+	{
+		if (playerPos.y < CRuleFly::GetPlayer(nCntPlayer)->GetPos().y)
+		{
+			playerPos = CRuleFly::GetPlayer(nCntPlayer)->GetPos();
+		}
+	}
+
+	m_posR.y += ((playerPos.y + CAMERA_POS_R.y)- m_posR.y)*0.05f;
 }

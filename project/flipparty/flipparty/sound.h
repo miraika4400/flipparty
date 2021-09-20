@@ -23,8 +23,10 @@ public:
 	typedef enum
 	{
 		LABEL_BGM_TITLE = 0,        // タイトルBGM
-		LABEL_BGM_GAME,             // ゲームBGM
-        LABEL_BGM_REMEMBER_GAME,    // 記憶ゲームのBGM
+		LABEL_BGM_TUTORIAL,         // チュートリアル
+		LABEL_BGM_FLAG_GAME,        // 旗揚げゲームのBGM
+		LABEL_BGM_FLY_GAME,         // 連打ゲームのBGM
+		LABEL_BGM_REMEMBER_GAME,    // 記憶ゲームのBGM
         LABEL_SE_OK,                // 記憶ゲーム正解の音
         LABEL_SE_MISS,              // 記憶ゲーム不正解の音
 		SOUND_LABEL_MAX,            // サウンド最大数

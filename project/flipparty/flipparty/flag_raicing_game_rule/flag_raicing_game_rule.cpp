@@ -27,6 +27,7 @@
 #include "sea.h"
 #include "result.h"
 #include "polygon.h"
+#include "sound.h"
 #include "flag_raicing_game_polygon.h"
 
 //======================================================
@@ -154,6 +155,9 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -12.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
 	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -10.0f, 0.0f), 0.004f, CSea::TYPE_NORMAL);
 
+	// BGM再生
+	CManager::GetSound()->Play(CSound::LABEL_BGM_FLAG_GAME);
+
 	return S_OK;
 }
 
@@ -162,8 +166,11 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 //======================================================
 void CFlagRaicingGame_rule::Uninit(void)
 {
+	// BGM停止
+	CManager::GetSound()->Stop(CSound::LABEL_BGM_FLAG_GAME);
+	
+	// 人数の取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
-
 	for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
 	{
 		// テクスチャクラスの終了処理
@@ -283,8 +290,8 @@ void CFlagRaicingGame_rule::FlagJudge(void)
 		pPlayerFlipper = m_pPlayer[nCount]->GetFlipper();
 
 		// 動きが同じだった場合
-		if (pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT)
-			&& pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT))
+		if (pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT)
+			&& pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT))
 		{
 			// 最初に同じ動きになったプレイヤーを探す
 			if(PlayerFlagJudge(m_pPlayer[nCount]))
