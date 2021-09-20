@@ -346,7 +346,7 @@ void CCaptain::FlagJudge()
 	{
 		// Âã‚°
 	case BLUE_UP:
-		if (!m_bJudgWhite)
+		if (!m_bJudgRed)
 		{
 			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_DOWN));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
@@ -359,7 +359,7 @@ void CCaptain::FlagJudge()
 		break;
 		// Â‰º‚°
 	case BLUE_DOWN:
-		if (m_bJudgWhite)
+		if (m_bJudgRed)
 		{
 			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
@@ -372,7 +372,7 @@ void CCaptain::FlagJudge()
 		break;
 		// Ôã‚°
 	case RED_UP:
-		if (!m_bJudgRed)
+		if (!m_bJudgWhite)
 		{
 			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_DOWN));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
@@ -385,7 +385,7 @@ void CCaptain::FlagJudge()
 		break;
 		// Ô‰º‚°
 	case RED_DOWN:
-		if (m_bJudgRed)
+		if (m_bJudgWhite)
 		{
 			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;

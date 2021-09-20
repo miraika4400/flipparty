@@ -18,7 +18,8 @@
 //======================================================
 //	マクロ定義
 //======================================================
-
+#define PLAYER_NUM 4
+#define MAX_POINT_NUM 2
 
 //======================================================
 //	前方前言
@@ -31,6 +32,7 @@ class CTimeLimit;
 class CBlind;
 class CBillboard;
 class CPassingPenguin;
+class CNumber;
 //======================================================
 //	クラス定義
 //======================================================
@@ -43,6 +45,11 @@ public:
 		CAPTAIN_TRUN,
 		TRUN_END
 	}TRUN;
+
+	typedef struct
+	{
+		CBillboard * bPoint[PLAYER_NUM];
+	}PLAYER_POINT_VARIABLE;
 
 	CFlagRaicingGame_rule();
 	~CFlagRaicingGame_rule();
@@ -70,6 +77,8 @@ private:
 	CCamera *m_pCamera;				// カメラへのポインタ
 	CCaptain *m_pCaptain;			// キャプテンのポインタ
 	static CBlind *m_pBlind;					//ブラインドクラスのポインタ
+	PLAYER_POINT_VARIABLE m_PlayerPoint;
+	CNumber *m_apNumber[MAX_POINT_NUM];
 
 	int m_nRandTime;				// フラッグを上げる間隔
 	int m_nCntTime;					// 時間計算

@@ -20,6 +20,7 @@
 #include "timelimit.h"
 #include "blind.h"
 #include "bg.h"
+#include "billboard.h"
 #include "iceberg.h"
 #include "passingpenguin.h"
 #include "stage.h"
@@ -37,12 +38,18 @@ CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 //	マクロ定義
 //======================================================
 #define PLAYER_SPACE 110.0f				// プレイヤー位置の間隔
+#define POINT_UI_SPACE 95.0f			// 点数の位置間隔
 #define TIME_SET 180					// 制限時間の設定
 #define TRUN_SET 40						// ターンの制限時間の設定
 #define ADD_POINT_NUM 1					// ポイント合計値の設定
 
 #define FLAG_PLAYER_POS_Y_NUM -100.0f	// プレイヤーのY座標
 #define FLAG_PLAYER_POS_Z_NUM -50.0f	// プレイヤーのZ座標
+
+#define POINT_UI_POS_Y_NUM -85.0f		// 点数のY座標
+#define POINT_UI_POS_Z_NUM 5.0f			// 点数のZ座標
+#define POINT_UI_SIZE_X_NUM 20.0f		// 点数UI横幅の大きさ
+#define POINT_UI_SIZE_Y_NUM 10.0f		// 点数UI縦幅の大きさ
 
 #define FLAG_CAPTAIN_POS_X_NUM 0.0f		// キャプテンのX座標
 #define FLAG_CAPTAIN_POS_Y_NUM -98.0f	// キャプテンのY座標
@@ -57,6 +64,8 @@ CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 {
 	// 変数の初期化
 	ZeroMemory(&m_pPlayer, sizeof(m_pPlayer));
+	ZeroMemory(&m_PlayerPoint, sizeof(m_PlayerPoint));
+	memset(m_apNumber, 0, sizeof(m_apNumber));
 	m_pCaptain = NULL;
 	m_nCntInputPlayer = 0;
 	m_nCntTime = 0;
@@ -108,15 +117,21 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
-	float posX = 0 + ((float)(nPlayerNum - 1) * PLAYER_SPACE) / 2;// 位置の調整
+	float posX = 0 + ((float)(nPlayerNum - 1) * PLAYER_SPACE) / 2;// プレイヤー位置の調整
+	float posXUI = 0 + ((float)(nPlayerNum - 1) * POINT_UI_SPACE) / 2;// 点数の位置調整
 
 	// プレイヤーの人数分プレイヤー生成
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
 	{
 		// プレイヤーの生成
 		m_pPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
+		// ポイントUIの生成
+		m_PlayerPoint.bPoint[nCntPlayer] = CBillboard::Create(
+			D3DXVECTOR3(posXUI, POINT_UI_POS_Y_NUM, POINT_UI_POS_Z_NUM), 
+			D3DXVECTOR3(POINT_UI_SIZE_X_NUM, POINT_UI_SIZE_Y_NUM, 0.0f));
 
 		posX -= PLAYER_SPACE;
+		posXUI -= POINT_UI_SPACE;
 	}
 	// キャプテンの生成
 	m_pCaptain = CCaptain::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_CAPTAIN_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM));
@@ -146,7 +161,23 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 //======================================================
 void CFlagRaicingGame_rule::Uninit(void)
 {
+	int nPlayerNum = CCountSelect::GetPlayerNum();
 
+	for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
+	{
+		// テクスチャクラスの終了処理
+		if (m_PlayerPoint.bPoint[nCnt] != NULL)
+		{
+			//ビルボードの終了
+			m_PlayerPoint.bPoint[nCnt]->Uninit();
+
+			//メモリの削除
+			delete m_PlayerPoint.bPoint[nCnt];
+
+			//メモリのクリア
+			m_PlayerPoint.bPoint[nCnt] = NULL;
+		}
+	}
 }
 
 //======================================================
@@ -216,7 +247,12 @@ void CFlagRaicingGame_rule::Update(void)
 //======================================================
 void CFlagRaicingGame_rule::Draw(void)
 {
+	int nPlayerNum = CCountSelect::GetPlayerNum();
 
+	for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
+	{
+		m_PlayerPoint.bPoint[nCnt]->Draw();
+	}
 }
 
 //======================================================
