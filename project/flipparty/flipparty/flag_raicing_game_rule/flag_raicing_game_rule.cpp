@@ -26,6 +26,8 @@
 #include "stage.h"
 #include "sea.h"
 #include "result.h"
+#include "polygon.h"
+#include "flag_raicing_game_polygon.h"
 
 //======================================================
 //	静的メンバ変数宣言初期化
@@ -33,12 +35,13 @@
 CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eLoop
 	= CFlagRaicingGame_rule::CAPTAIN_TRUN;	// キャプテンのターンかプレイヤーのターンかを判別する変数
 CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
+CPlayer *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
 
 //======================================================
 //	マクロ定義
 //======================================================
 #define PLAYER_SPACE 110.0f				// プレイヤー位置の間隔
-#define POINT_UI_SPACE 95.0f			// 点数の位置間隔
+#define POINT_UI_SPACE 310.0f			// 点数の位置間隔
 #define TIME_SET 180					// 制限時間の設定
 #define TRUN_SET 40						// ターンの制限時間の設定
 #define ADD_POINT_NUM 1					// ポイント合計値の設定
@@ -46,10 +49,10 @@ CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 #define FLAG_PLAYER_POS_Y_NUM -100.0f	// プレイヤーのY座標
 #define FLAG_PLAYER_POS_Z_NUM -50.0f	// プレイヤーのZ座標
 
-#define POINT_UI_POS_Y_NUM -85.0f		// 点数のY座標
+#define POINT_UI_POS_Y_NUM 630.0f		// 点数のY座標
 #define POINT_UI_POS_Z_NUM 5.0f			// 点数のZ座標
-#define POINT_UI_SIZE_X_NUM 20.0f		// 点数UI横幅の大きさ
-#define POINT_UI_SIZE_Y_NUM 10.0f		// 点数UI縦幅の大きさ
+#define POINT_UI_SIZE_X_NUM 60.0f		// 点数UI横幅の大きさ
+#define POINT_UI_SIZE_Y_NUM 30.0f		// 点数UI縦幅の大きさ
 
 #define FLAG_CAPTAIN_POS_X_NUM 0.0f		// キャプテンのX座標
 #define FLAG_CAPTAIN_POS_Y_NUM -98.0f	// キャプテンのY座標
@@ -63,7 +66,6 @@ CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 {
 	// 変数の初期化
-	ZeroMemory(&m_pPlayer, sizeof(m_pPlayer));
 	ZeroMemory(&m_PlayerPoint, sizeof(m_PlayerPoint));
 	memset(m_apNumber, 0, sizeof(m_apNumber));
 	m_pCaptain = NULL;
@@ -118,7 +120,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
 	float posX = 0 + ((float)(nPlayerNum - 1) * PLAYER_SPACE) / 2;// プレイヤー位置の調整
-	float posXUI = 0 + ((float)(nPlayerNum - 1) * POINT_UI_SPACE) / 2;// 点数の位置調整
+	float posXUI = SCREEN_WIDTH / 2 + ((float)(nPlayerNum - 1) * POINT_UI_SPACE) / 2;// 点数の位置調整
 
 	// プレイヤーの人数分プレイヤー生成
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
@@ -126,9 +128,8 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 		// プレイヤーの生成
 		m_pPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
 		// ポイントUIの生成
-		m_PlayerPoint.bPoint[nCntPlayer] = CBillboard::Create(
-			D3DXVECTOR3(posXUI, POINT_UI_POS_Y_NUM, POINT_UI_POS_Z_NUM), 
-			D3DXVECTOR3(POINT_UI_SIZE_X_NUM, POINT_UI_SIZE_Y_NUM, 0.0f));
+		m_PlayerPoint.bPoint[nCntPlayer] = CFlagRaicingGamePolygon::Create(
+			nCntPlayer,D3DXVECTOR3(posXUI, POINT_UI_POS_Y_NUM, 0.0f));
 
 		posX -= PLAYER_SPACE;
 		posXUI -= POINT_UI_SPACE;
@@ -185,6 +186,8 @@ void CFlagRaicingGame_rule::Uninit(void)
 //======================================================
 void CFlagRaicingGame_rule::Update(void)
 {
+	// プレイヤーの人数取得
+	int nPlayerNum = CCountSelect::GetPlayerNum();
 	bool btest = true;
 	if (btest == true)
 	{
@@ -193,6 +196,11 @@ void CFlagRaicingGame_rule::Update(void)
 		{
 			// 乱数の初期化
 			srand((unsigned int)time(NULL));
+			for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
+			{
+				// ポイント追加処理
+				m_PlayerPoint.bPoint[nCnt]->Update();
+			}
 			// 時間計算処理
 			++m_nCntTime;
 			// 判別処理

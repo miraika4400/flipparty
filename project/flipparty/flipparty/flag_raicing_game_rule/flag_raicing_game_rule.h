@@ -33,6 +33,7 @@ class CBlind;
 class CBillboard;
 class CPassingPenguin;
 class CNumber;
+class CFlagRaicingGamePolygon;
 //======================================================
 //	クラス定義
 //======================================================
@@ -48,7 +49,7 @@ public:
 
 	typedef struct
 	{
-		CBillboard * bPoint[PLAYER_NUM];
+		CFlagRaicingGamePolygon * bPoint[PLAYER_NUM];
 	}PLAYER_POINT_VARIABLE;
 
 	CFlagRaicingGame_rule();
@@ -69,11 +70,12 @@ public:
 	static TRUN GetGameLoop(void) { return m_eLoop; }		// ターン情報の取得
 	static void SetGameLoop(TRUN loop) { m_eLoop = loop; }	// ターン情報の設定
 	static CBlind *GetBlind(void) { return m_pBlind; }
+	static CPlayer *GetPlayer(int playerNum) { return m_pPlayer[playerNum]; }
 private:
 	// CPlayerの動的配列
 	std::vector<CPlayer*> m_playerVector;
 
-	CPlayer *m_pPlayer[MAX_PLAYER_NUM];	// プレイヤーへのポインタ
+	static CPlayer *m_pPlayer[MAX_PLAYER_NUM];	// プレイヤーへのポインタ
 	CCamera *m_pCamera;				// カメラへのポインタ
 	CCaptain *m_pCaptain;			// キャプテンのポインタ
 	static CBlind *m_pBlind;					//ブラインドクラスのポインタ
