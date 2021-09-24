@@ -53,11 +53,6 @@ public:
 		CFlipper::FLIPPER_STATE state;
 	}FLIPPER_DATA;
 
-	typedef struct
-	{
-		FLIPPER_DATA data;
-		int PlayerNum;
-	}PLAYER_DATA;
 
 	typedef struct
 	{
@@ -74,7 +69,6 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void FlagJudge(void);					// プレイヤーとキャプテンの旗上げ判別関数
 	void JudgeRank(void);					// 順位の判定
 
 	static TRUN GetGameTrun(void) { return m_eTrun; }		// ターン情報の取得
@@ -101,8 +95,8 @@ private:
 	static TRUN m_eTrun;			// 上げるか上げないかの判別
 	CTimeLimit * m_pTimeLimit;		// 制限時間クラス
 	CPassingPenguin *m_pPassingPenguin;	//通過ペンギンクラス
-	static FLIPPER_DATA m_CaptainData;	//キャプテンの行動データ
-	static std::vector<PLAYER_DATA> m_vecPlayerData;	//プレイヤーの行動データ
+	static FLIPPER_DATA m_CaptainData;	//キャプテンの行動データの保存変数
+	static std::vector<int> m_vecPlayerNumber;	//行動済みプレイヤー番号の保存変数
 };
 
 

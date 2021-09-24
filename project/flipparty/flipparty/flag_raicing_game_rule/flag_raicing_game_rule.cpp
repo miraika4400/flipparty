@@ -35,7 +35,7 @@
 //	マクロ定義
 //======================================================
 #define PLAYER_SPACE 110.0f				// プレイヤー位置の間隔
-#define POINT_UI_SPACE 310.0f			// 点数の位置間隔
+#define POINT_UI_SPACE 325.0f			// 点数の位置間隔
 #define TIME_SET 180					// 制限時間の設定
 #define TRUN_SET 40						// ターンの制限時間の設定
 #define ADD_POINT_NUM_RANK1 3			// 一番目のポイント加算値
@@ -65,7 +65,7 @@ CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eTrun
 CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
 CPlayer *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
 CFlagRaicingGame_rule::FLIPPER_DATA CFlagRaicingGame_rule::m_CaptainData = {};
-std::vector<CFlagRaicingGame_rule::PLAYER_DATA> CFlagRaicingGame_rule::m_vecPlayerData = {};
+std::vector<int> CFlagRaicingGame_rule::m_vecPlayerNumber = {};
 int nAddPoint[MAX_PLAYER_NUM]=
 {
 	ADD_POINT_NUM_RANK1,ADD_POINT_NUM_RANK2,ADD_POINT_NUM_RANK3,ADD_POINT_NUM_RANK4
@@ -125,6 +125,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 
 	m_bPlay = true;
 	//m_nRandTime = TIME_SET;
+	m_nRandTime = 120;
 	//カメラの生成
 	CManager::SetCamera(CFlagRaicingGameCamera::Create());
 
@@ -170,7 +171,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	m_CaptainData.state = CFlipper::FLIPPER_STATE_NONE;
 
 	//プレイヤーデータの初期化
-	m_vecPlayerData.clear();
+	m_vecPlayerNumber.clear();
 
 	// BGM再生
 	CManager::GetSound()->Play(CSound::LABEL_BGM_FLAG_GAME);
@@ -229,10 +230,10 @@ void CFlagRaicingGame_rule::Update(void)
 			// 時間経過で次の動作に入る
 			if (m_nCntTime == m_nRandTime)
 			{
-				FlagJudge();
 				m_nRandTime = RAND_FLAG;	// ランダムで次に旗の変更するタイミングを設定
 				SetGameTrun(CAPTAIN_TRUN);	// キャプテンのターンに変更
 				m_nCntTime = 0;				// タイムの初期化
+				m_vecPlayerNumber.clear();	//行動済みデータを削除
 			}
 			// 時間計算処理
 			++m_nCntTime;
@@ -290,35 +291,6 @@ void CFlagRaicingGame_rule::Draw(void)
 }
 
 //======================================================
-//	右か左かの判別処理
-//======================================================
-void CFlagRaicingGame_rule::FlagJudge(void)
-{
-	//現在のサイズ（個数）を取得
-	int nVecterNum = m_vecPlayerData.size();
-
-	if (nVecterNum != 0)
-	{
-		for (int nCntCheck = 0; nCntCheck < nVecterNum; nCntCheck++)
-		{
-			//キャプテンと変更した羽が一緒だった場合
-			if (m_CaptainData.type == m_vecPlayerData[nCntCheck].data.type &&
-				m_CaptainData.state == m_vecPlayerData[nCntCheck].data.type)
-			{
-				//参加人数によって加算するポイントを変更するための基数を生成
-				int nIndex = MAX_PLAYER_NUM - CCountSelect::GetPlayerNum();
-
-				//ポイント加算
-				m_pPlayer[m_vecPlayerData[nCntCheck].PlayerNum]->AddPoint(nAddPoint[nCntCheck + nIndex]);
-			}
-		}
-
-		//加算し終わったらデータを削除
-		m_vecPlayerData.clear();
-	}
-}
-
-//======================================================
 //	順位の判定
 //======================================================
 void CFlagRaicingGame_rule::JudgeRank(void)
@@ -354,12 +326,18 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 	m_bPlay = false;
 }
 
+//======================================================
+//	キャプテンの羽状態の情報保存
+//======================================================
 void CFlagRaicingGame_rule::SetCaptainData(CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state)
 {
 	m_CaptainData.type = type;
 	m_CaptainData.state = state;
 }
 
+//======================================================
+//	プレイヤーの回答判定
+//======================================================
 void CFlagRaicingGame_rule::SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state)
 {
 	//プレイヤーの行動ターン時のみ処理をする
@@ -369,18 +347,18 @@ void CFlagRaicingGame_rule::SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE
 		int nEntryNum = CCountSelect::GetPlayerNum();
 
 		//現在のサイズ（個数）を取得
-		int nVecterNum = m_vecPlayerData.size();
+		int nVecNum = m_vecPlayerNumber.size();
 
 		// 現在のサイズ（個数）が参加プレイヤー数より小さい間
-		if (nVecterNum < nEntryNum)
+		if (nVecNum < nEntryNum)
 		{
-			//すでに情報が登録されている場合
-			if (nVecterNum != 0)
+			//すでに情報が存在する場合、重複設定をしないように確認する
+			if (nVecNum != 0)
 			{
-				for (int nCntCheck = 0; nCntCheck < nVecterNum; nCntCheck++)
+				for (int nCntCheck = 0; nCntCheck < nVecNum; nCntCheck++)
 				{
-					//データがすでに登録されているプレイヤーだった場合
-					if (m_vecPlayerData[nCntCheck].PlayerNum == nPlayerNum)
+					//行動済みのプレイヤーだった場合
+					if (m_vecPlayerNumber[nCntCheck] == nPlayerNum)
 					{
 						//処理終了
 						return;
@@ -388,13 +366,19 @@ void CFlagRaicingGame_rule::SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE
 				}
 			}
 
-			PLAYER_DATA playerNow;
-			playerNow.PlayerNum = nPlayerNum;
-			playerNow.data.type = type;
-			playerNow.data.state = state;
+			//キャプテンが変更した羽とプレイヤーが変更した羽が一緒だった場合
+			if (m_CaptainData.type == type &&
+				m_CaptainData.state == state)
+			{
+				//参加人数によって加算するポイントを変更するための基数を生成
+				int nIndex = MAX_PLAYER_NUM - CCountSelect::GetPlayerNum();
 
-			//データを登録
-			m_vecPlayerData.push_back(playerNow);
+				//ポイント加算
+				m_pPlayer[nPlayerNum]->AddPoint(nAddPoint[nVecNum + nIndex]);
+			}
+
+			//行動済みのプレイヤー番号を登録
+			m_vecPlayerNumber.push_back(nPlayerNum);
 		}
 	}
 }
