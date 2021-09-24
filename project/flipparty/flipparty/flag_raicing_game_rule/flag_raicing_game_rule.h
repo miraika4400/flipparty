@@ -49,6 +49,18 @@ public:
 
 	typedef struct
 	{
+		CFlipper::FLIPPER_TYPE type;
+		CFlipper::FLIPPER_STATE state;
+	}FLIPPER_DATA;
+
+	typedef struct
+	{
+		FLIPPER_DATA data;
+		int PlayerNum;
+	}PLAYER_DATA;
+
+	typedef struct
+	{
 		CFlagRaicingGamePolygon * bPoint[PLAYER_NUM];
 	}PLAYER_POINT_VARIABLE;
 
@@ -63,18 +75,17 @@ public:
 	void Draw(void);
 
 	void FlagJudge(void);					// プレイヤーとキャプテンの旗上げ判別関数
-	void FlagPoint(void);					// プレイヤーとキャプテンの旗が上がっているか下がっているかの判定処理関数
-	bool PlayerFlagJudge(CPlayer *player);	// vectorの中身の比較
 	void JudgeRank(void);					// 順位の判定
 
-	static TRUN GetGameLoop(void) { return m_eLoop; }		// ターン情報の取得
-	static void SetGameLoop(TRUN loop) { m_eLoop = loop; }	// ターン情報の設定
+	static TRUN GetGameTrun(void) { return m_eTrun; }		// ターン情報の取得
+	static void SetGameTrun(TRUN Trun) { m_eTrun = Trun; }	// ターン情報の設定
 	static CBlind *GetBlind(void) { return m_pBlind; }
 	static CPlayer *GetPlayer(int playerNum) { return m_pPlayer[playerNum]; }
-private:
-	// CPlayerの動的配列
-	std::vector<CPlayer*> m_playerVector;
 
+	static void SetCaptainData(CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state);
+	static void SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state);
+private:
+	
 	static CPlayer *m_pPlayer[MAX_PLAYER_NUM];	// プレイヤーへのポインタ
 	CCamera *m_pCamera;				// カメラへのポインタ
 	CCaptain *m_pCaptain;			// キャプテンのポインタ
@@ -84,13 +95,14 @@ private:
 
 	int m_nRandTime;				// フラッグを上げる間隔
 	int m_nCntTime;					// 時間計算
-	int m_nTarn;					// ターン数の追加
 	int m_nCntInputPlayer;			// 行動済みのプレイヤー数カウント
 
 	bool m_bPlay;					// プレイヤーが動くか動かないかの判別
-	static TRUN m_eLoop;			// 上げるか上げないかの判別
+	static TRUN m_eTrun;			// 上げるか上げないかの判別
 	CTimeLimit * m_pTimeLimit;		// 制限時間クラス
 	CPassingPenguin *m_pPassingPenguin;	//通過ペンギンクラス
+	static FLIPPER_DATA m_CaptainData;	//キャプテンの行動データ
+	static std::vector<PLAYER_DATA> m_vecPlayerData;	//プレイヤーの行動データ
 };
 
 

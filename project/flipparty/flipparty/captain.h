@@ -27,6 +27,7 @@
 class CFlipper;
 class CMotion;
 class CBillboard;
+class COrderPolygon;
 
 //*****************************
 // クラス定義
@@ -36,39 +37,6 @@ class CBillboard;
 class CCaptain : public CModelHierarchy
 {
 public:
-	typedef enum
-	{
-		RED_FLAG_UP = 0,	// 赤上がっている状態
-		BLUE_FLAG_UP,		// 青上がっている状態
-		RED_FLAG_DOWN,		// 赤下がっている状態
-		BLUE_FLAG_DOWN,		// 青下がっている状態
-		FLAG_END
-	}FLAG;
-
-	typedef enum
-	{
-		FLAG_TEX_RIGHT,
-		FLAG_TEX_LEFT,
-		FLAG_TEX_MAX
-	}FLAG_TEX;
-
-	typedef struct
-	{
-		bool bFlagRight;
-		bool bFlagLeft;
-		CBillboard * apFlagTex[MAX_FLAG_TEXTURRE];		// 右左どちらを上げるかのテクスチャを表示させる変数
-	}FLAG_TEX_VARIABLE;
-
-	typedef enum
-	{
-		COLOR_NORMAL = 0,
-		BLUE_UP,			// 青上がっている状態
-		BLUE_DOWN,			// 青下がっている状態
-		RED_UP,				// 赤上がっている状態
-		RED_DOWN,			// 赤下がっている状態
-		COLOR_END
-	}COLOR;
-
 	// 表情パターン
 	typedef enum
 	{
@@ -90,12 +58,7 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	void Judge(FLAG ColorFlagRed, FLAG ColorFlagWhite, COLOR ColorRed, COLOR ColorWhite);	// 色判別処理
-	void JudgeColor(FLAG ColorFlagRed, FLAG ColorFlagWhite, COLOR ColorRed, COLOR ColorWhite);
-	void FlagJudge();
-
 	void ManageFlipperAngle(void); // 羽の角度管理
-	void Choice(int choice) { m_nChoice = choice; }
 
 	CFlipper*GetFlipper(void) { return m_pFlipper; }
 	CFlipper*GetFlipperMoveState(void) { return m_pFlipperMoveState; }
@@ -106,30 +69,18 @@ public:
 private:
 	void DrawModel(void);// モデルの描画
 	void SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model *pModelData); // シェーダープログラムに値を送る
-
+	void ChangeFlipper(void);	//羽の状態変更
+	
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM];    // モデル構造体
-	static int m_nPartsNum;
+	static int m_nPartsNum;	//パーツ数
 
-	int m_nCntTime;
-	int m_nColor;
-	int m_nCount;
-	int m_nChoice;
-	int m_facePattern;
-
-	bool m_bJudgRed;				// 赤上げてるか下げてるかの判別
-	bool m_bJudgWhite;				// 白上げてるか下げてるかの判別
-
-
-	FLAG m_eColorRed;
-	FLAG m_eColorWhite;
-
-	FLAG_TEX_VARIABLE m_falgTexVal;	//指示テクスチャの構造体変数
+	int m_facePattern;	//顔テクスチャパターン
 
 	CFlipper * m_pFlipper;          // フリッパークラス
 	CFlipper * m_pFlipperMoveState;
 	float m_fFlipperDist[2];       // フリッパーの角度目標値
-
+	COrderPolygon *m_pOrder;
 	// モーション用変数
 	static char m_achAnimPath[64];   // モーションテキストのパス格納用
 	CMotion *m_pMotion;              // モーションポインタ

@@ -166,6 +166,7 @@
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_camera.cpp" />
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_polygon.cpp" />
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_rule.cpp" />
+    <ClCompile Include="flag_raicing_game_rule\orderPolygon.cpp" />
     <ClCompile Include="flag_raicing_game_rule\passingpenguin.cpp" />
     <ClCompile Include="flipper.cpp" />
     <ClCompile Include="fly_game\camera_flygame.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_camera.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_polygon.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_rule.h" />
+    <ClInclude Include="flag_raicing_game_rule\orderPolygon.h" />
     <ClInclude Include="flag_raicing_game_rule\passingpenguin.h" />
     <ClInclude Include="flipper.h" />
     <ClInclude Include="fly_game\camera_flygame.h" />

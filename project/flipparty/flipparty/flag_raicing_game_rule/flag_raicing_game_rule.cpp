@@ -29,14 +29,7 @@
 #include "polygon.h"
 #include "sound.h"
 #include "flag_raicing_game_polygon.h"
-
-//======================================================
-//	静的メンバ変数宣言初期化
-//======================================================
-CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eLoop
-	= CFlagRaicingGame_rule::CAPTAIN_TRUN;	// キャプテンのターンかプレイヤーのターンかを判別する変数
-CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
-CPlayer *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
+#include "orderPolygon.h"
 
 //======================================================
 //	マクロ定義
@@ -45,7 +38,10 @@ CPlayer *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
 #define POINT_UI_SPACE 310.0f			// 点数の位置間隔
 #define TIME_SET 180					// 制限時間の設定
 #define TRUN_SET 40						// ターンの制限時間の設定
-#define ADD_POINT_NUM 1					// ポイント合計値の設定
+#define ADD_POINT_NUM_RANK1 3			// 一番目のポイント加算値
+#define ADD_POINT_NUM_RANK2 2			// 二番目のポイント加算値
+#define ADD_POINT_NUM_RANK3 1			// 三番目のポイント加算値
+#define ADD_POINT_NUM_RANK4 0			// 四番目のポイント加算値
 
 #define FLAG_PLAYER_POS_Y_NUM -100.0f	// プレイヤーのY座標
 #define FLAG_PLAYER_POS_Z_NUM -50.0f	// プレイヤーのZ座標
@@ -62,6 +58,21 @@ CPlayer *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
 #define RAND_FLAG rand() % 180 + 50		// フラッグの上げる間隔の設定
 
 //======================================================
+//	静的メンバ変数宣言初期化
+//======================================================
+CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eTrun
+	= CFlagRaicingGame_rule::CAPTAIN_TRUN;	// キャプテンのターンかプレイヤーのターンかを判別する変数
+CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
+CPlayer *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
+CFlagRaicingGame_rule::FLIPPER_DATA CFlagRaicingGame_rule::m_CaptainData = {};
+std::vector<CFlagRaicingGame_rule::PLAYER_DATA> CFlagRaicingGame_rule::m_vecPlayerData = {};
+int nAddPoint[MAX_PLAYER_NUM]=
+{
+	ADD_POINT_NUM_RANK1,ADD_POINT_NUM_RANK2,ADD_POINT_NUM_RANK3,ADD_POINT_NUM_RANK4
+};
+
+
+//======================================================
 //	コンストラクタ
 //======================================================
 CFlagRaicingGame_rule::CFlagRaicingGame_rule()
@@ -72,7 +83,6 @@ CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 	m_pCaptain = NULL;
 	m_nCntInputPlayer = 0;
 	m_nCntTime = 0;
-	m_nTarn = 0;
 	m_nRandTime = 0;
 	m_pTimeLimit = NULL;
 	m_bPlay = true;
@@ -114,14 +124,14 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	CBg::Create();
 
 	m_bPlay = true;
-	m_nRandTime = TIME_SET;
+	//m_nRandTime = TIME_SET;
 	//カメラの生成
 	CManager::SetCamera(CFlagRaicingGameCamera::Create());
 
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
 	float posX = 0 + ((float)(nPlayerNum - 1) * PLAYER_SPACE) / 2;// プレイヤー位置の調整
-	float posXUI = SCREEN_WIDTH / 2 + ((float)(nPlayerNum - 1) * POINT_UI_SPACE) / 2;// 点数の位置調整
+	float posXUI = SCREEN_WIDTH / 2 - ((float)(nPlayerNum - 1) * POINT_UI_SPACE) / 2;// 点数の位置調整
 
 	// プレイヤーの人数分プレイヤー生成
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
@@ -133,7 +143,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 			nCntPlayer,D3DXVECTOR3(posXUI, POINT_UI_POS_Y_NUM, 0.0f));
 
 		posX -= PLAYER_SPACE;
-		posXUI -= POINT_UI_SPACE;
+		posXUI += POINT_UI_SPACE;
 	}
 	// キャプテンの生成
 	m_pCaptain = CCaptain::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_CAPTAIN_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM));
@@ -154,6 +164,13 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -14.0f, 0.0f), 0.001f, CSea::TYPE_NORMAL);
 	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -12.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
 	CSea::Create(D3DXVECTOR3(0.0f, FLAG_PLAYER_POS_Y_NUM -10.0f, 0.0f), 0.004f, CSea::TYPE_NORMAL);
+
+	//キャプテンデータの初期化
+	m_CaptainData.type = CFlipper::FLIPPER_TYPE_LEFT;
+	m_CaptainData.state = CFlipper::FLIPPER_STATE_NONE;
+
+	//プレイヤーデータの初期化
+	m_vecPlayerData.clear();
 
 	// BGM再生
 	CManager::GetSound()->Play(CSound::LABEL_BGM_FLAG_GAME);
@@ -208,22 +225,19 @@ void CFlagRaicingGame_rule::Update(void)
 				// ポイント追加処理
 				m_PlayerPoint.bPoint[nCnt]->Update();
 			}
-			// 時間計算処理
-			++m_nCntTime;
-			// 判別処理
-			FlagJudge();
-
+			
 			// 時間経過で次の動作に入る
 			if (m_nCntTime == m_nRandTime)
 			{
-				m_nRandTime = RAND_FLAG;	// ランダムで旗の上げるタイミングを設定
-				m_nTarn++;					// ターンを進める
-				SetGameLoop(CAPTAIN_TRUN);	// キャプテンのターンに変更
+				FlagJudge();
+				m_nRandTime = RAND_FLAG;	// ランダムで次に旗の変更するタイミングを設定
+				SetGameTrun(CAPTAIN_TRUN);	// キャプテンのターンに変更
 				m_nCntTime = 0;				// タイムの初期化
-				FlagPoint();				// ポイント追加
 			}
+			// 時間計算処理
+			++m_nCntTime;
 
-			//制限時間を取得
+			//残りの制限時間を取得
 			int nTimeLimit = m_pTimeLimit->GetTimeLimit();
 
 			// 上限のターン数を上回ったらゲームを終了させる
@@ -252,6 +266,11 @@ void CFlagRaicingGame_rule::Update(void)
 					m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_RIGHT);
 				}
 			}
+			if (nTimeLimit == (TRUN_SET / 2))
+			{
+				//指示ポリゴンを使用しなくする
+				COrderPolygon::SetUse(false);
+			}
 		}
 
 	}
@@ -275,58 +294,28 @@ void CFlagRaicingGame_rule::Draw(void)
 //======================================================
 void CFlagRaicingGame_rule::FlagJudge(void)
 {
-	// プレイヤー数
-	int nPlayerNum = CCountSelect::GetPlayerNum();
-	CFlipper*pCaptainFlipper;
-	CFlipper*pPlayerFlipper;
+	//現在のサイズ（個数）を取得
+	int nVecterNum = m_vecPlayerData.size();
 
-	// キャプテンの旗判別
-	pCaptainFlipper = m_pCaptain->GetFlipper();
-
-	// プレイヤーの数分処理を回す
-	for (int nCount = 0; nCount < nPlayerNum; nCount++)
+	if (nVecterNum != 0)
 	{
-		// プレイヤーの旗の判別
-		pPlayerFlipper = m_pPlayer[nCount]->GetFlipper();
-
-		// 動きが同じだった場合
-		if (pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT)
-			&& pPlayerFlipper->GetState(CFlipper::FLIPPER_TYPE_RIGHT) == pCaptainFlipper->GetState(CFlipper::FLIPPER_TYPE_LEFT))
+		for (int nCntCheck = 0; nCntCheck < nVecterNum; nCntCheck++)
 		{
-			// 最初に同じ動きになったプレイヤーを探す
-			if(PlayerFlagJudge(m_pPlayer[nCount]))
+			//キャプテンと変更した羽が一緒だった場合
+			if (m_CaptainData.type == m_vecPlayerData[nCntCheck].data.type &&
+				m_CaptainData.state == m_vecPlayerData[nCntCheck].data.type)
 			{
-				m_playerVector.push_back(m_pPlayer[nCount]);
+				//参加人数によって加算するポイントを変更するための基数を生成
+				int nIndex = MAX_PLAYER_NUM - CCountSelect::GetPlayerNum();
+
+				//ポイント加算
+				m_pPlayer[m_vecPlayerData[nCntCheck].PlayerNum]->AddPoint(nAddPoint[nCntCheck + nIndex]);
 			}
 		}
-	}
-}
 
-//======================================================
-//	ポイント加算処理
-//======================================================
-void CFlagRaicingGame_rule::FlagPoint(void)
-{
-	if (m_playerVector.size() != 0)
-	{
-		m_playerVector[0]->AddPoint(ADD_POINT_NUM);		// ポイント追加処理
-		m_playerVector.clear();							// プレイヤー情報の初期化
+		//加算し終わったらデータを削除
+		m_vecPlayerData.clear();
 	}
-}
-
-//======================================================
-//	vectorの中身の比較
-//======================================================
-bool CFlagRaicingGame_rule::PlayerFlagJudge(CPlayer *player)
-{
-	for (int nCount = 0; nCount < (signed)m_playerVector.size(); nCount++)
-	{
-		if (m_playerVector[nCount] == player)
-		{
-			return false;
-		}
-	}
-	return true;
 }
 
 //======================================================
@@ -360,6 +349,52 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 	}
 	// 仮のリザルト表示
 	CMiniResult::Create();
+
 	// プレイヤーを動けなくする
 	m_bPlay = false;
+}
+
+void CFlagRaicingGame_rule::SetCaptainData(CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state)
+{
+	m_CaptainData.type = type;
+	m_CaptainData.state = state;
+}
+
+void CFlagRaicingGame_rule::SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state)
+{
+	//プレイヤーの行動ターン時のみ処理をする
+	if (m_eTrun == CFlagRaicingGame_rule::PLAYER_TRUN)
+	{
+		//参加プレイヤー数を取得
+		int nEntryNum = CCountSelect::GetPlayerNum();
+
+		//現在のサイズ（個数）を取得
+		int nVecterNum = m_vecPlayerData.size();
+
+		// 現在のサイズ（個数）が参加プレイヤー数より小さい間
+		if (nVecterNum < nEntryNum)
+		{
+			//すでに情報が登録されている場合
+			if (nVecterNum != 0)
+			{
+				for (int nCntCheck = 0; nCntCheck < nVecterNum; nCntCheck++)
+				{
+					//データがすでに登録されているプレイヤーだった場合
+					if (m_vecPlayerData[nCntCheck].PlayerNum == nPlayerNum)
+					{
+						//処理終了
+						return;
+					}
+				}
+			}
+
+			PLAYER_DATA playerNow;
+			playerNow.PlayerNum = nPlayerNum;
+			playerNow.data.type = type;
+			playerNow.data.state = state;
+
+			//データを登録
+			m_vecPlayerData.push_back(playerNow);
+		}
+	}
 }
