@@ -27,6 +27,7 @@
 #include "sea.h"
 #include "stage.h"
 #include "warning.h"
+#include "sound.h"
 
 //******************************
 // マクロ定義
@@ -109,6 +110,9 @@ HRESULT CRuleFly::Init(void)
 	// プレイ中フラグの初期化
 	m_bPlay = true;
 
+	// BGM再生
+	CManager::GetSound() ->Play(CSound::LABEL_BGM_FLY_GAME);
+
 	return S_OK;
 }
 
@@ -117,6 +121,8 @@ HRESULT CRuleFly::Init(void)
 //******************************
 void CRuleFly::Uninit(void)
 {
+	// BGM停止
+	CManager::GetSound() ->Stop(CSound::LABEL_BGM_FLY_GAME);
 }
 
 //******************************
