@@ -67,10 +67,12 @@ public:
 
     void SetRememberData(CFlipper::FLIPPER_TYPE type);
 
+    void GameProcess(void);
+    void MiniResultProcess(void);
+
     // Get関数
     CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
-	void GameProcess(void);
-	void MiniResultProcess(void);
+
 private:
 
     //---------------------

@@ -452,31 +452,10 @@ void CRememjber_rule::Ranking(void)
     m_pPlayer[m_nTurnPlayer]->SetIsLoss(true);// 脱落フラグをたてる
     PlayerChange(m_nTurnPlayer);    // プレイヤーの順番変更
 
-
-    // プレイヤーが最後の1人になったらリザルト生成
+    // プレイヤーが最後の1人になったらゲーム終了
     if (m_nNumPlayer - m_nLossPlayer == 1)
     {
-        // 順位の設定
-        for (int nRank = 0; nRank < m_nNumPlayer; nRank++)
-        {
-            m_pPlayer[m_aTurn[nRank]]->SetRank(nRank);
-
-			// ミニゲームに順位を送る
-			CResult::SetMiniGameRank(CRuleManager::RULE_REMENBER, m_pPlayer[m_aTurn[nRank]]->GetPlayerNumber(), m_pPlayer[m_aTurn[nRank]]->GetRank());
-        }
-
-        m_IsPlay = false;
-
-        // 吹雪の破棄
-        if (CSnow::GetInstancce())
-        {
-        CSnow::GetInstancce()->CSnow::Uninit();
-        }
-
-        // UI表示フラグをfalseにする
-        m_IsUIDraw = false;
-
-        CMiniResult::Create();
+        SetRuleState(RULE_STATE_END);// ゲーム終了
     }
 }
 
@@ -514,6 +493,28 @@ void CRememjber_rule::GameProcess(void)
 //======================================================
 void CRememjber_rule::MiniResultProcess(void)
 {
+    // 順位の設定
+    for (int nRank = 0; nRank < m_nNumPlayer; nRank++)
+    {
+        m_pPlayer[m_aTurn[nRank]]->SetRank(nRank);
+
+        // ミニゲームに順位を送る
+        CResult::SetMiniGameRank(CRuleManager::RULE_REMENBER, m_pPlayer[m_aTurn[nRank]]->GetPlayerNumber(), m_pPlayer[m_aTurn[nRank]]->GetRank());
+    }
+
+    m_IsPlay = false;
+
+    // 吹雪の破棄
+    if (CSnow::GetInstancce())
+    {
+        CSnow::GetInstancce()->CSnow::Uninit();
+    }
+
+    // UI表示フラグをfalseにする
+    m_IsUIDraw = false;
+
+    CMiniResult::Create();
+
 }
 
 //=============================================================================
