@@ -18,7 +18,7 @@
 //*****************************
 // マクロ定義
 //*****************************
-#define MAX_TEHNIQUENAME_LENGTH 64
+#define MAX_TEHNIQUENAME_LENGTH_OBJ 64
 
 //*****************************
 //クラス定義
@@ -45,7 +45,7 @@ public:
 	typedef struct
 	{
 		LPD3DXEFFECT pEffect;                             // エフェクトファイル
-		char achTechniqueName[MAX_TEHNIQUENAME_LENGTH];   // HLSLテクニックネーム
+		char achTechniqueName[MAX_TEHNIQUENAME_LENGTH_OBJ];   // HLSLテクニックネーム
 		LPDIRECT3DCUBETEXTURE9 pCubeTex;                  // キューブテクスチャポインタ
 	}Shader;
 

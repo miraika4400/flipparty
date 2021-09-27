@@ -134,6 +134,8 @@ void CRuleManager::Update(void)
 
 				// BGM’âŽ~
 				CManager::GetSound()->Stop(CSound::LABEL_BGM_TUTORIAL);
+				// SE‚ÌÄ¶
+				CManager::GetSound()->Play(CSound::LABEL_SE_ENTER);
 
                 // ƒ‹[ƒ‹ƒNƒ‰ƒX‚Ì‰Šú‰»
                 if (m_pGameRule != NULL)

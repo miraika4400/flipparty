@@ -27,8 +27,22 @@ public:
 		LABEL_BGM_FLAG_GAME,        // 旗揚げゲームのBGM
 		LABEL_BGM_FLY_GAME,         // 連打ゲームのBGM
 		LABEL_BGM_REMEMBER_GAME,    // 記憶ゲームのBGM
+		LABEL_SE_ENTER,             // エンター音
+		LABEL_SE_CURSOR,            // カーソル音
         LABEL_SE_OK,                // 記憶ゲーム正解の音
         LABEL_SE_MISS,              // 記憶ゲーム不正解の音
+		LABEL_SE_MISS2,             // ぶぶー
+		LABEL_SE_MISS3,             // ぶぶー
+		LABEL_SE_MISS4,             // ぶぶー
+		LABEL_SE_WARNING,           // 警告音
+		LABEL_SE_FLIPPER_LEFT1,     // フリッパー左
+		LABEL_SE_FLIPPER_LEFT2,     // フリッパー左
+		LABEL_SE_FLIPPER_LEFT3,     // フリッパー左
+		LABEL_SE_FLIPPER_LEFT4,     // フリッパー左
+		LABEL_SE_FLIPPER_RIGHT1,    // フリッパー右
+		LABEL_SE_FLIPPER_RIGHT2,    // フリッパー右
+		LABEL_SE_FLIPPER_RIGHT3,    // フリッパー右
+		LABEL_SE_FLIPPER_RIGHT4,    // フリッパー右
 		SOUND_LABEL_MAX,            // サウンド最大数
 	}LABEL;
 

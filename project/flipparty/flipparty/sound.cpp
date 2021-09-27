@@ -17,8 +17,23 @@ CSound::SOUNDPARAM CSound::m_aParam[SOUND_LABEL_MAX]
     { "./data/Sounds/BGM/flag_game.wav"    , -1 },
 	{ "./data/Sounds/BGM/fly_game.wav"    , -1 },
 	{ "./data/Sounds/BGM/remember_game.wav"    , -1 },
+	{ "./data/Sounds/SE/enter.wav"    , 0 },
+	{ "./data/Sounds/SE/cursor.wav"    , 0 },
     { "./data/Sounds/SE/remember_ok.wav"    , 0 },
     { "./data/Sounds/SE/remember_miss .wav"    , 0 },
+	{ "./data/Sounds/SE/remember_miss .wav"    , 0 },
+	{ "./data/Sounds/SE/remember_miss .wav"    , 0 },
+	{ "./data/Sounds/SE/remember_miss .wav"    , 0 },
+	{ "./data/Sounds/SE/warning.wav"    , 0 },
+	{ "./data/Sounds/SE/flipper_left.wav"    , 0 },
+	{ "./data/Sounds/SE/flipper_left.wav"    , 0 },
+	{ "./data/Sounds/SE/flipper_left.wav"    , 0 },
+	{ "./data/Sounds/SE/flipper_left.wav"    , 0 },
+	{ "./data/Sounds/SE/flipper_right.wav"    , 0 },
+	{ "./data/Sounds/SE/flipper_right.wav"    , 0 },
+	{ "./data/Sounds/SE/flipper_right.wav"    , 0 },
+	{ "./data/Sounds/SE/flipper_right.wav"    , 0 },
+
 };
 
 //=============================================================================
@@ -236,9 +251,9 @@ HRESULT CSound::Play(LABEL label)
 	m_apSourceVoice[label]->GetState(&xa2state);
 	if (xa2state.BuffersQueued != 0)
 	{// 再生中
-	 // 一時停止
+		// 一時停止
 		m_apSourceVoice[label]->Stop(0);
-
+		
 		// オーディオバッファの削除
 		m_apSourceVoice[label]->FlushSourceBuffers();
 	}
