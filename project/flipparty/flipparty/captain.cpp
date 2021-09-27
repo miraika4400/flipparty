@@ -24,17 +24,19 @@
 #include "motion.h"
 #include "billboard.h"
 #include "blind.h"
+#include "orderPolygon.h"
+#include "sound.h"
 
 //*****************************
 // マクロ定義
 //*****************************
 #define HIERARCHY_TEXT_PATH "./data/Texts/hierarchy/captain.txt"    //階層構造テキストのパス
-#define RIGHT_FLIPPER_PARTS_NUM 5                                    // 右羽のパーツ番号
-#define LEFT_FLIPPER_PARTS_NUM  4                                    // 左羽のパーツ番号
-#define RIGHT_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(-40.0f)           // 右羽を上げたときの角度
-#define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(50.0f)            // 右羽を下げたときの角度
-#define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
-#define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
+#define RIGHT_CAPTAIN_FLIPPER_PARTS_NUM 5                                    // 右羽のパーツ番号
+#define LEFT_CAPTAIN_FLIPPER_PARTS_NUM  4                                    // 左羽のパーツ番号
+#define RIGHT_CAPTAIN_FLIPPER_DIST_ANGLE_UP   D3DXToRadian(60.0f)				// 右羽を上げたときの角度
+#define RIGHT_CAPTAIN_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(-30.0f)            // 右羽を下げたときの角度
+#define LEFT_CAPTAIN_FLIPPER_DIST_ANGLE_UP    -RIGHT_CAPTAIN_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
+#define LEFT_CAPTAIN_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_CAPTAIN_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
 #define FLIPPER_RATE 0.07f                                           // 羽を動かすときの係数
 #define FLIPPER_JUDGE D3DXToRadian(20.0f)                            // 上がっているか下がっているか判定の基準値
 #define FACE_PARTS_NUMBER 3  // 表情パーツのパーツ番号
@@ -47,6 +49,7 @@
 #define FLAG_LEFT_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)
 #define ROT D3DXVECTOR3( 0.0f, D3DXToRadian(180.0f), 0.0f)
 #define SIZE D3DXVECTOR3(1.4f,1.4f,1.4f)
+
 //*****************************
 // 静的メンバ変数宣言
 //*****************************
@@ -55,6 +58,11 @@ int CCaptain::m_nPartsNum = 0;
 char CCaptainm_achAnimPath[64]
 {
 	 "./data/Texts/motion/idol.txt"          // 待機アニメーション
+};
+float fDist[CFlipper::FLIPPER_TYPE_MAX][CFlipper::FLIPPER_STATE_MAX]=
+{
+	{0.0f,LEFT_CAPTAIN_FLIPPER_DIST_ANGLE_UP ,LEFT_CAPTAIN_FLIPPER_DIST_ANGLE_DOWN },
+	{0.0f,RIGHT_CAPTAIN_FLIPPER_DIST_ANGLE_UP ,RIGHT_CAPTAIN_FLIPPER_DIST_ANGLE_DOWN }
 };
 
 //******************************
@@ -65,19 +73,10 @@ CCaptain::CCaptain() :CModelHierarchy(OBJTYPE_CPU)
 	// 変数のクリア
 	m_pFlipper = NULL;
 	ZeroMemory(&m_fFlipperDist, sizeof(m_fFlipperDist)); // 羽の角度 目標値
-	m_nColor = 0;
-	m_nCount = 0;
-	m_nChoice = 0;
+
 	m_facePattern = 0;
-
-	m_bJudgRed = false;
-	m_bJudgWhite = false;
-
-	m_eColorRed = RED_FLAG_DOWN;
-	m_eColorWhite = BLUE_FLAG_DOWN;
-
+	m_pOrder = NULL;
 	m_pMotion = NULL;
-	ZeroMemory(&m_falgTexVal, sizeof(m_falgTexVal));
 }
 
 //******************************
@@ -157,11 +156,17 @@ HRESULT CCaptain::Init(void)
 	// フリッパークラスの生成
 	m_pFlipper = CFlipper::Create();
 
-	// 羽の目標角度の初期化
+	// 左の羽の目標角度の初期化
+	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_CAPTAIN_FLIPPER_DIST_ANGLE_DOWN;
+	
 	// 左下がっている状態に初期化
-	m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+	m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+
+	// 右の羽の目標角度の初期化
+	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_CAPTAIN_FLIPPER_DIST_ANGLE_DOWN;
+
 	// 右下がっている状態に初期化
-	m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
+	m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 
 	// 表情の初期化
 	m_facePattern = 0;
@@ -170,17 +175,14 @@ HRESULT CCaptain::Init(void)
 	m_pMotion = CMotion::Create(GetPartsNum(), CCaptainm_achAnimPath, GetModelData());
 	m_pMotion->SetActiveMotion(true);
 
-	//右挙げ指示ビルボードの作成
-	m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT] = CBillboard::Create(FLAG_RIGHT_POS, FLAG_RIGHT_SIZE);
-	
-	//左挙げ指示ビルボードの作成
-	m_falgTexVal.apFlagTex[FLAG_TEX_LEFT] = CBillboard::Create(FLAG_LEFT_POS, FLAG_LEFT_SIZE);
-
 	// 回転
 	SetRot(ROT);
 
 	// サイズ
 	SetSize(SIZE);
+
+	//指示ポリゴンの生成
+	m_pOrder = COrderPolygon::Crate();
 
 	return S_OK;
 }
@@ -199,21 +201,6 @@ void CCaptain::Uninit(void)
 		m_pFlipper->Uninit();
 		m_pFlipper = NULL;
 	}
-	for (int nCnt = 0; nCnt < FLAG_TEX_MAX; nCnt++)
-	{
-		// テクスチャクラスの終了処理
-		if (m_falgTexVal.apFlagTex[nCnt] != NULL)
-		{
-			//ビルボードの終了
-			m_falgTexVal.apFlagTex[nCnt]->Uninit();
-
-			//メモリの削除
-			delete m_falgTexVal.apFlagTex[nCnt];
-
-			//メモリのクリア
-			m_falgTexVal.apFlagTex[nCnt] = NULL;
-		}
-	}
 }
 
 //******************************
@@ -221,24 +208,16 @@ void CCaptain::Uninit(void)
 //******************************
 void CCaptain::Update(void)
 {
-    // キャプテンが動く処理
-	if (CFlagRaicingGame_rule::GetGameLoop() == CFlagRaicingGame_rule::CAPTAIN_TRUN)
+     //キャプテンが動く処理
+	if (CFlagRaicingGame_rule::GetGameTrun() == CFlagRaicingGame_rule::CAPTAIN_TRUN)
 	{
-		// 全部下げている状態
-		Judge(RED_FLAG_DOWN, BLUE_FLAG_DOWN, BLUE_DOWN, RED_DOWN);
-		// 白だけ上げている状態
-		Judge(RED_FLAG_DOWN, BLUE_FLAG_UP, BLUE_UP, RED_DOWN);
-		// 赤だけ上げている状態
-		Judge(RED_FLAG_UP, BLUE_FLAG_DOWN, BLUE_DOWN, RED_UP);
-		// どちらも上がっている状態
-		Judge(RED_FLAG_UP, BLUE_FLAG_UP, BLUE_UP, RED_UP);
+		//羽の上げ下げの変更
+		ChangeFlipper();
 
-        // プレイヤーのターンに変更
-		CFlagRaicingGame_rule::SetGameLoop(CFlagRaicingGame_rule::PLAYER_TRUN);
+		// プレイヤーのターンに変更
+		CFlagRaicingGame_rule::SetGameTrun(CFlagRaicingGame_rule::PLAYER_TRUN);
 	}
 
-	// 旗上げ判定処理
-	FlagJudge();
 	// 羽の角度の管理
 	ManageFlipperAngle();
 }
@@ -253,26 +232,6 @@ void CCaptain::Draw(void)
 
 	//Zバッファ設定の保存用変数
 	DWORD dwCurZTest = 0;
-
-	if (CFlagRaicingGame_rule::GetBlind()->GetState() != CBlind::BLIND_STATE_NORMAL)
-	{
-		//右を挙げていたら
-		if (m_falgTexVal.bFlagRight)
-		{
-			if (m_falgTexVal.apFlagTex[FLAG_TEX_LEFT])
-			{
-				m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->Draw();
-			}
-		}
-		//左を挙げていたら
-		if (m_falgTexVal.bFlagLeft)
-		{
-			if (m_falgTexVal.apFlagTex[FLAG_TEX_LEFT])
-			{
-				m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->Draw();
-			}
-		}
-	}
 	
 	if (CFlagRaicingGame_rule::GetBlind()->GetState() == CBlind::BLIND_STATE_NORMAL)
 	{
@@ -308,96 +267,6 @@ void CCaptain::Draw(void)
 	}
 }
 
-//******************************
-// 色判別処理
-//******************************
-void CCaptain::Judge(FLAG ColorFlagRed, FLAG ColorFlagWhite, COLOR ColorRed, COLOR ColorWhite)
-{
-	// 全部下げている状態
-	if (m_eColorRed == ColorFlagRed && m_eColorWhite == ColorFlagWhite)
-	{
-		while (true)
-		{
-			// 色判定
-			m_nColor = rand() % 4 + 1;
-			if (m_nColor != ColorRed && m_nColor != ColorWhite)
-			{
-				break;
-			}
-		}
-	}
-}
-
-//******************************
-// 下げているか上げているかの確認
-//******************************
-void CCaptain::JudgeColor(FLAG ColorFlagRed, FLAG ColorFlagWhite, COLOR ColorRed, COLOR ColorWhite)
-{
-
-}
-
-//******************************
-// 旗上げ判定処理
-//******************************
-void CCaptain::FlagJudge()
-{
-	// 旗上げ判定処理
-	switch (m_nColor)
-	{
-		// 青上げ
-	case BLUE_UP:
-		if (!m_bJudgWhite)
-		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_DOWN));
-			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
-			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
-			m_eColorWhite = BLUE_FLAG_UP;
-			m_bJudgWhite = true;
-			m_falgTexVal.bFlagRight = true;
-			m_falgTexVal.bFlagLeft = false;
-		}
-		break;
-		// 青下げ
-	case BLUE_DOWN:
-		if (m_bJudgWhite)
-		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_RIGHT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
-			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
-			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
-			m_eColorWhite = BLUE_FLAG_DOWN;
-			m_bJudgWhite = false;
-			m_falgTexVal.bFlagRight = true;
-			m_falgTexVal.bFlagLeft = false;
-		}
-		break;
-		// 赤上げ
-	case RED_UP:
-		if (!m_bJudgRed)
-		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_DOWN));
-			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
-			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
-			m_eColorRed = RED_FLAG_UP;
-			m_bJudgRed = true;
-			m_falgTexVal.bFlagLeft = true;
-			m_falgTexVal.bFlagRight = false;
-		}
-		break;
-		// 赤下げ
-	case RED_DOWN:
-		if (m_bJudgRed)
-		{
-			m_falgTexVal.apFlagTex[FLAG_TEX_LEFT]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
-			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
-			m_pFlipper->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
-			m_eColorRed = RED_FLAG_DOWN;
-			m_bJudgRed = false;
-			m_falgTexVal.bFlagLeft = true;
-			m_falgTexVal.bFlagRight = false;
-		}
-		break;
-	}
-}
 
 //******************************
 // 羽の角度の管理
@@ -406,10 +275,12 @@ void CCaptain::ManageFlipperAngle(void)
 {
 	// モデルデータの取得
 	CResourceModel::Model * pModelData = GetModelData();
+
 	// 右羽を動かす
-	pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z += (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] - pModelData[RIGHT_FLIPPER_PARTS_NUM].rot.z)*FLIPPER_RATE;
+	pModelData[RIGHT_CAPTAIN_FLIPPER_PARTS_NUM].rot.z += (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] - pModelData[RIGHT_CAPTAIN_FLIPPER_PARTS_NUM].rot.z)*FLIPPER_RATE;
+	
 	// 左羽を動かす
-	pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z += (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] - pModelData[LEFT_FLIPPER_PARTS_NUM].rot.z)*FLIPPER_RATE;
+	pModelData[LEFT_CAPTAIN_FLIPPER_PARTS_NUM].rot.z += (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] - pModelData[LEFT_CAPTAIN_FLIPPER_PARTS_NUM].rot.z)*FLIPPER_RATE;
 }
 
 //******************************
@@ -523,3 +394,55 @@ void CCaptain::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * p
 	}
 }
 
+//******************************
+// 羽の状態変更
+//******************************
+void CCaptain::ChangeFlipper(void)
+{
+	//左右どちらの羽を変更するかランダムで変更
+	int nFlipperType = rand() % 2;
+
+	//羽の状態保存用変数
+	CFlipper::FLIPPER_STATE flipperState = CFlipper::FLIPPER_STATE_NONE;
+
+	//変更する羽の現在の状態を取得
+	CFlipper::FLIPPER_STATE flipperStateNow = m_pFlipper->GetState((CFlipper::FLIPPER_TYPE)nFlipperType);
+
+	//羽が上がっていたら
+	if (flipperStateNow == CFlipper::FLIPPERSTATE_UP)
+	{
+		//羽を下げる
+		m_pFlipper->SetState((CFlipper::FLIPPER_TYPE)nFlipperType, CFlipper::FLIPPERSTATE_DOWN);
+		
+		//変更した状態を保存
+		flipperState = CFlipper::FLIPPERSTATE_DOWN;
+	}
+	//羽が下がっていたら
+	else if (flipperStateNow == CFlipper::FLIPPERSTATE_DOWN)
+	{
+		//羽を上げる
+		m_pFlipper->SetState((CFlipper::FLIPPER_TYPE)nFlipperType, CFlipper::FLIPPERSTATE_UP);
+		
+		//変更した状態を保存
+		flipperState = CFlipper::FLIPPERSTATE_UP;
+	}
+
+	if (nFlipperType == 0)
+	{
+		CManager::GetSound()->Play(CSound::LABEL_SE_FLIPPER_LEFT1);
+	}
+	else
+	{
+		CManager::GetSound()->Play(CSound::LABEL_SE_FLIPPER_RIGHT1);
+
+	}
+
+	//変更した羽の角度の目的値を設定
+	m_fFlipperDist[(CFlipper::FLIPPER_TYPE)nFlipperType] = fDist[(CFlipper::FLIPPER_TYPE)nFlipperType][flipperState];
+
+	//指示ポリゴンクラスに変更した情報を渡す
+	m_pOrder->SetDraw((CFlipper::FLIPPER_TYPE)nFlipperType, flipperState);
+
+	//変更した情報を旗上げルールクラスへ送る
+	CFlagRaicingGame_rule::SetCaptainData((CFlipper::FLIPPER_TYPE)nFlipperType, flipperState);
+}

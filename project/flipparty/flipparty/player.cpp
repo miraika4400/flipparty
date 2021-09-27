@@ -24,6 +24,7 @@
 #include "light.h"
 #include "sound.h"
 
+#include "flag_raicing_game_rule.h"
 //*****************************
 // マクロ定義
 //*****************************
@@ -414,6 +415,9 @@ void CPlayer::ControllFlipper(void)
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+
 	}
 	else if (CManager::GetKeyboard()->GetKeyPress(DIK_DOWN))
 	{// 下げる
@@ -427,6 +431,9 @@ void CPlayer::ControllFlipper(void)
 
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 
 	}
 
@@ -444,6 +451,9 @@ void CPlayer::ControllFlipper(void)
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+
 	}
 	else if (CManager::GetKeyboard()->GetKeyPress(DIK_S))
 	{// 下げる
@@ -458,7 +468,8 @@ void CPlayer::ControllFlipper(void)
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 
-
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
 
 #endif // _DEBUG
@@ -478,6 +489,8 @@ void CPlayer::ControllFlipper(void)
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lRz >= 10)
 	{// 下げる
@@ -492,6 +505,8 @@ void CPlayer::ControllFlipper(void)
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
 	}
 
 	// 左羽を操作
@@ -509,9 +524,12 @@ void CPlayer::ControllFlipper(void)
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lY >= 10)
 	{// 下げる
+		m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
 		
 		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_DOWN)
 		{
@@ -520,12 +538,13 @@ void CPlayer::ControllFlipper(void)
 
 			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
 		}
-		
 
 		// 移動状態の更新
 		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
-	}
 
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+	}
 }
 
 //******************************

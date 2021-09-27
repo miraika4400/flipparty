@@ -186,8 +186,24 @@ void CRuleManager::Update(void)
 					m_pGameRule = NULL;
 				}
 
-                // チュートリアル生成
-                m_MiniTutorial = CMini_Tutorial::Create(CResourceTexture::TEXTURE_TUTORIAL);
+                // 次のルールに合わせてチュートリアル生成
+                switch (m_ruleNext)
+                {
+                case RULE_FLAG_RACING:
+                    // 旗揚げ
+                    m_MiniTutorial = CMini_Tutorial::Create(CResourceTexture::TEXTURE_TUTORIAL_FLAG);
+                    break;
+                case RULE_FLY:
+                    // フライ
+                    m_MiniTutorial = CMini_Tutorial::Create(CResourceTexture::TEXTURE_TUTORIAL_FRY);
+                    break;
+                case RULE_REMENBER:
+                    // 記憶
+                    m_MiniTutorial = CMini_Tutorial::Create(CResourceTexture::TEXTURE_TUTORIAL_REMEMBER);
+                    break;
+                default:
+                    break;
+                }
 
 				// BGM再生
 				CManager::GetSound()->Play(CSound::LABEL_BGM_TUTORIAL);

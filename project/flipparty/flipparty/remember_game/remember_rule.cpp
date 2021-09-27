@@ -310,6 +310,7 @@ void CRememjber_rule::InputPlayer(void)
     else if (m_pPlayer[m_nTurnPlayer]->GetIsLoss())
     {
         TurnChange();                                   // プレイヤーのターン変更
+        m_nNumInput = 0;// プレイヤーの入力回数リセット
     }
 
     // 条件の定義
@@ -393,14 +394,30 @@ void CRememjber_rule::TurnChange(void)
 //=============================================================================
 void CRememjber_rule::PlayerChange(int nPlayerNum)
 {
+
    // 脱落したプレイヤーの番号を配列の最後に移動
    // バブルソートで入れ替えれば最終的に順位と同じ順番になる
-    for (int nData = nPlayerNum; nData < m_nNumPlayer - m_nLossPlayer; nData++)
-    {
-        int nSwap = m_aTurn[nData];// 入れ替え用変数
+    int nPlayer;
 
-        m_aTurn[nData] = m_aTurn[nData + 1];
-        m_aTurn[nData + 1] = nSwap;
+    //配列の中から脱落したプレイヤーを探す
+    for (int nData = 0;  nData < MAX_PLAYER_NUM; nData++)
+    {
+        // nPlayerに配列の番号を保存
+        nPlayer = nData;
+
+        if (m_aTurn[nData] == nPlayerNum)
+        {
+            break;
+        }
+    }
+
+    // プレイヤー番号の入れ替え
+    for (int nSwap =0; nSwap < (m_nNumPlayer - m_nLossPlayer)- nPlayer; nSwap++)
+    {
+        int nSwapData = m_aTurn[nPlayer+ nSwap];// 入れ替え用変数
+
+        m_aTurn[nPlayer + nSwap] = m_aTurn[nPlayer + nSwap + 1];
+        m_aTurn[nPlayer + nSwap + 1] = nSwapData;
     }
 
 }
@@ -432,8 +449,9 @@ void CRememjber_rule::Comparison(void)
 void CRememjber_rule::Ranking(void)
 {
     m_nLossPlayer++;                // 脱落したプレイヤーの人数をカウント
-    PlayerChange(m_nTurnPlayer);    // プレイヤーの順番変更
     m_pPlayer[m_nTurnPlayer]->SetIsLoss(true);// 脱落フラグをたてる
+    PlayerChange(m_nTurnPlayer);    // プレイヤーの順番変更
+
 
     // プレイヤーが最後の1人になったらリザルト生成
     if (m_nNumPlayer - m_nLossPlayer == 1)
@@ -467,6 +485,7 @@ void CRememjber_rule::Ranking(void)
 //=============================================================================
 void CRememjber_rule::SetRememberData(CFlipper::FLIPPER_TYPE type)
 {
+
     m_PlayerInput[m_nNumInput] = type;                 // 入力した情報を保存
 
     // 入力した回数がターンと同じとき
