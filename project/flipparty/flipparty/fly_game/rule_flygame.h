@@ -44,6 +44,9 @@ public:
 	// ƒvƒŒƒCƒ„[æ“¾ˆ—
 	static CFlyGamePlayer * GetPlayer(int nPlayerNum) { return m_pPlayer[nPlayerNum]; }
 	static bool GetPlayFlag(void) { return m_bPlay; }
+
+	void GameProcess(void);
+	void MiniResultProcess(void);
 private:
 	void JudgeRank(void); // ‡ˆÊ”»’è
 	//============

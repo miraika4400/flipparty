@@ -178,8 +178,7 @@ HRESULT CRememjber_rule::Init(void)
     m_pNumber = CNumber::Create(TIME_LIMIT, TIME_LIMIT_UI_POS, TIME_LIMIT_UI_SIZE, TIME_LIMIT_UI_COLOR);
 
     ChangeTurnUI();
-    // BGMの再生
-    CManager::GetSound()->Play(CSound::LABEL_BGM_REMEMBER_GAME);
+   
 
 	// 海の生成
 	CSea::Create(D3DXVECTOR3(0.0f, -PLAYER_CENTER_HEIGHT - 14.0f, 0.0f), 0.001f, CSea::TYPE_NORMAL);
@@ -235,19 +234,21 @@ void CRememjber_rule::Uninit(void)
 //=============================================================================
 void CRememjber_rule::Update(void)
 {
-    if (m_IsPlay)
-    {
-        // プレイヤーの入力
-        InputPlayer();
-    }
+	if (GetRuleState() == CRuleBase::RULE_STATE_GAME)
+	{
+		if (m_IsPlay)
+		{
+			// プレイヤーの入力
+			InputPlayer();
+		}
 
-    // 吹雪の生成
-    if (IsSnowstormTurn())
-    {
-        m_IsSnow = true;// フラグをオンにする
-        CSnow::Create();// 生成
-    }
-
+		// 吹雪の生成
+		if (IsSnowstormTurn())
+		{
+			m_IsSnow = true;// フラグをオンにする
+			CSnow::Create();// 生成
+		}
+	}
 }
 
 //=============================================================================
@@ -419,7 +420,6 @@ void CRememjber_rule::PlayerChange(int nPlayerNum)
         m_aTurn[nPlayer + nSwap] = m_aTurn[nPlayer + nSwap + 1];
         m_aTurn[nPlayer + nSwap + 1] = nSwapData;
     }
-
 }
 
 //=============================================================================
@@ -498,6 +498,22 @@ void CRememjber_rule::SetRememberData(CFlipper::FLIPPER_TYPE type)
     m_nInputTime = MAX_INPUT_TIME;                   // 入力できる制限時間の回復
     ControllFlipper(type, CFlipper::FLIPPERSTATE_UP);// 手をあげるモーションにする
     m_nNumInput++;                                   // 入力した回数の追加
+}
+
+//======================================================
+//	ゲーム用の処理
+//======================================================
+void CRememjber_rule::GameProcess(void)
+{
+	// BGMの再生
+	CManager::GetSound()->Play(CSound::LABEL_BGM_REMEMBER_GAME);
+}
+
+//======================================================
+//	ミニリザルト用の処理
+//======================================================
+void CRememjber_rule::MiniResultProcess(void)
+{
 }
 
 //=============================================================================

@@ -47,6 +47,9 @@ public:
 		LABEL_SE_STAN2,             // stan
 		LABEL_SE_STAN3,             // stan
 		LABEL_SE_STAN4,             // stan
+		LABEL_SE_COUNT,				// カウント音
+		LABEL_SE_START,				// ゲーム開始音
+		LABEL_SE_GAME_END,			// ゲーム終了音
 		SOUND_LABEL_MAX,            // サウンド最大数
 	}LABEL;
 

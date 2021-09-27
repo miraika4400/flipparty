@@ -125,7 +125,7 @@ void COrderPolygon::Draw(void)
 		{
 			if (m_Order[nCntPoygon].bIsDraw)
 			{
-				//左右のポリゴンを生成
+				//ポリゴンを描画
 				m_Order[nCntPoygon].pOrderBillboard->Draw();
 			}
 		}
@@ -140,14 +140,17 @@ void COrderPolygon::SetDraw(CFlipper::FLIPPER_TYPE flipperState, CFlipper::FLIPP
 	//左手の場合
 	if (flipperState == CFlipper::FLIPPER_TYPE_LEFT)
 	{
+		//左側を表示、右側を非表示
 		m_Order[CFlipper::FLIPPER_TYPE_LEFT].bIsDraw = true;
 		m_Order[CFlipper::FLIPPER_TYPE_RIGHT].bIsDraw = false;
 
+		//上げる場合
 		if (state == CFlipper::FLIPPERSTATE_UP)
 		{
 			m_Order[flipperState].pOrderBillboard->BindTexture
 			(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
 		}
+		//下げる場合
 		else if (state == CFlipper::FLIPPERSTATE_DOWN)
 		{
 			m_Order[flipperState].pOrderBillboard->BindTexture
@@ -158,14 +161,17 @@ void COrderPolygon::SetDraw(CFlipper::FLIPPER_TYPE flipperState, CFlipper::FLIPP
 	//右手の場合
 	else if (flipperState == CFlipper::FLIPPER_TYPE_RIGHT)
 	{
+		//右側を表示、左側を非表示
 		m_Order[CFlipper::FLIPPER_TYPE_LEFT].bIsDraw = false;
 		m_Order[CFlipper::FLIPPER_TYPE_RIGHT].bIsDraw = true;
 
+		//上げる場合
 		if (state == CFlipper::FLIPPERSTATE_UP)
 		{
 			m_Order[flipperState].pOrderBillboard->BindTexture
 			(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
 		}
+		//下げる場合
 		else if (state == CFlipper::FLIPPERSTATE_DOWN)
 		{
 			m_Order[flipperState].pOrderBillboard->BindTexture

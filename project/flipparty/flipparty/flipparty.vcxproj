@@ -162,6 +162,7 @@
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="count_selection.cpp" />
     <ClCompile Include="debug_log.cpp" />
+    <ClCompile Include="enddisplay.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_camera.cpp" />
     <ClCompile Include="flag_raicing_game_rule\flag_raicing_game_polygon.cpp" />
@@ -203,6 +204,7 @@
     <ClCompile Include="resource_shader.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="resultboard.cpp" />
+    <ClCompile Include="rule_base.cpp" />
     <ClCompile Include="rule_manager.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="scene2d.cpp" />
@@ -212,6 +214,7 @@
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="resource_texture.cpp" />
     <ClCompile Include="stage.cpp" />
+    <ClCompile Include="startcount.cpp" />
     <ClCompile Include="tears_manager.cpp" />
     <ClCompile Include="tears_particle.cpp" />
     <ClCompile Include="timelimit.cpp" />
@@ -231,6 +234,7 @@
     <ClInclude Include="collision.h" />
     <ClInclude Include="count_selection.h" />
     <ClInclude Include="debug_log.h" />
+    <ClInclude Include="enddisplay.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_camera.h" />
     <ClInclude Include="flag_raicing_game_rule\flag_raicing_game_polygon.h" />
@@ -249,6 +253,7 @@
     <ClInclude Include="resultboard.h" />
     <ClInclude Include="sea.h" />
     <ClInclude Include="stage.h" />
+    <ClInclude Include="startcount.h" />
     <ClInclude Include="warning.h" />
     <ClInclude Include="z_tex.h" />
     <ClInclude Include="input.h" />

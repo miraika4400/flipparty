@@ -11,6 +11,9 @@
 #include "timelimit.h"
 #include "number.h"
 #include "manager.h"
+#include "rule_base.h"
+#include "game.h"
+#include "rule_manager.h"
 
 //**********************************
 //マクロ定義
@@ -114,38 +117,40 @@ void CTimeLimit::Uninit(void)
 //==================================
 void CTimeLimit::Update(void)
 {
-	if (m_nLimitTime > 0)
+	if (CGame::GetRuleManager()->GetRule()->GetRuleState() == CRuleBase::RULE_STATE_GAME)
 	{
-		//trueの時のみカウントを進める
-		if (m_bIsTimeCount)
+		if (m_nLimitTime > 0)
 		{
-			// カウントを進める
-			m_nCntTime++;
-			// カウントが一定以上の時
-			if (m_nCntTime >= ONE_SECOND_COUNT)
+			//trueの時のみカウントを進める
+			if (m_bIsTimeCount)
 			{
-				// カウントの初期化
-				m_nCntTime = 0;
-				// 制限時間を減らす
-				m_nLimitTime--;
-
-				if (m_nLimitTime <= 0)
+				// カウントを進める
+				m_nCntTime++;
+				// カウントが一定以上の時
+				if (m_nCntTime >= ONE_SECOND_COUNT)
 				{
-					m_nLimitTime = 0;
+					// カウントの初期化
+					m_nCntTime = 0;
+					// 制限時間を減らす
+					m_nLimitTime--;
+
+					if (m_nLimitTime <= 0)
+					{
+						m_nLimitTime = 0;
+					}
 				}
 			}
-		}
-		// 最大分ループ
-		for (int nCntDigit = 0; nCntDigit < MAX_TIME_NUM; nCntDigit++)
-		{
-			// ナンバーのアップデート
-			m_apNumber[nCntDigit]->Update();
+			// 最大分ループ
+			for (int nCntDigit = 0; nCntDigit < MAX_TIME_NUM; nCntDigit++)
+			{
+				// ナンバーのアップデート
+				m_apNumber[nCntDigit]->Update();
 
-			// 各桁の計算
-			m_apNumber[nCntDigit]->SetNumber((m_nLimitTime % (int)(powf(10.0f, (MAX_TIME_NUM - nCntDigit)))) / (float)(powf(10.0, (MAX_TIME_NUM - nCntDigit - 1))));
+				// 各桁の計算
+				m_apNumber[nCntDigit]->SetNumber((m_nLimitTime % (int)(powf(10.0f, (MAX_TIME_NUM - nCntDigit)))) / (float)(powf(10.0, (MAX_TIME_NUM - nCntDigit - 1))));
+			}
 		}
 	}
-
 }
 
 //==================================
@@ -153,9 +158,12 @@ void CTimeLimit::Update(void)
 //==================================
 void CTimeLimit::Draw(void)
 {
-	// 最大分ループ
-	for (int nCntDigit = 0; nCntDigit < MAX_TIME_NUM; nCntDigit++)
+	if (CGame::GetRuleManager()->GetRule()->GetRuleState() == CRuleBase::RULE_STATE_GAME)
 	{
-		m_apNumber[nCntDigit]->Draw();
+		// 最大分ループ
+		for (int nCntDigit = 0; nCntDigit < MAX_TIME_NUM; nCntDigit++)
+		{
+			m_apNumber[nCntDigit]->Draw();
+		}
 	}
 }

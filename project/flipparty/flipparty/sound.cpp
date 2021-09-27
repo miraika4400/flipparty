@@ -38,6 +38,9 @@ CSound::SOUNDPARAM CSound::m_aParam[SOUND_LABEL_MAX]
 	{ "./data/Sounds/SE/stan.wav"    , 0 },
 	{ "./data/Sounds/SE/stan.wav"    , 0 },
 
+	{ "./data/Sounds/SE/count.wav"    , 0 },
+	{ "./data/Sounds/SE/Start_SE.wav"    , 0 },
+	{ "./data/Sounds/SE/game_end.wav"    , 0 },
 };
 
 //=============================================================================
