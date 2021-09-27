@@ -156,14 +156,22 @@ void CPause::Update(void)
 		}
 	}
 
-	// メニュー操作
-	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_W) || CManager::GetKeyboard()->GetKeyTrigger(DIK_UP))
+	DIJOYSTATE jy = CManager::GetJoypad()->GetStick(0);
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_W) || CManager::GetKeyboard()->GetKeyTrigger(DIK_UP) || m_bMove && jy.lY <= -600)
 	{// ↑
 		m_nMenu--;
+		m_bMove = false;
 	}
-	else if (CManager::GetKeyboard()->GetKeyTrigger(DIK_S) || CManager::GetKeyboard()->GetKeyTrigger(DIK_DOWN))
+	else if (CManager::GetKeyboard()->GetKeyTrigger(DIK_S) || CManager::GetKeyboard()->GetKeyTrigger(DIK_DOWN) || m_bMove && jy.lY >= 600)
 	{// ↓
 		m_nMenu++;
+		m_bMove = false;
+	}
+
+	// スティック用フラグの初期化
+	if (jy.lY <= 500 && jy.lY >= -500)
+	{
+		m_bMove = true;
 	}
 
 	// 範囲外に行かないように
@@ -177,7 +185,7 @@ void CPause::Update(void)
 	}
 
 	// メニューコマンド
-	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN))
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN) || CManager::GetJoypad()->GetJoystickTrigger(3, 0))
 	{
 		switch (m_nMenu)
 		{
@@ -191,7 +199,7 @@ void CPause::Update(void)
 			break;
 		case EXIT:
 			// 終了処理
-			DestroyWindow(FindWindow(WINDOW_CLASS_NAME, NULL));
+			CManager::GetFade()->SetFade(CManager::MODE_TITLE);
 			break;
 		default:
 			break;

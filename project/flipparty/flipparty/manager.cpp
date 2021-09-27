@@ -216,6 +216,13 @@ void CManager::Uninit(void)
 		delete m_pFade;
 		m_pFade = NULL;
 	}
+
+	if (m_pPause != NULL)
+	{
+		m_pPause->Uninit();
+		delete m_pPause;
+		m_pPause = NULL;
+	}
 }
 
 

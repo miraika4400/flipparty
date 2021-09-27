@@ -23,7 +23,7 @@
 //マクロ定義
 //=============================================================================
 #define LIMIT_TIME 3
-#define STRAT_NUMBER_SIZE_X 50.0f
+#define STRAT_NUMBER_SIZE_X 100.0f
 #define STRAT_NUMBER_SIZE_Y 100.0f
 #define STRAT_ICON_SIZE_X 200.0f
 #define STRAT_ICON_SIZE_Y 50.0f 
@@ -100,6 +100,19 @@ HRESULT CStratCount::Init(void)
 //=============================================================================
 void CStratCount::Uninit(void)
 {
+	//ナンバーの削除
+	if (m_pNumber)
+	{
+		//終了処理
+		m_pNumber->Uninit();
+
+		//メモリ削除
+		delete m_pNumber;
+
+		//メモリのクリア
+		m_pNumber = NULL;
+	}
+
 	//自身を破棄
 	CScene::Release();
 }

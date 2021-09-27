@@ -15,6 +15,7 @@
 #include "keyboard.h"
 #include "fade.h"
 #include "sound.h"
+#include "joypad.h"
 
 //*****************************
 // マクロ定義
@@ -37,6 +38,7 @@ CCountSelect::CCountSelect() :CScene(OBJTYPE_UI)
 	// 変数のクリア
 	ZeroMemory(&m_pPolygon, sizeof(m_pPolygon)); // UIポリゴン
 	m_nSelectUi = 0;                             // 選んでいるUIのタイプ
+	m_bMove = true;
 }
 
 //=============================================================================
@@ -86,6 +88,8 @@ HRESULT CCountSelect::Init(void)
 	m_pPolygon[SELECT_2_PLAYER]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_COUNT_SELECT_2));
 	m_pPolygon[SELECT_3_PLAYER]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_COUNT_SELECT_3));
 	m_pPolygon[SELECT_4_PLAYER]->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_COUNT_SELECT_4));
+
+	m_bMove = true;
 
 	return S_OK;
 }
@@ -141,10 +145,14 @@ void CCountSelect::Draw(void)
 //=============================================================================
 void CCountSelect::SelectUi(void)
 {
+	
+
+	DIJOYSTATE jy = CManager::GetJoypad()->GetStick(0);
 	// キーボードによる選択処理
-	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RIGHT))
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RIGHT) || m_bMove && jy.lX >= 600)
 	{// 右
 		m_nSelectUi++;
+		m_bMove = false;
 		if (m_nSelectUi >= SELECT_COUNT_MAX)
 		{
 			m_nSelectUi = 0;
@@ -153,9 +161,10 @@ void CCountSelect::SelectUi(void)
 		// SEの再生
 		CManager::GetSound()->Play(CSound::LABEL_SE_CURSOR);
 	}
-	if(CManager::GetKeyboard()->GetKeyTrigger(DIK_LEFT))
+	if(CManager::GetKeyboard()->GetKeyTrigger(DIK_LEFT) || m_bMove && jy.lX <= -600)
 	{// 左
 		m_nSelectUi--;
+		m_bMove = false;
 		if (m_nSelectUi < 0)
 		{
 			m_nSelectUi = SELECT_COUNT_MAX - 1;
@@ -165,7 +174,13 @@ void CCountSelect::SelectUi(void)
 		CManager::GetSound()->Play(CSound::LABEL_SE_CURSOR);
 	}
 
-	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN))
+	// スティック用フラグの初期化
+	if (jy.lX <= 500 && jy.lX >= -500)
+	{
+		m_bMove = true;
+	}
+
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN)|| CManager::GetJoypad()->GetJoystickTrigger(3, 0))
 	{
 		m_nPlayerNum = m_nSelectUi + 2;
 		CManager::GetFade()->SetFade(CManager::MODE_TUTORIAL);

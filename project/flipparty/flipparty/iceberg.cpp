@@ -230,8 +230,7 @@ void CIceberg::SetShaderVariable(LPD3DXEFFECT pEffect, CResourceModel::Model * p
 		// ワールド座標
 		pEffect->SetMatrix("World", &pModelData->mtxWorld);
 		// ライトディレクション
-		D3DXVECTOR3 lightDir = CGame::GetLight()->GetDir();
-		pEffect->SetFloatArray("LightDirection", (float*)&D3DXVECTOR3(lightDir.x, -lightDir.y, -lightDir.z), 3);
+		pEffect->SetFloatArray("LightDirection", (float*)&D3DXVECTOR3(LIGHT_DIR_BASE.x, -LIGHT_DIR_BASE.y, -LIGHT_DIR_BASE.z), 3);
 		// 視点位置
 		D3DXVECTOR3 eye = CManager::GetCamera()->GetPos();
 		pEffect->SetFloatArray("Eye", (float*)&eye, 3);

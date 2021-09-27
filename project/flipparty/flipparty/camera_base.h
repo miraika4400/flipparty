@@ -44,6 +44,8 @@ public:
 
 	void SetFov(float fFov) { m_fFov = fFov; } // 視野角のセット
 
+	void SetPosV(D3DXVECTOR3 posV) { m_posV = posV; }
+	void SetPosR(D3DXVECTOR3 posR) { m_posR = posR; }
 protected:
 	//============
 	// メンバ変数

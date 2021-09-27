@@ -65,6 +65,7 @@ private:
 	static int m_nPlayerNum;                // ゲームに参加しているプレイヤーの人数
 	CPolygon *m_pPolygon[SELECT_COUNT_MAX]; // UIポリゴン
 	int  m_nSelectUi;                       // 選んでいるUIのタイプ
+	bool m_bMove; // 移動フラグ
 };
 
 #endif#pragma once
