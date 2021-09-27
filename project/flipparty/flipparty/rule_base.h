@@ -51,9 +51,9 @@ public:
 	virtual void Update(void) = 0;  // çXêV
     virtual void Draw(void) = 0;    // ï`âÊ
 
-	void EndProcess(void);
-	virtual void GameProcess(void);
-	virtual void MiniResultProcess(void);
+	//virtual void StratProcess(void) = 0;
+	virtual void GameProcess(void) = 0;
+	virtual void MiniResultProcess(void) = 0;
 
 	RULE_STATE GetRuleState(void) { return m_ruleState; }
 	void SetRuleState(RULE_STATE ruleState);

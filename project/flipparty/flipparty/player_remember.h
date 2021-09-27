@@ -37,7 +37,8 @@ public:
 
     // GetŠÖ”
     bool GetIsLoss(void) { return m_IsLoss;}            // ’E—‚µ‚½‚©‚Ç‚¤‚©
-
+	void GameProcess(void);
+	void MiniResultProcess(void);
 private:
     //---------------------
     // ƒƒ“ƒo•Ï”

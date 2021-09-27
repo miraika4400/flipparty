@@ -93,3 +93,11 @@ void CPlayerRemember::ControllFlipper(void)
     return;
 }
 
+void CPlayerRemember::GameProcess(void)
+{
+}
+
+void CPlayerRemember::MiniResultProcess(void)
+{
+}
+

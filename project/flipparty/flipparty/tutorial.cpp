@@ -17,6 +17,7 @@
 #include "joypad.h"
 #include "fade.h"
 #include "resource_texture.h"
+#include "sound.h"
 
 //**********************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -109,6 +110,9 @@ void CTutorial::Update(void)
 		if (m_nNumTutorial >= TUTORIAL_NUM)
 		{
 			CManager::GetFade()->SetFade(CManager::MODE_GAME);
+
+			// SE‚ÌÄ¶
+			CManager::GetSound()->Play(CSound::LABEL_SE_ENTER);
 		}
 		else
 		{

@@ -14,6 +14,8 @@
 #include "rule_flygame.h"
 #include "player_flygame.h"
 #include "cloud.h"
+#include "sound.h"
+#include "manager.h"
 
 //=============================
 // マクロ定義
@@ -83,6 +85,10 @@ HRESULT CWarningUI::Init(void)
 
 	// 色の設定
 	m_pBillboard->SetColor(COLOR);
+
+	// SW
+	CManager::GetSound()->Play(CSound::LABEL_SE_WARNING);
+
 	return S_OK;
 }
 

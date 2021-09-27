@@ -25,6 +25,7 @@
 #include "billboard.h"
 #include "blind.h"
 #include "orderPolygon.h"
+#include "sound.h"
 
 //*****************************
 // マクロ定義
@@ -424,6 +425,16 @@ void CCaptain::ChangeFlipper(void)
 		
 		//変更した状態を保存
 		flipperState = CFlipper::FLIPPERSTATE_UP;
+	}
+
+	if (nFlipperType == 0)
+	{
+		CManager::GetSound()->Play(CSound::LABEL_SE_FLIPPER_LEFT1);
+	}
+	else
+	{
+		CManager::GetSound()->Play(CSound::LABEL_SE_FLIPPER_RIGHT1);
+
 	}
 
 	//変更した羽の角度の目的値を設定

@@ -15,6 +15,7 @@
 #include "renderer.h"
 #include "rule_flygame.h"
 #include "player_flygame.h"
+#include "sound.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -53,13 +54,16 @@ CThunder * CThunder::Create(D3DXVECTOR3 pos , int nPlayerNum)
 {
 	// メモリの確保
 	CThunder *pThunder = new CThunder;
+	
+	// プレイヤー番号
+	pThunder->m_nPlayerNum = nPlayerNum;
+
 	// 初期化
 	pThunder->Init();
 
 	// 位置の反映
 	pThunder->SetPos(pos);
-	// プレイヤー番号
-	pThunder->m_nPlayerNum = nPlayerNum;
+
 	return pThunder;
 }
 
@@ -95,6 +99,8 @@ HRESULT CThunder::Init(void)
 	// UV座標セット
 	SetTextureUV(uv);
 
+	// SE
+	CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_MISS) + m_nPlayerNum));
 	return S_OK;
 }
 

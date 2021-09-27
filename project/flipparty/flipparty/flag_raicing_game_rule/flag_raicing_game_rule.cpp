@@ -174,8 +174,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	//プレイヤーデータの初期化
 	m_vecPlayerNumber.clear();
 
-	// BGM再生
-	CManager::GetSound()->Play(CSound::LABEL_BGM_FLAG_GAME);
+	
 	m_eTrun = CFlagRaicingGame_rule::PLAYER_TRUN;
 	return S_OK;
 }
@@ -292,6 +291,12 @@ void CFlagRaicingGame_rule::Draw(void)
 	{
 		m_PlayerPoint.bPoint[nCnt]->Draw();
 	}
+}
+
+void CFlagRaicingGame_rule::GameProcess(void)
+{
+	// BGM再生
+	CManager::GetSound()->Play(CSound::LABEL_BGM_FLAG_GAME);
 }
 
 //======================================================

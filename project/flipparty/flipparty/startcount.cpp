@@ -169,6 +169,8 @@ void CStratCount::Update(void)
 			m_pScene2D->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_STRAT_ICON));
 
 			//スタート音をここで再生予定
+			//カウント音の再生
+			CManager::GetSound()->Play(CSound::LABEL_SE_START);
 		}
 		else
 		{

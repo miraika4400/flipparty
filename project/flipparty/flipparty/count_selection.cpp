@@ -14,6 +14,7 @@
 #include "manager.h"
 #include "keyboard.h"
 #include "fade.h"
+#include "sound.h"
 
 //*****************************
 // ƒ}ƒNƒ’è‹`
@@ -148,6 +149,9 @@ void CCountSelect::SelectUi(void)
 		{
 			m_nSelectUi = 0;
 		}
+
+		// SE‚ÌÄ¶
+		CManager::GetSound()->Play(CSound::LABEL_SE_CURSOR);
 	}
 	if(CManager::GetKeyboard()->GetKeyTrigger(DIK_LEFT))
 	{// ¶
@@ -156,12 +160,18 @@ void CCountSelect::SelectUi(void)
 		{
 			m_nSelectUi = SELECT_COUNT_MAX - 1;
 		}
+
+		// SE‚ÌÄ¶
+		CManager::GetSound()->Play(CSound::LABEL_SE_CURSOR);
 	}
 
 	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_RETURN))
 	{
 		m_nPlayerNum = m_nSelectUi + 2;
 		CManager::GetFade()->SetFade(CManager::MODE_TUTORIAL);
+
+		// SE‚ÌÄ¶
+		CManager::GetSound()->Play(CSound::LABEL_SE_ENTER);
 	}
 }
 

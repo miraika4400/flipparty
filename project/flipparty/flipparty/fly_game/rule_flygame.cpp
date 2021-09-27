@@ -110,9 +110,6 @@ HRESULT CRuleFly::Init(void)
 	// プレイ中フラグの初期化
 	m_bPlay = false;
 
-	// BGM再生
-	CManager::GetSound() ->Play(CSound::LABEL_BGM_FLY_GAME);
-
 	return S_OK;
 }
 
@@ -196,6 +193,9 @@ void CRuleFly::GameProcess(void)
 		// 次のプレイヤー情報に更新
 		pPlayer = (CPlayer*)pPlayer->GetNext();
 	}
+
+	// BGM再生
+	CManager::GetSound()->Play(CSound::LABEL_BGM_FLY_GAME);
 }
 
 //======================================================

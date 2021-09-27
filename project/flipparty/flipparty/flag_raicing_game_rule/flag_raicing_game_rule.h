@@ -68,6 +68,7 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
+	void GameProcess(void);
 	void MiniResultProcess(void);
 	void JudgeRank(void);					// ‡ˆÊ‚Ì”»’è
 
