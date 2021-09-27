@@ -68,6 +68,7 @@ public:
 	void Draw(void);    // 描画
 
 	void SetRule(RULE_TYPE ruleNext); //ルールのセット
+	CRuleBase *GetRule(void) { return m_pGameRule; }
 	void TransitionRule(void);        // ルール遷移
 private:
 

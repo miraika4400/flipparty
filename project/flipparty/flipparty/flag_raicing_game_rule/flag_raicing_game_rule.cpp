@@ -71,7 +71,6 @@ int nAddPoint[MAX_PLAYER_NUM]=
 	ADD_POINT_NUM_RANK1,ADD_POINT_NUM_RANK2,ADD_POINT_NUM_RANK3,ADD_POINT_NUM_RANK4
 };
 
-
 //======================================================
 //	コンストラクタ
 //======================================================
@@ -88,6 +87,8 @@ CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 	m_bPlay = true;
 	m_pBlind = NULL;
 	m_pPassingPenguin = NULL;
+	m_CaptainData.type = CFlipper::FLIPPER_TYPE_LEFT;
+	m_CaptainData.state = CFlipper::FLIPPER_STATE_NONE;
 }
 
 //======================================================
@@ -125,7 +126,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 
 	m_bPlay = true;
 	//m_nRandTime = TIME_SET;
-	m_nRandTime = 120;
+	m_nRandTime = 30;
 	//カメラの生成
 	CManager::SetCamera(CFlagRaicingGameCamera::Create());
 
@@ -175,7 +176,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 
 	// BGM再生
 	CManager::GetSound()->Play(CSound::LABEL_BGM_FLAG_GAME);
-
+	m_eTrun = CFlagRaicingGame_rule::PLAYER_TRUN;
 	return S_OK;
 }
 
@@ -213,8 +214,8 @@ void CFlagRaicingGame_rule::Update(void)
 {
 	// プレイヤーの人数取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
-	bool btest = true;
-	if (btest == true)
+
+	if (GetRuleState() == RULE_STATE_GAME)
 	{
 		// プレイヤーを必要時以外動けなくするようにする処理
 		if (m_bPlay)
@@ -245,7 +246,11 @@ void CFlagRaicingGame_rule::Update(void)
 			// 制限時間が0以下の時
 			if (nTimeLimit <= 0)
 			{
-				JudgeRank();
+				//ゲーム終了状態へ移行
+				SetRuleState(CRuleBase::RULE_STATE_END);
+				
+				// プレイヤーを動けなくする
+				m_bPlay = false;
 			}
 
 			//ブラインドに現在タイムを与える
@@ -273,7 +278,6 @@ void CFlagRaicingGame_rule::Update(void)
 				COrderPolygon::SetUse(false);
 			}
 		}
-
 	}
 }
 
@@ -288,6 +292,15 @@ void CFlagRaicingGame_rule::Draw(void)
 	{
 		m_PlayerPoint.bPoint[nCnt]->Draw();
 	}
+}
+
+//======================================================
+//	ミニリザルト様の処理
+//======================================================
+void CFlagRaicingGame_rule::MiniResultProcess(void)
+{
+	//順位を設定
+	JudgeRank();
 }
 
 //======================================================
@@ -319,11 +332,9 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 		// ミニゲームに順位を送る
 		CResult::SetMiniGameRank(CRuleManager::RULE_FLAG_RACING, m_pPlayer[nCnt]->GetPlayerNumber(), m_pPlayer[nCnt]->GetRank());
 	}
+
 	// 仮のリザルト表示
 	CMiniResult::Create();
-
-	// プレイヤーを動けなくする
-	m_bPlay = false;
 }
 
 //======================================================

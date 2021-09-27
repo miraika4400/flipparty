@@ -29,6 +29,8 @@ public:
 		LABEL_BGM_REMEMBER_GAME,    // 記憶ゲームのBGM
         LABEL_SE_OK,                // 記憶ゲーム正解の音
         LABEL_SE_MISS,              // 記憶ゲーム不正解の音
+		LABEL_SE_COUNT,				// カウント音
+		LABEL_SE_GAME_END,			// ゲーム終了音
 		SOUND_LABEL_MAX,            // サウンド最大数
 	}LABEL;
 

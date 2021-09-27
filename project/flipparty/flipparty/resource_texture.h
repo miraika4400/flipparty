@@ -68,6 +68,7 @@ public:
 		TESTURE_ICON_REMENBER,   // 記憶ゲームアイコン
 		TESTURE_RESULTBOARD_BACK,// リザルトボード背景
 		TESTURE_WARNING,         // 警告
+		TEXTURE_STRAT_ICON,		// STARTアイコン
 		TEXTURE_MAX              // テクスチャ数
 	}TEXTURE_TYPE;
 	

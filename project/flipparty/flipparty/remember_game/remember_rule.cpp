@@ -235,19 +235,18 @@ void CRememjber_rule::Uninit(void)
 //=============================================================================
 void CRememjber_rule::Update(void)
 {
-    if (m_IsPlay)
-    {
-        // プレイヤーの入力
-        InputPlayer();
-    }
+	if (m_IsPlay)
+	{
+		// プレイヤーの入力
+		InputPlayer();
+	}
 
-    // 吹雪の生成
-    if (IsSnowstormTurn())
-    {
-        m_IsSnow = true;// フラグをオンにする
-        CSnow::Create();// 生成
-    }
-
+	// 吹雪の生成
+	if (IsSnowstormTurn())
+	{
+		m_IsSnow = true;// フラグをオンにする
+		CSnow::Create();// 生成
+	}
 }
 
 //=============================================================================

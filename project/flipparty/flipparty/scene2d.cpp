@@ -64,7 +64,7 @@ HRESULT CScene2d::Init(void)
 {
 	VERTEX_2D *pVtx;// 頂点情報ポインタ
 
-					// デバイスの取得
+	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
 
 	// 頂点バッファの生成
@@ -179,7 +179,7 @@ void CScene2d::SetPos(const D3DXVECTOR3 pos)
 {
 	VERTEX_2D *pVtx;// 頂点情報ポインタ
 
-					//posの代入
+	//posの代入
 	m_pos = pos;
 
 	// ロック

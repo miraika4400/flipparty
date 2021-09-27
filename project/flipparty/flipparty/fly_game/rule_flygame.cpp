@@ -108,7 +108,7 @@ HRESULT CRuleFly::Init(void)
 	m_pTimeLimit = CTimeLimit::Create(PLAY_TIME);
 
 	// プレイ中フラグの初期化
-	m_bPlay = true;
+	m_bPlay = false;
 
 	// BGM再生
 	CManager::GetSound() ->Play(CSound::LABEL_BGM_FLY_GAME);
@@ -130,37 +130,42 @@ void CRuleFly::Uninit(void)
 //******************************
 void CRuleFly::Update(void)
 {
-
-	////////////////////////////////////////
-	// 仮置き
-
-	// 雷雲の生成
-	if (m_pTimeLimit->GetTimeLimit() == 20 && m_pTimeLimit->GetTimeCount() == 0 || m_pTimeLimit->GetTimeLimit() == 10 && m_pTimeLimit->GetTimeCount() == 0)
+	if (GetRuleState() == RULE_STATE_GAME)
 	{
-		for (int nCntPlayer = 0; nCntPlayer < CCountSelect::GetPlayerNum(); nCntPlayer++)
-		{
-			//CCloud::Create(nCntPlayer);
+		////////////////////////////////////////
+		// 仮置き
 
-			CWarningUI::Create(nCntPlayer);
+		// 雷雲の生成
+		if (m_pTimeLimit->GetTimeLimit() == 20 && m_pTimeLimit->GetTimeCount() == 0 || m_pTimeLimit->GetTimeLimit() == 10 && m_pTimeLimit->GetTimeCount() == 0)
+		{
+			for (int nCntPlayer = 0; nCntPlayer < CCountSelect::GetPlayerNum(); nCntPlayer++)
+			{
+				//CCloud::Create(nCntPlayer);
+
+				CWarningUI::Create(nCntPlayer);
+			}
 		}
-	}
 
-	/////////////////////////////////////////
+		/////////////////////////////////////////
 
-	if (m_pTimeLimit->GetTimeLimit() <= 0)
-	{
-		if (m_bPlay)
+		if (m_pTimeLimit->GetTimeLimit() <= 0)
 		{
-			// ゲーム中フラグをfalse
-			m_bPlay = false;
+			//ゲーム終了状態へ移行
+			SetRuleState(CRuleBase::RULE_STATE_END);
 
-			// 順位判定
-			JudgeRank();
-		}
-		else
-		{
-			// カメラクラス
-			//CManager::SetCamera(CFlyGameCamera::Create());
+
+			if (m_bPlay)
+			{
+				// ゲーム中フラグをfalse
+				m_bPlay = false;
+
+				
+			}
+			else
+			{
+				// カメラクラス
+				//CManager::SetCamera(CFlyGameCamera::Create());
+			}
 		}
 	}
 }
@@ -170,6 +175,36 @@ void CRuleFly::Update(void)
 //******************************
 void CRuleFly::Draw(void)
 {
+}
+
+//======================================================
+//	ゲーム用の処理
+//======================================================
+void CRuleFly::GameProcess(void)
+{
+	// プレイ中フラグを有効化
+	m_bPlay = true;
+
+	// プレイヤーオブジェクトの取得
+	CPlayer *pPlayer = (CPlayer *)CScene::GetTop(CScene::OBJTYPE_PLAYER);
+
+	while (pPlayer != NULL)
+	{
+		// 操作を可能にする
+		pPlayer->SetMoveFlag(true);
+
+		// 次のプレイヤー情報に更新
+		pPlayer = (CPlayer*)pPlayer->GetNext();
+	}
+}
+
+//======================================================
+//	ミニリザルト用の処理
+//======================================================
+void CRuleFly::MiniResultProcess(void)
+{
+	// 順位判定
+	JudgeRank();
 }
 
 //******************************

@@ -68,7 +68,7 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-
+	void MiniResultProcess(void);
 	void JudgeRank(void);					// ‡ˆÊ‚Ì”»’è
 
 	static TRUN GetGameTrun(void) { return m_eTrun; }		// ƒ^[ƒ“î•ñ‚Ìæ“¾

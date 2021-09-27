@@ -67,7 +67,6 @@ public:
 
     void SetRememberData(CFlipper::FLIPPER_TYPE type);
 
-
     // Get関数
     CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
 

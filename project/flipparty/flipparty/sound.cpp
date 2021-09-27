@@ -19,6 +19,8 @@ CSound::SOUNDPARAM CSound::m_aParam[SOUND_LABEL_MAX]
 	{ "./data/Sounds/BGM/remember_game.wav"    , -1 },
     { "./data/Sounds/SE/remember_ok.wav"    , 0 },
     { "./data/Sounds/SE/remember_miss .wav"    , 0 },
+	{ "./data/Sounds/SE/count.wav"    , 0 },
+	{ "./data/Sounds/SE/GAMEÅQEND.wav"    , 0 },
 };
 
 //=============================================================================

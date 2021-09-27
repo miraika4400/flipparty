@@ -77,6 +77,8 @@ HRESULT CFlyGamePlayer::Init(void)
 	m_nCntState = 0;
 
 	SetFacePattern(FACE_PATTERN_GOOD);
+
+	SetMoveFlag(false);
 	return S_OK;
 }
 

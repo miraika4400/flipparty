@@ -65,6 +65,7 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/Icon_Remenber.png",   // 記憶ゲームアイコン
 	"./data/Textures/resultboard_back.png", // リザルトボード背景
 	"./data/Textures/warning.png",          // 警告
+	"./data/Textures/strat_icon.png",          // STARTアイコン
 	
 };
 
