@@ -38,7 +38,7 @@
 
 #define SIZE_SCORE D3DXVECTOR3 (45.0f ,45.0f ,0.0f ) // スコアのサイズ
 #define SCORE_POS_Y 620.0f                           // スコアY座標
-#define SCORE_SPACE 80.0f                           // スコア各桁の間隔
+#define SCORE_SPACE 90.0f                           // スコア各桁の間隔
 
 //**********************************
 // 静的メンバ変数宣言

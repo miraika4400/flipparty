@@ -43,6 +43,10 @@ public:
 		LABEL_SE_FLIPPER_RIGHT2,    // フリッパー右
 		LABEL_SE_FLIPPER_RIGHT3,    // フリッパー右
 		LABEL_SE_FLIPPER_RIGHT4,    // フリッパー右
+		LABEL_SE_STAN1,             // stan
+		LABEL_SE_STAN2,             // stan
+		LABEL_SE_STAN3,             // stan
+		LABEL_SE_STAN4,             // stan
 		SOUND_LABEL_MAX,            // サウンド最大数
 	}LABEL;
 

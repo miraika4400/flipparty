@@ -13,6 +13,7 @@
 #include "manager.h"
 #include "keyboard.h"
 #include "joypad.h"
+#include "sound.h"
 
 //*****************************
 // ƒ}ƒNƒ’è‹`
@@ -156,8 +157,11 @@ void CFlyGamePlayer::ManageState(void)
 			SetMotion(MOTION_THUNDER);
 			SetMoveFlag(false);
 			SetFacePattern(FACE_PATTERN_NO_GOOD);
+
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_STAN1) + GetPlayerNumber()));
 		}
-		
+
 		m_nCntState++;
 		if (m_nCntState >= STAN_FLANE)
 		{

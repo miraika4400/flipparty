@@ -33,6 +33,10 @@ CSound::SOUNDPARAM CSound::m_aParam[SOUND_LABEL_MAX]
 	{ "./data/Sounds/SE/flipper_right.wav"    , 0 },
 	{ "./data/Sounds/SE/flipper_right.wav"    , 0 },
 	{ "./data/Sounds/SE/flipper_right.wav"    , 0 },
+	{ "./data/Sounds/SE/stan.wav"    , 0 },
+	{ "./data/Sounds/SE/stan.wav"    , 0 },
+	{ "./data/Sounds/SE/stan.wav"    , 0 },
+	{ "./data/Sounds/SE/stan.wav"    , 0 },
 
 };
 

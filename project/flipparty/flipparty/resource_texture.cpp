@@ -58,13 +58,14 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/right_flag_doun.png",	// UI　右下げ
 	"./data/Textures/left_flag_up.png", 	// UI　左上げ
 	"./data/Textures/left_flag_doun.png",	// UI　左下げ
-	"./data/Textures/thunder.png",      // 雷エフェクト
-	"./data/Textures/snow.png",         // 吹雪エフェクト
+	"./data/Textures/thunder.png",         // 雷エフェクト
+	"./data/Textures/snow.png",            // 吹雪エフェクト
 	"./data/Textures/Icon_FlagRacing.png", // 旗揚げゲームアイコン
 	"./data/Textures/Icon_Fly.png",        // 連打ゲームアイコン
 	"./data/Textures/Icon_Remenber.png",   // 記憶ゲームアイコン
 	"./data/Textures/resultboard_back.png", // リザルトボード背景
 	"./data/Textures/warning.png",          // 警告
+	"./data/Textures/penguin_shadow.png",   // ペンギンの影
 	
 };
 
