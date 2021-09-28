@@ -70,6 +70,8 @@ public:
 		TESTURE_WARNING,         // 警告
 		TESTURE_PENGUIN_SHADOW,  // ペンギンの影
 		TEXTURE_STRAT_ICON,		// STARTアイコン
+		TEXTURE_END_ICON,		// ENDアイコン
+		TEXTURE_ADD_POINT_DISPLAY,	//加点表示
 		TEXTURE_MAX              // テクスチャ数
 	}TEXTURE_TYPE;
 	

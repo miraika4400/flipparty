@@ -16,8 +16,13 @@
 #include "game.h"
 #include "rule_manager.h"
 
-#define DISPLAY_SIZE D3DXVECTOR3(100.0f,50.0f,0.0f)
-#define SIPLAY_SIZE_DIST DISPLAY_SIZE * 2
+//=============================================================================
+//マクロ定義
+//=============================================================================
+#define DISPLAY_SIZE D3DXVECTOR3(200.0f,50.0f,0.0f)	//ポリゴンのサイズ
+#define DISPLAY_SIZE_DIST DISPLAY_SIZE * 2	//拡大後のサイズ
+#define DISPLAY_RATE 0.1f	//拡大係数
+#define END_TIME 120	//終了するタイム
 
 //=============================================================================
 //コンストラクタ
@@ -39,7 +44,6 @@ CEndDisplay::~CEndDisplay()
 //=============================================================================
 CEndDisplay * CEndDisplay::Create(void)
 {
-	//
 	CEndDisplay *pEndDisplay = NULL;
 
 	//インスタンス生成
@@ -58,16 +62,24 @@ CEndDisplay * CEndDisplay::Create(void)
 //=============================================================================
 HRESULT CEndDisplay::Init(void)
 {
+	//初期化処理
 	CScene2d::Init();
+	
+	//位置の設定
 	SetPos(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
+	
+	//サイズの設定
 	SetSize(DISPLAY_SIZE);
-	BindTexture(CResourceTexture::GetTexture(CResourceTexture::TESTURE_ICON_FLAGRACING));
+	
+	//テクスチャの設定
+	BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_END_ICON));
 	
 	//再生しているすべての音声を停止
 	CManager::GetSound()->Stop();
 
 	//終了音を再生
 	CManager::GetSound()->Play(CSound::LABEL_SE_GAME_END);
+
 	return S_OK;
 }
 
@@ -76,6 +88,7 @@ HRESULT CEndDisplay::Init(void)
 //=============================================================================
 void CEndDisplay::Uninit(void)
 {
+	//終了処理
 	CScene2d::Uninit();
 }
 
@@ -86,10 +99,12 @@ void CEndDisplay::Update(void)
 {
 	m_nCntTime++;
 
-	if (m_nCntTime == 120)
+	if (m_nCntTime == END_TIME)
 	{
 		//ミニリザルトへ移行
 		CGame::GetRuleManager()->GetRule()->SetRuleState(CRuleBase::RULE_STATE_MINI_RESULT);
+		
+		//終了処理
 		Uninit();
 
 		return;
@@ -99,7 +114,7 @@ void CEndDisplay::Update(void)
 		//サイズを取得
 		D3DXVECTOR3 size = GetSize();
 
-		size += (SIPLAY_SIZE_DIST - size) * 0.1f;
+		size += (DISPLAY_SIZE_DIST - size) * DISPLAY_RATE;
 
 		//サイズを設定
 		SetSize(size);
@@ -111,5 +126,6 @@ void CEndDisplay::Update(void)
 //=============================================================================
 void CEndDisplay::Draw(void)
 {
+	//描画処理
 	CScene2d::Draw();
 }

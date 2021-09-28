@@ -55,9 +55,9 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/ranking.png",      // UI「順位]
 	"./data/Textures/blind.jpg",		// ブラインド
 	"./data/Textures/right_flag_up.png",	// UI　右上げ
-	"./data/Textures/right_flag_doun.png",	// UI　右下げ
+	"./data/Textures/right_flag_down.png",	// UI　右下げ
 	"./data/Textures/left_flag_up.png", 	// UI　左上げ
-	"./data/Textures/left_flag_doun.png",	// UI　左下げ
+	"./data/Textures/left_flag_down.png",	// UI　左下げ
 	"./data/Textures/thunder.png",         // 雷エフェクト
 	"./data/Textures/snow.png",            // 吹雪エフェクト
 	"./data/Textures/Icon_FlagRacing.png", // 旗揚げゲームアイコン
@@ -67,6 +67,8 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/warning.png",          // 警告
 	"./data/Textures/penguin_shadow.png",   // ペンギンの影
 	"./data/Textures/strat_icon.png",          // STARTアイコン
+	"./data/Textures/end_icon.png",          // ENDアイコン
+	"./data/Textures/answer_polygon.png",          // 加点表示
 	
 };
 

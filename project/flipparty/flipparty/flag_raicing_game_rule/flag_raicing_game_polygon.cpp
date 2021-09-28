@@ -13,8 +13,8 @@
 #include "resource_texture.h"
 #include "result.h"
 #include "number.h"
-#include "player.h"
 #include "flag_raicing_game_rule.h"
+#include "player_flag_raicing.h"
 
 //**********************************
 // ƒ}ƒNƒ’è‹`
