@@ -75,6 +75,7 @@ public:
 		TEXTURE_ADD_POINT_DISPLAY,	//加点表示
 		TEXTURE_MINIRESULT_LOGO,    // ミニリザルトロゴ
 		TEXTURE_PENGUIN_SHADOW,    // ミニリザルトロゴ
+		TESTURE_POINT_BACK,        // ポイント背景
 		TEXTURE_MAX              // テクスチャ数
 	}TEXTURE_TYPE;
 	

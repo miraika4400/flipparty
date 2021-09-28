@@ -21,9 +21,13 @@
 //**********************************
 #define SIZE D3DXVECTOR3(60.0f,30.0f,0.0f)           // ボードサイズ
 
-#define SIZE_SCORE D3DXVECTOR3 (15.0f ,15.0f ,0.0f ) // スコアのサイズ
+#define SIZE_SCORE D3DXVECTOR3 (20.0f ,20.0f ,0.0f ) // スコアのサイズ
 #define SCORE_POS_Y m_pos.y                           // スコアY座標
-#define SCORE_SPACE 30.0f                           // スコア各桁の間隔
+#define SCORE_SPACE 40.0f                           // スコア各桁の間隔
+#define COLOR_1P D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f)         // ボードカラー1p
+#define COLOR_2P D3DXCOLOR(0.5f, 0.5f, 1.0f, 1.0f)         // ボードカラー2p
+#define COLOR_3P D3DXCOLOR(0.5f, 1.0f, 0.5f, 1.0f)         // ボードカラー3p
+#define COLOR_4P D3DXCOLOR(1.5f, 1.5f, 0.5f, 1.0f)         // ボードカラー4p
 
 //**********************************
 // 静的メンバ変数宣言
@@ -73,10 +77,28 @@ HRESULT CFlagRaicingGamePolygon::Init(void)
 {
 	// 背景の生成
 	m_pBack = CPolygon::Create(m_pos, SIZE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	//m_pBack->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TESTURE_RESULTBOARD_BACK));
+	m_pBack->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TESTURE_POINT_BACK));
 
 	// スコアの生成
 	CreateScore();
+
+	switch (m_nPlayerNum)
+	{
+	case 0:
+		m_pBack->SetColor(COLOR_1P);
+		break;
+	case 1:
+		m_pBack->SetColor(COLOR_2P);
+		break;
+	case 2:
+		m_pBack->SetColor(COLOR_3P);
+		break;
+	case 3:
+		m_pBack->SetColor(COLOR_4P);
+		break;
+	default:
+		break;
+	}
 
 	return S_OK;
 }

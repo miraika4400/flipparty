@@ -181,7 +181,6 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	//プレイヤーデータの初期化
 	m_vecPlayerNumber.clear();
 
-
 	//ターンの初期化
 	m_eTrun = CFlagRaicingGame_rule::PLAYER_TRUN;
 
