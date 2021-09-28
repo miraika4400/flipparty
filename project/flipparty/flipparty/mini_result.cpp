@@ -228,6 +228,9 @@ void CMiniResult::Update(void)
 
 		// BGM‚Ì’âŽ~
 		CManager::GetSound()->Stop(CSound::LABEL_BGM_MINIRESULT);
+
+		// SE‚ÌÄ¶
+		CManager::GetSound()->Play(CSound::LABEL_SE_ENTER);
 	}
 }
 

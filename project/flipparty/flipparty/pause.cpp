@@ -16,6 +16,7 @@
 #include "renderer.h"
 #include "fade.h"
 #include "joypad.h"
+#include "sound.h"
 
 //=======================================================================================
 // マクロ定義
@@ -24,11 +25,12 @@
 #define BACK_POS D3DXVECTOR3(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,0.0f) // 背面座標
 
 #define STRING_SIZE D3DXVECTOR3(150.0f,50.0f,0.0f)                                  // 文字列
-#define RESUME_POS  D3DXVECTOR3(SCREEN_WIDTH/2, 35 + BACK_POS.y - (STRING_SIZE.y + 25),0.0f) // 続ける
-#define EXIT_POS   	D3DXVECTOR3(SCREEN_WIDTH/2, 35 + BACK_POS.y + (STRING_SIZE.y + 25),0.0f) // 終了
+#define RESUME_POS  D3DXVECTOR3(SCREEN_WIDTH/2, BACK_POS.y - (STRING_SIZE.y + 25),0.0f) // 続ける
+#define EXIT_POS   	D3DXVECTOR3(SCREEN_WIDTH/2, BACK_POS.y + (STRING_SIZE.y + 25),0.0f) // 終了
 
 #define MENU_ENTER_COL D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)     // 選んでるメニューの色
-#define MENU_NOT_ENTER_COL D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.7f) // 選んでないメニューの色
+#define MENU_NOT_ENTER_COL D3DXCOLOR(0.6f, 0.6f, 0.6f, 0.5f) // 選んでないメニューの色
+
 //=======================================================================================
 // 前方宣言
 //=======================================================================================
@@ -156,11 +158,17 @@ void CPause::Update(void)
 	{// ↑
 		m_nMenu--;
 		m_bMove = false;
+
+		// SEの再生
+		CManager::GetSound()->Play(CSound::LABEL_SE_CURSOR);
 	}
 	else if (CManager::GetKeyboard()->GetKeyTrigger(DIK_S) || CManager::GetKeyboard()->GetKeyTrigger(DIK_DOWN) || m_bMove && jy.lY >= 600)
 	{// ↓
 		m_nMenu++;
 		m_bMove = false;
+
+		// SEの再生
+		CManager::GetSound()->Play(CSound::LABEL_SE_CURSOR);
 	}
 
 	// スティック用フラグの初期化
@@ -196,6 +204,9 @@ void CPause::Update(void)
 		default:
 			break;
 		}
+
+		// SEの再生
+		CManager::GetSound()->Play(CSound::LABEL_SE_ENTER);
 	}
 }
 

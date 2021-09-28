@@ -220,6 +220,9 @@ void CResult::Update(void)
 			{// ‰æ–Ê‘JˆÚ
 				CManager::GetFade()->SetFade(CManager::MODE_TITLE);
 			}
+			
+			// SE‚ÌÄ¶
+			CManager::GetSound()->Play(CSound::LABEL_SE_ENTER);
 
 			return;
 		}
