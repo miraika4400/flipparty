@@ -164,7 +164,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit(), (TRUN_SET / 2));
 
 	//通過ペンギンの生成
-	//m_pPassingPenguin = CPassingPenguin::Create(PASSING_PENGUIN_POS);
+	m_pPassingPenguin = CPassingPenguin::Create(PASSING_PENGUIN_POS);
 
 	// ステージの生成
 	CStage::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_PLAYER_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM), CStage::STAGE_TYPE_LARGE)->SetSize(D3DXVECTOR3(3.0f, 1.0f, 1.0f));

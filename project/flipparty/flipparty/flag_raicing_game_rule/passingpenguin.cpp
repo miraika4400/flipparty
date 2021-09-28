@@ -17,6 +17,7 @@
 #include "game.h"
 #include "camera_base.h"
 #include "light.h"
+#include "sound.h"
 
 //=============================================================================
 //マクロ定義
@@ -47,6 +48,7 @@ CPassingPenguin::CPassingPenguin()
 	m_moveDirection = MOVE_DIRECTION_LEFT;
 	m_state = STATE_WAIT;
 	m_move = VEC3_ZERO;
+	m_nSoudCounter = 0;
 }
 
 //=============================================================================
@@ -177,6 +179,7 @@ void CPassingPenguin::Draw(void)
 //=============================================================================
 void CPassingPenguin::SetMoveDirection(MOVE_DIRECTION moveDirection)
 {
+	m_nSoudCounter = 0;
 	//移動方向を設定
 	m_moveDirection = moveDirection;
 
@@ -220,6 +223,13 @@ void CPassingPenguin::SetMoveDirection(MOVE_DIRECTION moveDirection)
 //=============================================================================
 void CPassingPenguin::Move(void)
 {
+	if (m_nSoudCounter % 20 == 0)
+	{
+		CManager::GetSound()->Play(CSound::LABEL_SE_PASSING_PENGUIN);
+	}
+
+	m_nSoudCounter++;
+
 	//位置の取得
 	D3DXVECTOR3 pos = GetPos();
 
@@ -234,6 +244,7 @@ void CPassingPenguin::Move(void)
 		//状態を待機に設定
 		m_state = STATE_WAIT;
 	}
+	
 }
 
 //=============================================================================

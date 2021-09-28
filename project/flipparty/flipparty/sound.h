@@ -53,6 +53,7 @@ public:
 		LABEL_SE_START,				// ゲーム開始音
 		LABEL_SE_GAME_END,			// ゲーム終了音
 		LABEL_SE_RESULT_WIN,		// 位置発表時SE
+		LABEL_SE_PASSING_PENGUIN,	// 通過ペンギンの足音
 		SOUND_LABEL_MAX,            // サウンド最大数
 	}LABEL;
 

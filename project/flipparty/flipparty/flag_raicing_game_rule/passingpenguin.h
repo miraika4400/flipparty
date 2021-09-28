@@ -65,5 +65,7 @@ private:
 	MOVE_DIRECTION m_moveDirection;	//ˆÚ“®•ûŒü
 	STATE m_state;	//ó‘Ô
 	D3DXVECTOR3 m_move;	//ˆÚ“®—Ê
+	int m_nSoudCounter;
+
 };
 #endif 
