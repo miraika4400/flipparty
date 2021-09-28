@@ -46,9 +46,8 @@
 #define ANSWER_UI_SIZE D3DXVECTOR3(128,64,0.0f)                     // サイズ
 
 // プレイヤーの入力UIの設定
-#define FRIP_UI_POS  D3DXVECTOR3(SCREEN_WIDTH / 2.0f, 530.0f, 0.0f)    // 位置
+#define FRIP_UI_POS  D3DXVECTOR3(SCREEN_WIDTH / 2.0f, 500.0f, 0.0f)    // 位置
 #define FRIP_UI_SIZE D3DXVECTOR3(64,64,0.0f)                     // サイズ
-
 
 // 制限時間の設定
 #define TIME_LIMIT (5)                                    // 制限時間
