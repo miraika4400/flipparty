@@ -122,7 +122,9 @@ CFlagRaicingGame_rule * CFlagRaicingGame_rule::Create(void)
 //======================================================
 HRESULT CFlagRaicingGame_rule::Init(void)
 {
+	// ïXéRÇÃê∂ê¨
 	CIceberg::Create(D3DXVECTOR3(0.0f, -100.0f, -1200.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
+
 	// îwåiÇÃê∂ê¨
 	CBg::Create();
 

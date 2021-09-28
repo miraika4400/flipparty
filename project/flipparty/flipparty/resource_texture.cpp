@@ -70,7 +70,8 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/result.png",           // リザルトロゴ
 	"./data/Textures/end_icon.png",          // ENDアイコン
 	"./data/Textures/answer_polygon.png",          // 加点表示
-	
+	"./data/Textures/mini_result.png",          // ミニリザルトロゴ
+	"./data/Textures/penguin_shadow.png",          // ミニリザルトロゴ
 };
 
 //===================================

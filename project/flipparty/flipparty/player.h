@@ -28,6 +28,8 @@
 #define RIGHT_FLIPPER_DIST_ANGLE_DOWN D3DXToRadian(30.0f)            // 右羽を下げたときの角度
 #define LEFT_FLIPPER_DIST_ANGLE_UP    -RIGHT_FLIPPER_DIST_ANGLE_UP   // 左羽を上げたときの角度
 #define LEFT_FLIPPER_DIST_ANGLE_DOWN  -RIGHT_FLIPPER_DIST_ANGLE_DOWN // 左羽を下げたときの角度
+#define PLAYER_SHADOW_SIZE  D3DXVECTOR3(25.0f ,0.0f, 25.0f)
+#define PLAYER_SHADOW_COLOR D3DXCOLOR(1.0f ,1.0f, 1.0f,0.5f)
 
 //*****************************
 // 前方宣言
@@ -35,6 +37,7 @@
 class CFlipper;
 class CBillboard;
 class CMotion;
+class CScene3d;
 #ifdef _DEBUG
 class CPolygon;
 #endif // _DEBUG

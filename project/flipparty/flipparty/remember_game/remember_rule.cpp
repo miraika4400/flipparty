@@ -26,6 +26,7 @@
 #include "sound.h"
 #include "tutorial.h"
 #include "result.h"
+#include "iceberg.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -139,6 +140,10 @@ HRESULT CRememjber_rule::Init(void)
     //-----------------------------
     // 各オブジェクト生成
     //-----------------------------
+
+	// 氷山の生成
+	CIceberg::Create(D3DXVECTOR3(0.0f, -100.0f, -1200.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
+
     // 背景の生成
     CBg::Create();
 

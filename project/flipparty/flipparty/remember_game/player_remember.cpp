@@ -5,6 +5,8 @@
 //
 //=============================================================================
 #include "player_remember.h"
+#include "scene3d.h"
+#include "resource_texture.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -43,6 +45,12 @@ CPlayerRemember * CPlayerRemember::Create(D3DXVECTOR3 pos, int nPlayerNum)
 
         // 初期化
         pPlayer->Init();
+
+		//　影の生成
+		CScene3d * p3DPolygon = CScene3d::Create(D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z), PLAYER_SHADOW_SIZE);
+		p3DPolygon->SetPriority(CScene::OBJTYPE_PARTICLE); // プライオリティの設定
+		p3DPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_PENGUIN_SHADOW));// テクスチャ
+		p3DPolygon->SetColor(PLAYER_SHADOW_COLOR);// 色
     }
     return pPlayer;
 }

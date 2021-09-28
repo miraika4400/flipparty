@@ -49,6 +49,8 @@
 #define FLAG_LEFT_SIZE D3DXVECTOR3(10.0f,10.0f,0.0f)
 #define ROT D3DXVECTOR3( 0.0f, D3DXToRadian(180.0f), 0.0f)
 #define SIZE D3DXVECTOR3(1.4f,1.4f,1.4f)
+#define SHADOW_SIZE  D3DXVECTOR3(40.0f ,0.0f, 40.0f)
+#define SHADOW_COLOR D3DXCOLOR(1.0f ,1.0f, 1.0f,0.5f)
 
 //*****************************
 // 静的メンバ変数宣言
@@ -101,6 +103,12 @@ CCaptain * CCaptain::Create(D3DXVECTOR3 pos)
 	// 各値の代入・セット
 	pCaptain->SetPos(pos);
 	pCaptain->SetPriority(OBJTYPE_CPU); // オブジェクトタイプ
+
+	//　影の生成
+	CScene3d * p3DPolygon = CScene3d::Create(D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z), SHADOW_SIZE);
+	p3DPolygon->SetPriority(CScene::OBJTYPE_PARTICLE); // プライオリティの設定
+	p3DPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_PENGUIN_SHADOW));// テクスチャ
+	p3DPolygon->SetColor(SHADOW_COLOR);// 色
 
 	return pCaptain;
 }

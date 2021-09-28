@@ -100,7 +100,7 @@ HRESULT CRuleFly::Init(void)
 
 		// ステージの生成
 		CStage::Create(D3DXVECTOR3(posX, 0.0f, 0.0f), CStage::STAGE_TYPE_NORMAL);
-
+		
 		posX -= PLAYER_SPACE;
 	}
 

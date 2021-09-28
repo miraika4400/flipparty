@@ -25,11 +25,10 @@
 
 #define STRING_SIZE D3DXVECTOR3(150.0f,50.0f,0.0f)                                  // 文字列
 #define RESUME_POS  D3DXVECTOR3(SCREEN_WIDTH/2, 35 + BACK_POS.y - (STRING_SIZE.y + 25),0.0f) // 続ける
-#define RESTART_POS D3DXVECTOR3(SCREEN_WIDTH/2, 35 + BACK_POS.y,0.0f)                        // リスタート
 #define EXIT_POS   	D3DXVECTOR3(SCREEN_WIDTH/2, 35 + BACK_POS.y + (STRING_SIZE.y + 25),0.0f) // 終了
 
-#define MENU_ENTER_COL D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f)     // 選んでるメニューの色
-#define MENU_NOT_ENTER_COL D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f) // 選んでないメニューの色
+#define MENU_ENTER_COL D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)     // 選んでるメニューの色
+#define MENU_NOT_ENTER_COL D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.7f) // 選んでないメニューの色
 //=======================================================================================
 // 前方宣言
 //=======================================================================================
@@ -75,7 +74,6 @@ HRESULT CPause::Load(void)
 	//テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice, "data/Textures/pause_back.png"   , &m_apTexture[BACK]);
 	D3DXCreateTextureFromFile(pDevice, "data/Textures/pause_resume.png" , &m_apTexture[RESUME]);
-	D3DXCreateTextureFromFile(pDevice, "data/Textures/pause_restart.png", &m_apTexture[RESTART]);
 	D3DXCreateTextureFromFile(pDevice, "data/Textures/pause_exit.png" , &m_apTexture[EXIT]);
 
 	return S_OK;
@@ -109,9 +107,6 @@ HRESULT CPause::Init(void)
 	// 再開のやつ
 	m_pPolygon[RESUME] = CPolygon::Create(RESUME_POS, STRING_SIZE);
 	m_pPolygon[RESUME]->BindTexture(m_apTexture[RESUME]);
-	// リスタートのやつ
-	m_pPolygon[RESTART] = CPolygon::Create(RESTART_POS, STRING_SIZE);
-	m_pPolygon[RESTART]->BindTexture(m_apTexture[RESTART]);
 	// EXITのやつ
 	m_pPolygon[EXIT] = CPolygon::Create(EXIT_POS, STRING_SIZE);
 	m_pPolygon[EXIT]->BindTexture(m_apTexture[EXIT]);
@@ -193,10 +188,7 @@ void CPause::Update(void)
 			// 続ける
 			CManager::SetActivePause(false);
 			break;
-		case RESTART:
-			// リスタート
-			CManager::GetFade()->SetFade(CManager::MODE_GAME);
-			break;
+
 		case EXIT:
 			// 終了処理
 			CManager::GetFade()->SetFade(CManager::MODE_TITLE);

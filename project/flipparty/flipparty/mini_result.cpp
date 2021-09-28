@@ -29,6 +29,7 @@
 #include "sea.h"
 #include "iceberg.h"
 #include "stage.h"
+#include "resource_texture.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -44,6 +45,9 @@
 #define PLAYER_RESULT_WORST_ROT_X D3DXToRadian(70.0f) // 最下位の時の回転軸のXの値
 #define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
 #define OBJ_BASE_POS_Y 2000.0f
+#define LOGO_POS D3DXVECTOR3(SCREEN_WIDTH/2, 100.0f, 0.0f)
+#define LOGO_SIZE D3DXVECTOR3(300.0f,75.0f,0.0f)
+
 //=============================
 // コンストラクタ
 //=============================
@@ -92,11 +96,6 @@ HRESULT CMiniResult::Init(void)
 
 	// 氷山の生成
 	CIceberg::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 50.0f, -900.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
-
-	//// 背景を暗くするよう
-	//CScene3d * p3DPolygon = CScene3d::Create(BLACKOUT_POS, BLACKOUT_SIZE);
-	//p3DPolygon->SetColor(BLACKOUT_COLOR);            //色の設定
-	//p3DPolygon->SetPriority(OBJTYPE_MINIRESULT_OBJ); // プライオリティの設定
 
 	// プレイヤー数の取得
 	int nPlayNum = CCountSelect::GetPlayerNum();
@@ -190,8 +189,16 @@ HRESULT CMiniResult::Init(void)
 		}
 	}
 
+	// ロゴの生成
+	CScene2d*pLogo = CScene2d::Create();
+	pLogo->SetPriority(OBJTYPE_UI);// プライオリティ
+	pLogo->SetPos(LOGO_POS);       // 座標
+	pLogo->SetSize(LOGO_SIZE);     // サイズ
+	pLogo->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_MINIRESULT_LOGO));// テクスチャ
+
 	// BGMの再生
 	CManager::GetSound()->Play(CSound::LABEL_BGM_MINIRESULT);
+
 	return S_OK;
 }
 
