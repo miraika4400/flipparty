@@ -84,10 +84,10 @@ HRESULT CScene3d::Init(void)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(+m_size.x, +m_size.y, +m_size.z);
-	pVtx[1].pos = D3DXVECTOR3(-m_size.x, +m_size.y, +m_size.z);
-	pVtx[2].pos = D3DXVECTOR3(+m_size.x, -m_size.y, -m_size.z);
-	pVtx[3].pos = D3DXVECTOR3(-m_size.x, -m_size.y, -m_size.z);
+	pVtx[0].pos = D3DXVECTOR3(+m_size.x, +m_size.y, -m_size.z);
+	pVtx[1].pos = D3DXVECTOR3(-m_size.x, +m_size.y, -m_size.z);
+	pVtx[2].pos = D3DXVECTOR3(+m_size.x, -m_size.y, +m_size.z);
+	pVtx[3].pos = D3DXVECTOR3(-m_size.x, -m_size.y, +m_size.z);
 
 	// テクスチャUV座標の設定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
@@ -206,10 +206,10 @@ void CScene3d::SetPos(const D3DXVECTOR3 pos)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(+m_size.x, +m_size.y, +m_size.z);
-	pVtx[1].pos = D3DXVECTOR3(-m_size.x, +m_size.y, +m_size.z);
-	pVtx[2].pos = D3DXVECTOR3(+m_size.x, -m_size.y, -m_size.z);
-	pVtx[3].pos = D3DXVECTOR3(-m_size.x, -m_size.y, -m_size.z);
+	pVtx[0].pos = D3DXVECTOR3(+m_size.x, +m_size.y, -m_size.z);
+	pVtx[1].pos = D3DXVECTOR3(-m_size.x, +m_size.y, -m_size.z);
+	pVtx[2].pos = D3DXVECTOR3(+m_size.x, -m_size.y, +m_size.z);
+	pVtx[3].pos = D3DXVECTOR3(-m_size.x, -m_size.y, +m_size.z);
 
 
 	// アンロック

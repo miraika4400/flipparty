@@ -122,9 +122,7 @@ CFlagRaicingGame_rule * CFlagRaicingGame_rule::Create(void)
 //======================================================
 HRESULT CFlagRaicingGame_rule::Init(void)
 {
-	//氷山の生成
 	CIceberg::Create(D3DXVECTOR3(0.0f, -100.0f, -1200.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
-	
 	// 背景の生成
 	CBg::Create();
 
@@ -182,6 +180,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 
 	//プレイヤーデータの初期化
 	m_vecPlayerNumber.clear();
+
 
 	//ターンの初期化
 	m_eTrun = CFlagRaicingGame_rule::PLAYER_TRUN;

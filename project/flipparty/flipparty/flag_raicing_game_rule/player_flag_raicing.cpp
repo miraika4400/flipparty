@@ -16,6 +16,8 @@
 #include "joypad.h"
 #include "sound.h"
 #include "keyboard.h"
+#include "resource_texture.h"
+#include "scene3d.h"
 
 //=============================================================================
 //コンストラクタ
@@ -48,6 +50,12 @@ CPlayerFlagRaicing * CPlayerFlagRaicing::Create(D3DXVECTOR3 pos, int nPlayerNum)
 		pPlayerFlag->SetPos(pos);							//位置の設定
 		pPlayerFlag->SetPriority(CScene::OBJTYPE_PLAYER);	//描画順を設定
 		pPlayerFlag->Init();								//初期化		
+
+		//　影の生成
+		CScene3d * p3DPolygon = CScene3d::Create(D3DXVECTOR3(pos.x, pos.y + 1.0f, pos.z), PLAYER_SHADOW_SIZE);
+		p3DPolygon->SetPriority(CScene::OBJTYPE_PARTICLE); // プライオリティの設定
+		p3DPolygon->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_PENGUIN_SHADOW));// テクスチャ
+		p3DPolygon->SetColor(PLAYER_SHADOW_COLOR);// 色
 	}
 
 	return pPlayerFlag;
@@ -79,6 +87,7 @@ void CPlayerFlagRaicing::Uninit(void)
 void CPlayerFlagRaicing::Update(void)
 {
 	CPlayer::Update();
+
 }
 
 //=============================================================================

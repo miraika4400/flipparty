@@ -36,7 +36,6 @@ public:
 	{
 		BACK = 0,
 		RESUME,
-		RESTART,
 		EXIT,
 		PARTS_MAX
 	}MENU_PARTS;
