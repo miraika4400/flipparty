@@ -19,6 +19,13 @@
 #define UV_ONE_FRAME 1.0f / POINT_DISPLAY_TYPE_MAX
 #define DISPLAY_SIZE D3DXVECTOR3(120.0f,30.0f,0.0f)
 
+D3DXCOLOR color[MAX_PLAYER_NUM]=
+{
+	D3DXCOLOR(1.0f,0.0f,0.0f,1.0f),	//1Pの色
+	D3DXCOLOR(0.0f,0.0f,1.0f,1.0f),	//2Pの色
+	D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),	//3Pの色
+	D3DXCOLOR(1.0f,1.0f,0.1960f,1.0f)	//4Pの色
+};
 //=============================================================================
 //コンストラクタ
 //=============================================================================
@@ -113,7 +120,6 @@ void CAddPointDisplay::Update(void)
 
 		m_nShoeCounter++;
 	}
-	
 }
 
 //=============================================================================
@@ -155,6 +161,5 @@ void CAddPointDisplay::SetDisplay(POINT_DISPLAY_TYPE displayType)
 		{
 			CManager::GetSound()->Play(CSound::LABEL_SE_OK);
 		}
-
 	}
 }

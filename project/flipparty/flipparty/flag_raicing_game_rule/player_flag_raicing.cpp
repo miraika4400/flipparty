@@ -15,6 +15,7 @@
 #include "manager.h"
 #include "joypad.h"
 #include "sound.h"
+#include "keyboard.h"
 
 //=============================================================================
 //コンストラクタ
@@ -77,28 +78,7 @@ void CPlayerFlagRaicing::Uninit(void)
 //=============================================================================
 void CPlayerFlagRaicing::Update(void)
 {
-//	//前回の値を取得
-//	CFlipper::FLIPPER_STATE oldLeftFlipper = GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_LEFT);
-//	CFlipper::FLIPPER_STATE oldRightFlipper = GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_RIGHT);
-//
 	CPlayer::Update();
-
-	////今回の値を取得
-	//CFlipper::FLIPPER_STATE nowLeftFlipper = GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_LEFT);
-	//CFlipper::FLIPPER_STATE nowRightFlipper = GetFlipperMoveState()->GetState(CFlipper::FLIPPER_TYPE_RIGHT);
-
-	////左のcheck
-	//if (nowLeftFlipper != oldLeftFlipper)
-	//{
-	//	//変更した情報を旗上げルールクラスへ送る
-	//	CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, nowLeftFlipper);
-
-	//}
-	//if (nowRightFlipper != oldRightFlipper)
-	//{
-	//	//変更した情報を旗上げルールクラスへ送る
-	//	CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, nowRightFlipper);
-	//}
 }
 
 //=============================================================================
@@ -109,8 +89,154 @@ void CPlayerFlagRaicing::Draw(void)
 	CPlayer::Draw();
 }
 
-CAddPointDisplay *CPlayerFlagRaicing::GetAddPoitDisplay(void)
+void CPlayerFlagRaicing::ControllFlipper(void)
 {
-	return m_pAddPointDisplay;
+#ifdef _DEBUG
+	// キーボード操作
+	// 右羽を操作
+	if (CManager::GetKeyboard()->GetKeyPress(DIK_UP))
+	{// 上げる
+		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_UP)
+		{
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_RIGHT1) + GetPlayerNumber()));
+
+			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
+		}
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+
+	}
+	else if (CManager::GetKeyboard()->GetKeyPress(DIK_DOWN))
+	{// 下げる
+		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_DOWN)
+		{
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_RIGHT1) + GetPlayerNumber()));
+
+			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
+		}
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+
+	}
+
+	// 左羽を操作
+	if (CManager::GetKeyboard()->GetKeyPress(DIK_W))
+	{// 上げる
+		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_UP)
+		{
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_LEFT1) + GetPlayerNumber()));
+
+			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
+		}
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+
+	}
+	else if (CManager::GetKeyboard()->GetKeyPress(DIK_S))
+	{// 下げる
+		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_DOWN)
+		{
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_LEFT1) + GetPlayerNumber()));
+
+			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+		}
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+	}
+
+#endif // _DEBUG
+	// コントローラー操作
+	// 右羽を操作
+	if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lRz <= -10)
+	{// 上げる
+
+		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_UP)
+		{
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_RIGHT1) + GetPlayerNumber()));
+
+			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
+		}
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+	}
+	else if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lRz >= 10)
+	{// 下げる
+
+		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_DOWN)
+		{
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_RIGHT1) + GetPlayerNumber()));
+
+			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
+		}
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+	}
+
+	// 左羽を操作
+	if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lY <= -10)
+	{// 上げる
+
+		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_UP)
+		{
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_LEFT1) + GetPlayerNumber()));
+
+			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
+		}
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+	}
+	else if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lY >= 10)
+	{// 下げる
+		m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+
+		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_DOWN)
+		{
+			// SE
+			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_LEFT1) + GetPlayerNumber()));
+
+			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+		}
+
+		// 移動状態の更新
+		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+
+		//変更した情報を旗上げルールクラスへ送る
+		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+	}
+
 }
 

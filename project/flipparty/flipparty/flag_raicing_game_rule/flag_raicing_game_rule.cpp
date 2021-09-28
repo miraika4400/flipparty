@@ -79,7 +79,7 @@ int nAddPoint[MAX_PLAYER_NUM]=
 CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 {
 	// 変数の初期化
-	ZeroMemory(&m_PlayerPoint, sizeof(m_PlayerPoint));
+	ZeroMemory(&m_apUiPoint, sizeof(m_apUiPoint));
 	memset(m_apNumber, 0, sizeof(m_apNumber));
 	m_pCaptain = NULL;
 	m_nCntInputPlayer = 0;
@@ -122,13 +122,16 @@ CFlagRaicingGame_rule * CFlagRaicingGame_rule::Create(void)
 //======================================================
 HRESULT CFlagRaicingGame_rule::Init(void)
 {
+	//氷山の生成
 	CIceberg::Create(D3DXVECTOR3(0.0f, -100.0f, -1200.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
+	
 	// 背景の生成
 	CBg::Create();
 
 	m_bPlay = true;
 	//m_nRandTime = TIME_SET;
 	m_nRandTime = 30;
+
 	//カメラの生成
 	CManager::SetCamera(CFlagRaicingGameCamera::Create());
 
@@ -142,10 +145,12 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	{
 		// プレイヤーの生成
 		m_pPlayer[nCntPlayer] = CPlayerFlagRaicing::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
+		
 		// ポイントUIの生成
-		m_PlayerPoint.bPoint[nCntPlayer] = CFlagRaicingGamePolygon::Create(
+		m_apUiPoint[nCntPlayer] = CFlagRaicingGamePolygon::Create(
 			nCntPlayer,D3DXVECTOR3(posXUI, POINT_UI_POS_Y_NUM, 0.0f));
 
+		//点数加算UIの位置設定
 		m_pPlayer[nCntPlayer]->GetAddPoitDisplay()->SetPos(D3DXVECTOR3(posXUI, 550.0f, 0.0f));
 		
 		posX -= PLAYER_SPACE;
@@ -161,7 +166,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	m_pBlind = CBlind::Create(m_pTimeLimit->GetTimeLimit(), (TRUN_SET / 2));
 
 	//通過ペンギンの生成
-	m_pPassingPenguin = CPassingPenguin::Create(PASSING_PENGUIN_POS);
+	//m_pPassingPenguin = CPassingPenguin::Create(PASSING_PENGUIN_POS);
 
 	// ステージの生成
 	CStage::Create(D3DXVECTOR3(FLAG_CAPTAIN_POS_X_NUM, FLAG_PLAYER_POS_Y_NUM, FLAG_CAPTAIN_POS_Z_NUM), CStage::STAGE_TYPE_LARGE);
@@ -178,8 +183,9 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	//プレイヤーデータの初期化
 	m_vecPlayerNumber.clear();
 
-	
+	//ターンの初期化
 	m_eTrun = CFlagRaicingGame_rule::PLAYER_TRUN;
+
 	return S_OK;
 }
 
@@ -193,19 +199,20 @@ void CFlagRaicingGame_rule::Uninit(void)
 	
 	// 人数の取得
 	int nPlayerNum = CCountSelect::GetPlayerNum();
+
 	for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
 	{
-		// テクスチャクラスの終了処理
-		if (m_PlayerPoint.bPoint[nCnt] != NULL)
+		// UIポイントの終了処理
+		if (m_apUiPoint[nCnt] != NULL)
 		{
-			//ビルボードの終了
-			m_PlayerPoint.bPoint[nCnt]->Uninit();
+			//UIポイントの終了
+			m_apUiPoint[nCnt]->Uninit();
 
 			//メモリの削除
-			delete m_PlayerPoint.bPoint[nCnt];
+			delete m_apUiPoint[nCnt];
 
 			//メモリのクリア
-			m_PlayerPoint.bPoint[nCnt] = NULL;
+			m_apUiPoint[nCnt] = NULL;
 		}
 	}
 }
@@ -227,8 +234,11 @@ void CFlagRaicingGame_rule::Update(void)
 			srand((unsigned int)time(NULL));
 			for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
 			{
-				// ポイント追加処理
-				m_PlayerPoint.bPoint[nCnt]->Update();
+				if (m_apUiPoint[nCnt])
+				{
+					// ポイント追加処理
+					m_apUiPoint[nCnt]->Update();
+				}
 			}
 			
 			// 時間経過で次の動作に入る
@@ -245,7 +255,6 @@ void CFlagRaicingGame_rule::Update(void)
 			//残りの制限時間を取得
 			int nTimeLimit = m_pTimeLimit->GetTimeLimit();
 
-			// 上限のターン数を上回ったらゲームを終了させる
 			// 制限時間が0以下の時
 			if (nTimeLimit <= 0)
 			{
@@ -254,24 +263,6 @@ void CFlagRaicingGame_rule::Update(void)
 				
 				// プレイヤーを動けなくする
 				m_bPlay = false;
-
-				// 人数の取得
-				int nPlayerNum = CCountSelect::GetPlayerNum();
-				for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
-				{
-					// テクスチャクラスの終了処理
-					if (m_PlayerPoint.bPoint[nCnt] != NULL)
-					{
-						//ビルボードの終了
-						m_PlayerPoint.bPoint[nCnt]->Uninit();
-
-						//メモリの削除
-						delete m_PlayerPoint.bPoint[nCnt];
-
-						//メモリのクリア
-						m_PlayerPoint.bPoint[nCnt] = NULL;
-					}
-				}
 			}
 
 			//ブラインドに現在タイムを与える
@@ -280,17 +271,20 @@ void CFlagRaicingGame_rule::Update(void)
 				m_pBlind->SetTime(nTimeLimit);
 			}
 
-			if (nTimeLimit > (TRUN_SET / 2))
+			if (m_pPassingPenguin)
 			{
-				if (nTimeLimit == 35)
+				if (nTimeLimit > (TRUN_SET / 2))
 				{
-					//左へ通過するよう設定
-					m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_LEFT);
-				}
-				else if (nTimeLimit == 25)
-				{
-					//右へ通過するように設定
-					m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_RIGHT);
+					if (nTimeLimit == 35)
+					{
+						//左へ通過するよう設定
+						m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_LEFT);
+					}
+					else if (nTimeLimit == 25)
+					{
+						//右へ通過するように設定
+						m_pPassingPenguin->SetMoveDirection(CPassingPenguin::MOVE_DIRECTION_RIGHT);
+					}
 				}
 			}
 			if (nTimeLimit == (TRUN_SET / 2))
@@ -311,10 +305,16 @@ void CFlagRaicingGame_rule::Draw(void)
 
 	for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
 	{
-		m_PlayerPoint.bPoint[nCnt]->Draw();
+		if (m_apUiPoint[nCnt])
+		{
+			m_apUiPoint[nCnt]->Draw();
+		}
 	}
 }
 
+//======================================================
+//	ゲーム用の処理
+//======================================================
 void CFlagRaicingGame_rule::GameProcess(void)
 {
 	// BGM再生
@@ -322,7 +322,7 @@ void CFlagRaicingGame_rule::GameProcess(void)
 }
 
 //======================================================
-//	ミニリザルト様の処理
+//	ミニリザルト用の処理
 //======================================================
 void CFlagRaicingGame_rule::MiniResultProcess(void)
 {
@@ -352,8 +352,20 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 	// プレイヤー数処理を回す
 	for (int nCnt = 0; nCnt < CCountSelect::GetPlayerNum(); ++nCnt)
 	{
-		// 順番を入れ替えてリザルトに表示させる
-		m_pPlayer[nCnt]->SetRank(nCnt);
+		if (nCnt != 0)
+		{
+			if (m_pPlayer[nCnt]->GetRank() == m_pPlayer[nCnt - 1]->GetRank())
+			{
+				// 順番を入れ替えてリザルトに表示させる
+				m_pPlayer[nCnt]->SetRank(m_pPlayer[nCnt - 1]->GetRank());
+			}
+			else
+			{
+				// 順番を入れ替えてリザルトに表示させる
+				m_pPlayer[nCnt]->SetRank(nCnt);
+			}
+		}
+
 		m_pPlayer[nCnt]->SetMoveFlag(false);
 
 		// ミニゲームに順位を送る

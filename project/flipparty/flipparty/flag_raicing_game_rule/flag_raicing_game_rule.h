@@ -86,7 +86,6 @@ private:
 	CCamera *m_pCamera;				// カメラへのポインタ
 	CCaptain *m_pCaptain;			// キャプテンのポインタ
 	static CBlind *m_pBlind;					//ブラインドクラスのポインタ
-	PLAYER_POINT_VARIABLE m_PlayerPoint;
 	CNumber *m_apNumber[MAX_POINT_NUM];
 
 	int m_nRandTime;				// フラッグを上げる間隔
@@ -99,6 +98,7 @@ private:
 	CPassingPenguin *m_pPassingPenguin;	//通過ペンギンクラス
 	static FLIPPER_DATA m_CaptainData;	//キャプテンの行動データの保存変数
 	static std::vector<int> m_vecPlayerNumber;	//行動済みプレイヤー番号の保存変数
+	CFlagRaicingGamePolygon *m_apUiPoint[PLAYER_NUM];
 };
 
 

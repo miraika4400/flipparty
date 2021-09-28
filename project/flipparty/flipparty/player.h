@@ -117,13 +117,16 @@ private:
 	virtual void ControllFlipper(void);    // 羽の操作
 	void ManageFlipperAngle(void);         // 羽の角度管理
 
+protected:
+	CFlipper * m_pFlipperMoveState;                      // フリッパーの移動状態
+	float m_fFlipperDist[FLIPPER_NUM];                   // フリッパーの角度目標値
+
 	// メンバ変数
 	static CResourceModel::Model m_model[MAX_PARTS_NUM]; // モデル構造体
 	static int m_nPartsNum;                              // モデルパーツ数
 	int m_nPlayerNum;                                    // プレイヤー番号
 	CFlipper * m_pFlipper;                               // フリッパークラス
-	CFlipper * m_pFlipperMoveState;                      // フリッパーの移動状態
-	float m_fFlipperDist[FLIPPER_NUM];                   // フリッパーの角度目標値
+	
 	CBillboard * m_pPlayerNumIcon;                       // プレイヤー番号のアイコン
 	bool m_bMove;                                        // 動けるかどうかのフラグ
 	int m_nRank;                                         // 順位

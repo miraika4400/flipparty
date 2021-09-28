@@ -28,9 +28,9 @@ public:
 	void Update(void);
 	void Draw(void);
 
-	CAddPointDisplay *GetAddPoitDisplay(void);
+	CAddPointDisplay *GetAddPoitDisplay(void) { return m_pAddPointDisplay; }
 private:
-	//void ControllFlipper(void);    // ‰H‚Ì‘€ì
+	void ControllFlipper(void);    // ‰H‚Ì‘€ì
 
 	CAddPointDisplay *m_pAddPointDisplay;
 };
