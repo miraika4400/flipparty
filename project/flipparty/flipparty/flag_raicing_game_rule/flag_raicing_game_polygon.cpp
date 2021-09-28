@@ -27,7 +27,7 @@
 #define COLOR_1P D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f)         // ボードカラー1p
 #define COLOR_2P D3DXCOLOR(0.5f, 0.5f, 1.0f, 1.0f)         // ボードカラー2p
 #define COLOR_3P D3DXCOLOR(0.5f, 1.0f, 0.5f, 1.0f)         // ボードカラー3p
-#define COLOR_4P D3DXCOLOR(1.5f, 1.5f, 0.5f, 1.0f)         // ボードカラー4p
+#define COLOR_4P D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f)         // ボードカラー4p
 
 //**********************************
 // 静的メンバ変数宣言
