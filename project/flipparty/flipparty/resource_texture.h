@@ -49,8 +49,8 @@ public:
 		TEXTURE_TOONSHADOW,      // トゥーンシャドウ
 		TEXTURE_TOONSHADOW_CLOUD,// トゥーンシャドウ*雲
 		TEXTURE_TOONSHADOW_ICEBERG,// トゥーンシャドウ*氷山
-        TEXTURE_UI_UP,           // UI「あげて」
-        TEXTURE_UI_DOWN,         // UI「さげて」
+        TEXTURE_UI_PLAYER_RIGHT,           // UI// UI 右手を上げたとき（記憶ゲームで使用）
+        TEXTURE_UI_PLAYER_LEFT,         // UI// UI 左手を上げたとき（記憶ゲームで使用）
         TEXTURE_UI_MARU,         // UI「〇」
         TEXTURE_UI_BATU,         // UI「×」
         TEXTURE_UI_000,          // UI プレイヤー番号（記憶ゲームで使用）
