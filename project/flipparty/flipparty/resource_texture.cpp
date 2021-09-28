@@ -46,8 +46,8 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/Toon_Shadow.png",  // トゥーンシャドウ
 	"./data/Textures/Toon_Shadow_Cloud.png",  // トゥーンシャドウ*雲
 	"./data/Textures/Toon_Shadow_Iceberg.png",  // トゥーンシャドウ*氷山
-    "./data/Textures/ui_up.png",        // UI「あげて」
-    "./data/Textures/ui_down.png",      // UI「さげて」
+    "./data/Textures/remenber_right_flag_up.png",        // UI 右手を上げたとき（記憶ゲームで使用）
+    "./data/Textures/remenber_left_flag_up.png",      // UI 左手をあげたとき（記憶ゲームで使用）
     "./data/Textures/UI_maru.png",      // UI「〇」
     "./data/Textures/UI_batu.png",      // UI「×」
     "./data/Textures/UI000.png",        // UI プレイヤー番号（記憶ゲームで使用）
@@ -55,9 +55,9 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/ranking.png",      // UI「順位]
 	"./data/Textures/blind.jpg",		// ブラインド
 	"./data/Textures/right_flag_up.png",	// UI　右上げ
-	"./data/Textures/right_flag_doun.png",	// UI　右下げ
+	"./data/Textures/right_flag_down.png",	// UI　右下げ
 	"./data/Textures/left_flag_up.png", 	// UI　左上げ
-	"./data/Textures/left_flag_doun.png",	// UI　左下げ
+	"./data/Textures/left_flag_down.png",	// UI　左下げ
 	"./data/Textures/thunder.png",         // 雷エフェクト
 	"./data/Textures/snow.png",            // 吹雪エフェクト
 	"./data/Textures/Icon_FlagRacing.png", // 旗揚げゲームアイコン
@@ -68,6 +68,8 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/penguin_shadow.png",   // ペンギンの影
 	"./data/Textures/strat_icon.png",       // STARTアイコン
 	"./data/Textures/result.png",           // リザルトロゴ
+	"./data/Textures/end_icon.png",          // ENDアイコン
+	"./data/Textures/answer_polygon.png",          // 加点表示
 	
 };
 

@@ -30,6 +30,8 @@
 #include "sound.h"
 #include "flag_raicing_game_polygon.h"
 #include "orderPolygon.h"
+#include "player_flag_raicing.h"
+#include "add_point_display.h"
 
 //======================================================
 //	マクロ定義
@@ -63,7 +65,7 @@
 CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eTrun
 	= CFlagRaicingGame_rule::CAPTAIN_TRUN;	// キャプテンのターンかプレイヤーのターンかを判別する変数
 CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
-CPlayer *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
+CPlayerFlagRaicing *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
 CFlagRaicingGame_rule::FLIPPER_DATA CFlagRaicingGame_rule::m_CaptainData = {};
 std::vector<int> CFlagRaicingGame_rule::m_vecPlayerNumber = {};
 int nAddPoint[MAX_PLAYER_NUM]=
@@ -139,11 +141,13 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
 	{
 		// プレイヤーの生成
-		m_pPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
+		m_pPlayer[nCntPlayer] = CPlayerFlagRaicing::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
 		// ポイントUIの生成
 		m_PlayerPoint.bPoint[nCntPlayer] = CFlagRaicingGamePolygon::Create(
 			nCntPlayer,D3DXVECTOR3(posXUI, POINT_UI_POS_Y_NUM, 0.0f));
 
+		m_pPlayer[nCntPlayer]->GetAddPoitDisplay()->SetPos(D3DXVECTOR3(posXUI, 550.0f, 0.0f));
+		
 		posX -= PLAYER_SPACE;
 		posXUI += POINT_UI_SPACE;
 	}
@@ -338,7 +342,7 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 		{
 			if (m_pPlayer[nCnt]->GetPoint() < m_pPlayer[nCntSort]->GetPoint())
 			{
-				CPlayer*pPlayer;
+				CPlayerFlagRaicing*pPlayer;
 				pPlayer = m_pPlayer[nCnt];
 				m_pPlayer[nCnt] = m_pPlayer[nCntSort];
 				m_pPlayer[nCntSort] = pPlayer;
@@ -409,6 +413,11 @@ void CFlagRaicingGame_rule::SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE
 
 				//ポイント加算
 				m_pPlayer[nPlayerNum]->AddPoint(nAddPoint[nVecNum + nIndex]);
+				m_pPlayer[nPlayerNum]->GetAddPoitDisplay()->SetDisplay((CAddPointDisplay::POINT_DISPLAY_TYPE)(nVecNum + nIndex));
+			}
+			else
+			{
+				m_pPlayer[nPlayerNum]->GetAddPoitDisplay()->SetDisplay(CAddPointDisplay::POINT_DISPLAY_TYPE_MISS);
 			}
 
 			//行動済みのプレイヤー番号を登録

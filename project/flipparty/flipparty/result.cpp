@@ -410,7 +410,6 @@ void CResult::JudgePlayerRank(bool bSamePointRank)
 		{
 			if (nCntPlayer != 0)
 			{
-
 				// ƒ|ƒCƒ“ƒg‚ª“¯‚¶‚È‚ç“¯‚¶‡ˆÊ‚É‚·‚é
 				if (m_apPlayer[nCntPlayer]->GetPoint() == m_apPlayer[nCntPlayer - 1]->GetPoint())
 				{

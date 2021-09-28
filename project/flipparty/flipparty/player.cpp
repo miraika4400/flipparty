@@ -398,7 +398,6 @@ void CPlayer::DrawModel(void)
 //******************************
 void CPlayer::ControllFlipper(void)
 {
-
 #ifdef _DEBUG
 	// キーボード操作
 	// 右羽を操作
@@ -477,7 +476,7 @@ void CPlayer::ControllFlipper(void)
 	// 右羽を操作
 	if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lRz <= -10)
 	{// 上げる
-		
+
 		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_UP)
 		{
 			// SE
@@ -530,7 +529,7 @@ void CPlayer::ControllFlipper(void)
 	else if (CManager::GetJoypad()->GetStick(m_nPlayerNum).lY >= 10)
 	{// 下げる
 		m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
-		
+
 		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_DOWN)
 		{
 			// SE
@@ -545,6 +544,7 @@ void CPlayer::ControllFlipper(void)
 		//変更した情報を旗上げルールクラスへ送る
 		CFlagRaicingGame_rule::SetPlayerData(m_nPlayerNum, CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
+
 }
 
 //******************************
