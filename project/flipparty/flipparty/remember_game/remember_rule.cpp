@@ -62,7 +62,7 @@
 CRememjber_rule* CRememjber_rule::m_pinstace = nullptr;// インスタンスへのポインタ
 CRememjber_rule::UI_DATA CRememjber_rule::m_UIData[MAX_UI_REMEMBER] = 
 {
-    { D3DXVECTOR3(500, 100.0f, 0.0f), D3DXVECTOR3(64.f, 16.f, 0.0f) ,CResourceTexture::TEXTURE_UI_000 },
+    { D3DXVECTOR3(500, 100.0f, 0.0f), D3DXVECTOR3(64.f, 32.f, 0.0f) ,CResourceTexture::TEXTURE_UI_000 },
     { D3DXVECTOR3(700, 100.0f, 0.0f), D3DXVECTOR3(128.f, 32.f, 0.0f) ,CResourceTexture::TEXTURE_UI_001 }
 };
 
