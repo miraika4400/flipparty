@@ -39,7 +39,7 @@
 #define PLAYER_SPACE 110.0f				// プレイヤー位置の間隔
 #define POINT_UI_SPACE 325.0f			// 点数の位置間隔
 #define TIME_SET 180					// 制限時間の設定
-#define TRUN_SET 40						// ターンの制限時間の設定
+#define TRUN_SET 10						// ターンの制限時間の設定
 #define ADD_POINT_NUM_RANK1 3			// 一番目のポイント加算値
 #define ADD_POINT_NUM_RANK2 2			// 二番目のポイント加算値
 #define ADD_POINT_NUM_RANK3 1			// 三番目のポイント加算値
@@ -350,17 +350,15 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 	// プレイヤー数処理を回す
 	for (int nCnt = 0; nCnt < CCountSelect::GetPlayerNum(); ++nCnt)
 	{
+		// 順番を入れ替えてリザルトに表示させる
+		m_pPlayer[nCnt]->SetRank(nCnt);
+
 		if (nCnt != 0)
 		{
-			if (m_pPlayer[nCnt]->GetRank() == m_pPlayer[nCnt - 1]->GetRank())
+			if (m_pPlayer[nCnt]->GetPoint() == m_pPlayer[nCnt - 1]->GetPoint())
 			{
 				// 順番を入れ替えてリザルトに表示させる
 				m_pPlayer[nCnt]->SetRank(m_pPlayer[nCnt - 1]->GetRank());
-			}
-			else
-			{
-				// 順番を入れ替えてリザルトに表示させる
-				m_pPlayer[nCnt]->SetRank(nCnt);
 			}
 		}
 
