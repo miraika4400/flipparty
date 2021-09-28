@@ -343,7 +343,7 @@ void CManager::SetMode(MODE mode)
 		// NULLクリア
 		m_pResult = NULL;
 		// リザルトBGM停止
-		//m_pSound->Stop(CSound::LABEL_BGM_RESULT);
+		m_pSound->Stop(CSound::LABEL_BGM_RESULT);
 		break;
 
 	default:
@@ -379,7 +379,7 @@ void CManager::SetMode(MODE mode)
 		// リザルト生成
 		m_pResult = CResult::Create();
 		// リザルトBGM再生
-		//m_pSound->Play(CSound::LABEL_BGM_RESULT);
+		m_pSound->Play(CSound::LABEL_BGM_RESULT);
 		break;
 
 	default:

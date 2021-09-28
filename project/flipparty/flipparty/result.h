@@ -22,6 +22,7 @@
 //*****************************
 class CPolygon;
 class CPlayer;
+class CRankUI;
 
 //*****************************
 //マクロ定義
@@ -88,6 +89,7 @@ private:
 	int m_nActionRank;                     // コケる等のアクションを起こす順位
 	bool m_bShow;                          // 順位発表フラグ
 	bool m_bBoard;                         // リザルトボードフラグ
+	CRankUI * m_apRankUI[MAX_PLAYER_NUM];  // 順位UI
 };
 
 #endif

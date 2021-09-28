@@ -24,6 +24,11 @@
 #include "tears_manager.h"
 #include "rank_ui.h"
 #include "resultboard.h"
+#include "sound.h"
+#include "resource_texture.h"
+#include "stage.h"
+#include "sea.h"
+#include "iceberg.h"
 
 //**********************************
 // マクロ定義
@@ -33,6 +38,10 @@
 #define PLAYER_FALL_COUNT 300 // プレイヤーがこけるカウント数
 #define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
 #define RESULT_BOARD_SPACE 320.0f
+
+#define LOGO_POS D3DXVECTOR3(SCREEN_WIDTH/2, 100.0f, 0.0f)
+#define LOGO_SIZE D3DXVECTOR3(300.0f,75.0f,0.0f)
+#define OBJ_BASE_POS_Y 2000.0f
 
 //**********************************
 // 静的メンバ変数宣言
@@ -49,6 +58,7 @@ CResult::CResult()
 	m_nActionRank = 0;
 	m_bShow = true;
 	m_bBoard = false;
+	ZeroMemory(&m_apRankUI, sizeof(m_apRankUI));
 }
 
 //=============================
@@ -77,10 +87,20 @@ HRESULT CResult::Init(void)
 {
 	//// カメラクラスの生成
 	CManager::SetCamera(CCamera::Create());
-	//m_pCamera = CGame::GetCamera();
+	D3DXVECTOR3 cameraPos = CManager::GetCamera()->GetPos();
+	cameraPos.y = OBJ_BASE_POS_Y + 100.0f;
+	CManager::GetCamera()->SetPosV(cameraPos);
 
 	// 背景の生成
 	CBg::Create();
+
+	// 海の生成
+	CSea::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 24.0f, 0.0f), 0.001f , CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 22.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 20.0f, 0.0f), 0.004f , CSea::TYPE_NORMAL);
+
+	// 氷山の生成
+	CIceberg::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 50.0f, -900.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
 
 	// プレイヤー数の取得
 	int nPlayNum = CCountSelect::GetPlayerNum();
@@ -90,7 +110,7 @@ HRESULT CResult::Init(void)
 	float posX = 0 + ((float)(nPlayNum - 1) * PLAYER_SPACE) / 2;
 	for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
 	{
-		m_apPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, 2000.0f - PLAYER_CENTER_HEIGHT, PLAYER_POS_Z), nCntPlayer);
+		m_apPlayer[nCntPlayer] = CPlayer::Create(D3DXVECTOR3(posX, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT, PLAYER_POS_Z), nCntPlayer);
 
 		// カメラの方向に体を向ける
 		D3DXVECTOR3 cemeraPos = CManager::GetCamera()->GetPos();
@@ -102,6 +122,7 @@ HRESULT CResult::Init(void)
 		// 操作フラグfalse
 		m_apPlayer[nCntPlayer]->SetMoveFlag(false);
 
+		CStage::Create(D3DXVECTOR3(posX, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT, PLAYER_POS_Z), CStage::STAGE_TYPE_NORMAL);
 		posX -= PLAYER_SPACE;
 	}
 
@@ -113,6 +134,13 @@ HRESULT CResult::Init(void)
 
 	// 点数計算
 	CalculationRank();
+
+	// ロゴの生成
+	CScene2d*pLogo = CScene2d::Create();
+	pLogo->SetPriority(OBJTYPE_UI);// プライオリティ
+	pLogo->SetPos(LOGO_POS);       // 座標
+	pLogo->SetSize(LOGO_SIZE);     // サイズ
+	pLogo->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_RESULT_LOGO));// テクスチャ
 
 	// ボードフラグ
 	m_bBoard = false;
@@ -175,8 +203,16 @@ void CResult::Update(void)
 
 				for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
 				{
+					// リザルトボードの生成
 					CResultBoard::Create(nCntPlayer, boardPos);
+
 					boardPos.x += RESULT_BOARD_SPACE;
+
+					if (m_apRankUI[nCntPlayer] != NULL)
+					{
+						m_apRankUI[nCntPlayer]->Uninit();
+						m_apRankUI[nCntPlayer] = NULL;
+					}
 				}
 				m_bBoard = true;
 			}
@@ -210,12 +246,20 @@ void CResult::Draw(void)
 //=============================
 void CResult::ChagePlayerMotion(void)
 {
+
+	if (m_nCntFallTime == 0 && m_nActionRank == 1)
+	{
+		// 一位発表時のSE再生
+		CManager::GetSound()->Play(CSound::LABEL_SE_RESULT_WIN);
+	}
+
 	// カウントを進める
 	m_nCntFallTime++;
+
 	if (PLAYER_FALL_COUNT <= m_nCntFallTime)
 	{// 一定のカウントで
 	 // カウントのリセット
-		m_nCntFallTime = 0;
+		
 		// プレイヤー数の取得
 		int nPlayNum = CCountSelect::GetPlayerNum();
 
@@ -229,12 +273,11 @@ void CResult::ChagePlayerMotion(void)
 					m_apPlayer[nCntPlayer]->SetMotion(CPlayer::MOTION_FALL);
 					// 表情の変更
 					m_apPlayer[nCntPlayer]->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
-					//// 涙の生成
-					//D3DXVECTOR3 headPos;
-					//headPos.x = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
-					//headPos.y = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
-					//headPos.z = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 10;
-					//CTearsManager::Create(headPos);
+
+					// SE
+					CManager::GetSound()->Play(CSound::LABEL_SE_MISS);
+
+					m_nCntFallTime = 0;
 				}
 			}
 			else
@@ -245,19 +288,15 @@ void CResult::ChagePlayerMotion(void)
 					m_apPlayer[nCntPlayer]->SetMotion(CPlayer::MOTION_FALL);
 					// 表情の変更
 					m_apPlayer[nCntPlayer]->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
-					//// 涙の生成
-					//D3DXVECTOR3 headPos;
-					//headPos.x = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._41;
-					//headPos.y = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._42;
-					//headPos.z = m_apPlayer[nCntPlayer]->GetModelData()[PLAYER_HEAD_PARTS_NUM].mtxWorld._43 - 10;
-					//CTearsManager::Create(headPos);
+
+					// SE
+					CManager::GetSound()->Play(CSound::LABEL_SE_MISS);
 				}
 				else if (m_apPlayer[nCntPlayer]->GetRank() == 0)
 				{
 					// 一位モーションの再生
 					m_apPlayer[nCntPlayer]->SetMotion(CPlayer::MOTION_MINIRESULT_1);
 				}
-
 			}
 		}
 
@@ -268,6 +307,10 @@ void CResult::ChagePlayerMotion(void)
 
 			// 同ポイントを考慮して順位をつけなおす
 			JudgePlayerRank(true);
+		}
+		else if (m_nActionRank == 1)
+		{
+			m_nCntFallTime = 0;
 		}
 	}
 }
@@ -377,7 +420,7 @@ void CResult::JudgePlayerRank(bool bSamePointRank)
 
 			D3DXVECTOR3 playerPos = m_apPlayer[nCntPlayer]->GetPos();
 			// ランクUIの生成
-			CRankUI::Create(D3DXVECTOR3(playerPos.x, playerPos.y + RANK_UI_HEGHT, playerPos.z), m_apPlayer[nCntPlayer]->GetRank());
+			m_apRankUI[nCntPlayer] = CRankUI::Create(D3DXVECTOR3(playerPos.x, playerPos.y + RANK_UI_HEGHT, playerPos.z), m_apPlayer[nCntPlayer]->GetRank());
 		}
 		else
 		{

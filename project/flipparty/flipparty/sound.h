@@ -27,6 +27,8 @@ public:
 		LABEL_BGM_FLAG_GAME,        // 旗揚げゲームのBGM
 		LABEL_BGM_FLY_GAME,         // 連打ゲームのBGM
 		LABEL_BGM_REMEMBER_GAME,    // 記憶ゲームのBGM
+		LABEL_BGM_MINIRESULT,       // ミニリザルトのBGM
+		LABEL_BGM_RESULT,           // リザルトのBGM
 		LABEL_SE_ENTER,             // エンター音
 		LABEL_SE_CURSOR,            // カーソル音
         LABEL_SE_OK,                // 記憶ゲーム正解の音
@@ -50,6 +52,7 @@ public:
 		LABEL_SE_COUNT,				// カウント音
 		LABEL_SE_START,				// ゲーム開始音
 		LABEL_SE_GAME_END,			// ゲーム終了音
+		LABEL_SE_RESULT_WIN,		// 位置発表時SE
 		SOUND_LABEL_MAX,            // サウンド最大数
 	}LABEL;
 

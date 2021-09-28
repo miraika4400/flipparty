@@ -250,6 +250,24 @@ void CFlagRaicingGame_rule::Update(void)
 				
 				// プレイヤーを動けなくする
 				m_bPlay = false;
+
+				// 人数の取得
+				int nPlayerNum = CCountSelect::GetPlayerNum();
+				for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
+				{
+					// テクスチャクラスの終了処理
+					if (m_PlayerPoint.bPoint[nCnt] != NULL)
+					{
+						//ビルボードの終了
+						m_PlayerPoint.bPoint[nCnt]->Uninit();
+
+						//メモリの削除
+						delete m_PlayerPoint.bPoint[nCnt];
+
+						//メモリのクリア
+						m_PlayerPoint.bPoint[nCnt] = NULL;
+					}
+				}
 			}
 
 			//ブラインドに現在タイムを与える

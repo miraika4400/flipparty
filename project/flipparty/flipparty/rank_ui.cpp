@@ -11,6 +11,8 @@
 #include "rank_ui.h"
 #include "billboard.h"
 #include "resource_texture.h"
+#include "manager.h"
+#include "renderer.h"
 
 //=============================
 // マクロ定義
@@ -142,8 +144,15 @@ void CRankUI::Update(void)
 //=============================
 void CRankUI::Draw(void)
 {
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+
+	pDevice->SetRenderState(D3DRS_ZENABLE, false);
+
 	if (m_pBillboard!=NULL)
 	{
 		m_pBillboard->Draw();
 	}
+
+	pDevice->SetRenderState(D3DRS_ZENABLE, true);
 }

@@ -33,7 +33,7 @@
 // カラー
 #define COLOR_DIRTY D3DXCOLOR( 0.5f,0.0f,0.3f,1.0f)   
 #define COLOR_NORMAL D3DXCOLOR(0.5f,0.6f,1.0f,1.0f)
-#define COLOR_EVENING D3DXCOLOR(1.0f,0.2f,0.1f,1.0f)
+#define COLOR_EVENING D3DXCOLOR(1.0f,0.3f,0.3f,1.0f)
 
 //*****************************
 // 静的メンバ変数宣言

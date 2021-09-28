@@ -17,6 +17,8 @@ CSound::SOUNDPARAM CSound::m_aParam[SOUND_LABEL_MAX]
     { "./data/Sounds/BGM/flag_game.wav"    , -1 },
 	{ "./data/Sounds/BGM/fly_game.wav"    , -1 },
 	{ "./data/Sounds/BGM/remember_game.wav"    , -1 },
+	{ "./data/Sounds/BGM/mini_result.wav"    , -1 },
+	{ "./data/Sounds/BGM/result.wav"    , -1 },
 	{ "./data/Sounds/SE/enter.wav"    , 0 },
 	{ "./data/Sounds/SE/cursor.wav"    , 0 },
     { "./data/Sounds/SE/remember_ok.wav"    , 0 },
@@ -41,6 +43,7 @@ CSound::SOUNDPARAM CSound::m_aParam[SOUND_LABEL_MAX]
 	{ "./data/Sounds/SE/count.wav"    , 0 },
 	{ "./data/Sounds/SE/Start_SE.wav"    , 0 },
 	{ "./data/Sounds/SE/game_end.wav"    , 0 },
+	{ "./data/Sounds/SE/result_win.wav"    , 0 },
 };
 
 //=============================================================================

@@ -12,7 +12,7 @@ MOTIONSET
 	KEYSET			# --- << KEY : 0 / 2 >> ---
 		FRAME = 30
 		KEY	# ----- [ 0 ] -----
-			POS = 0.00 15.00 0.00
+			POS = 0.00 0.00 0.00
 			ROT = 0.00 0.09 0.00
 		END_KEY
 
@@ -70,7 +70,7 @@ MOTIONSET
 	KEYSET			# --- << KEY : 1 / 2 >> ---
 		FRAME = 30
 		KEY	# ----- [ 0 ] -----
-			POS = 0.00 0.00 0.00
+			POS = 0.00 15.00 0.00
 			ROT = 0.00 -0.09 0.00
 		END_KEY
 

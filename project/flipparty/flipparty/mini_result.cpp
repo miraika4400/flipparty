@@ -25,6 +25,10 @@
 #include "rank_ui.h"
 #include "tears_manager.h"
 #include "rule_manager.h"
+#include "sound.h"
+#include "sea.h"
+#include "iceberg.h"
+#include "stage.h"
 
 //**********************************
 // 静的メンバ変数宣言
@@ -39,7 +43,7 @@
 #define BLACKOUT_POS   D3DXVECTOR3(0.0f, 2000.0f, 50.0f)
 #define PLAYER_RESULT_WORST_ROT_X D3DXToRadian(70.0f) // 最下位の時の回転軸のXの値
 #define RANK_UI_HEGHT -50  // ランキングのUIプレイヤーからの位置
-
+#define OBJ_BASE_POS_Y 2000.0f
 //=============================
 // コンストラクタ
 //=============================
@@ -77,13 +81,22 @@ HRESULT CMiniResult::Init(void)
 	CManager::SetCamera(pCamera);
 	pCamera->SetCamera();
 
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	D3DXVECTOR3 cameraPos = CManager::GetCamera()->GetPos();
+	cameraPos.y = OBJ_BASE_POS_Y + 100.0f;
+	CManager::GetCamera()->SetPosV(cameraPos);
 
-	// 背景を暗くするよう
-	CScene3d * p3DPolygon = CScene3d::Create(BLACKOUT_POS, BLACKOUT_SIZE);
-	p3DPolygon->SetColor(BLACKOUT_COLOR);            //色の設定
-	p3DPolygon->SetPriority(OBJTYPE_MINIRESULT_OBJ); // プライオリティの設定
+	// 海の生成
+	CSea::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 24.0f, 0.0f), 0.001f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 22.0f, 0.0f), 0.0025f, CSea::TYPE_NORMAL);
+	CSea::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 20.0f, 0.0f), 0.004f, CSea::TYPE_NORMAL);
+
+	// 氷山の生成
+	CIceberg::Create(D3DXVECTOR3(0.0f, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT - 50.0f, -900.0f), CIceberg::ICEBERG_TYPE(rand() % CIceberg::ICEBERG_MAX));
+
+	//// 背景を暗くするよう
+	//CScene3d * p3DPolygon = CScene3d::Create(BLACKOUT_POS, BLACKOUT_SIZE);
+	//p3DPolygon->SetColor(BLACKOUT_COLOR);            //色の設定
+	//p3DPolygon->SetPriority(OBJTYPE_MINIRESULT_OBJ); // プライオリティの設定
 
 	// プレイヤー数の取得
 	int nPlayNum = CCountSelect::GetPlayerNum();
@@ -113,7 +126,7 @@ HRESULT CMiniResult::Init(void)
 		for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
 		{
 			// プレイヤー生成位置
-			D3DXVECTOR3 createPlayerPos = D3DXVECTOR3(posX, 2000.0f - PLAYER_CENTER_HEIGHT, 100.0f);
+			D3DXVECTOR3 createPlayerPos = D3DXVECTOR3(posX, OBJ_BASE_POS_Y - PLAYER_CENTER_HEIGHT, 100.0f);
 
 			// プレイヤーの生成
 			CPlayer * pResultPlayer = CPlayer::Create(createPlayerPos, nCntPlayer);
@@ -157,6 +170,10 @@ HRESULT CMiniResult::Init(void)
 			else if (pPlayer->GetRank() == 2)
 			{// 三位
 				pResultPlayer->SetMotion(CPlayer::MOTION_MINIRESULT_3);
+				D3DXVECTOR3 pos = pResultPlayer->GetPos();
+				pos.y -= 8.0f;
+				pResultPlayer->SetPos(pos);
+
 				// 表情の設定
 				pResultPlayer->SetFacePattern(CPlayer::FACE_PATTERN_NO_GOOD);
 			}
@@ -164,12 +181,17 @@ HRESULT CMiniResult::Init(void)
 			// ランクUIの生成
 			CRankUI::Create(D3DXVECTOR3(createPlayerPos.x, createPlayerPos.y + RANK_UI_HEGHT, createPlayerPos.z), pPlayer->GetRank());
 
+			CStage::Create(createPlayerPos, CStage::STAGE_TYPE_NORMAL);
+
 			// 位置をずらす
 			posX -= PLAYER_SPACE;
 
 			pPlayer = (CPlayer*)pPlayer->GetNext();
 		}
 	}
+
+	// BGMの再生
+	CManager::GetSound()->Play(CSound::LABEL_BGM_MINIRESULT);
 	return S_OK;
 }
 
@@ -178,6 +200,8 @@ HRESULT CMiniResult::Init(void)
 //=============================
 void CMiniResult::Uninit(void)
 {
+	// BGMの停止
+	CManager::GetSound()->Stop(CSound::LABEL_BGM_MINIRESULT);
 	// 開放処理
 	Release();
 }
@@ -194,6 +218,9 @@ void CMiniResult::Update(void)
 		CManager::GetJoypad()->GetJoystickTrigger(11, 0))
 	{
 		CGame::GetRuleManager()->TransitionRule();
+
+		// BGMの停止
+		CManager::GetSound()->Stop(CSound::LABEL_BGM_MINIRESULT);
 	}
 }
 
