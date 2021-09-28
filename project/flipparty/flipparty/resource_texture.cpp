@@ -46,8 +46,8 @@ const std::string CResourceTexture::m_aTexPath[CResourceTexture::TEXTURE_MAX]
 	"./data/Textures/Toon_Shadow.png",  // トゥーンシャドウ
 	"./data/Textures/Toon_Shadow_Cloud.png",  // トゥーンシャドウ*雲
 	"./data/Textures/Toon_Shadow_Iceberg.png",  // トゥーンシャドウ*氷山
-    "./data/Textures/ui_up.png",        // UI「あげて」
-    "./data/Textures/ui_down.png",      // UI「さげて」
+    "./data/Textures/remenber_right_flag_up.png",        // UI 右手を上げたとき（記憶ゲームで使用）
+    "./data/Textures/remenber_left_flag_up.png",      // UI 左手をあげたとき（記憶ゲームで使用）
     "./data/Textures/UI_maru.png",      // UI「〇」
     "./data/Textures/UI_batu.png",      // UI「×」
     "./data/Textures/UI000.png",        // UI プレイヤー番号（記憶ゲームで使用）

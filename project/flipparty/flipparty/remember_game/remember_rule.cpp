@@ -323,13 +323,13 @@ void CRememjber_rule::InputPlayer(void)
     if (IsRight)
     {    // ‰E‚ğã‚°‚½‚Æ‚«
         SetRememberData(CFlipper::FLIPPER_TYPE_LEFT);
-        m_apFrip->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_RIGHT_UP));
+        m_apFrip->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_PLAYER_RIGHT));
     }
     else if (IsLeft)
     {    // ¶‚ğã‚°‚½‚Æ‚«
         
         SetRememberData(CFlipper::FLIPPER_TYPE_RIGHT);
-        m_apFrip->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_LEFT_UP));
+        m_apFrip->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_UI_PLAYER_LEFT));
     }
 
     // §ŒÀŠÔ‚ğŒ¸‚ç‚·
