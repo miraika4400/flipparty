@@ -156,7 +156,13 @@ void CRuleFly::Update(void)
 				// ゲーム中フラグをfalse
 				m_bPlay = false;
 
-				
+				// プレイヤー数の取得
+				int nPlayNum = CCountSelect::GetPlayerNum();
+				// プレイヤーの生成
+				for (int nCntPlayer = 0; nCntPlayer < nPlayNum; nCntPlayer++)
+				{
+					m_pPlayer[nCntPlayer]->SetMoveFlag(false);
+				}
 			}
 			else
 			{
