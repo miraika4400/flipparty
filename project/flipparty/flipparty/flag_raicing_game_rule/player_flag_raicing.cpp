@@ -246,6 +246,4 @@ void CPlayerFlagRaicing::ControllFlipper(void)
 		//変更した情報を旗上げルールクラスへ送る
 		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
-
 }
-

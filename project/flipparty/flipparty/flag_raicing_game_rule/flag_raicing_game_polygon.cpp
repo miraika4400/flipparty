@@ -19,7 +19,7 @@
 //**********************************
 // マクロ定義
 //**********************************
-#define SIZE D3DXVECTOR3(60.0f,30.0f,0.0f)           // ボードサイズ
+#define SIZE_BACK D3DXVECTOR3(60.0f,30.0f,0.0f)           // ボードサイズ
 
 #define SIZE_SCORE D3DXVECTOR3 (20.0f ,20.0f ,0.0f ) // スコアのサイズ
 #define SCORE_POS_Y m_pos.y                           // スコアY座標
@@ -76,7 +76,9 @@ CFlagRaicingGamePolygon * CFlagRaicingGamePolygon::Create(int nPlayerNum, D3DXVE
 HRESULT CFlagRaicingGamePolygon::Init(void)
 {
 	// 背景の生成
-	m_pBack = CPolygon::Create(m_pos, SIZE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pBack = CPolygon::Create(m_pos, SIZE_BACK, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+	//背景のテクスチャ設定
 	m_pBack->BindTexture(CResourceTexture::GetTexture(CResourceTexture::TESTURE_POINT_BACK));
 
 	// スコアの生成
@@ -100,6 +102,8 @@ HRESULT CFlagRaicingGamePolygon::Init(void)
 		break;
 	}
 
+	SetPriority(CScene::OBJTYPE_UI);
+
 	return S_OK;
 }
 
@@ -111,8 +115,13 @@ void CFlagRaicingGamePolygon::Uninit(void)
 	// 背景の解放
 	if (m_pBack != NULL)
 	{
+		//終了処理
 		m_pBack->Uninit();
+
+		//メモリ削除
 		delete m_pBack;
+
+		//メモリクリア
 		m_pBack = NULL;
 	}
 
@@ -121,21 +130,29 @@ void CFlagRaicingGamePolygon::Uninit(void)
 	{
 		if (m_apScoreNumber[nCntDigit] != NULL)
 		{
+			//終了処理
 			m_apScoreNumber[nCntDigit]->Uninit();
+
+			//メモリ削除
 			delete m_apScoreNumber[nCntDigit];
+
+			//メモリクリア
 			m_apScoreNumber[nCntDigit] = NULL;
 		}
 	}
-}
 
+	Release();
+}
 
 //=============================
 // 更新処理
 //=============================
 void CFlagRaicingGamePolygon::Update(void)
 {
+	//プレイヤーのポイントを取得
 	int nScore = CFlagRaicingGame_rule::GetPlayer(m_nPlayerNum)->GetPoint();
 
+	//取得した数値をナンバークラスへ設定
 	for (int nCntDigit = 0; nCntDigit < POINT_MAX_DIGIT; nCntDigit++)
 	{
 		m_apScoreNumber[nCntDigit]->SetNumber((int)((nScore % (int)(powf(10.0f, (POINT_MAX_DIGIT - nCntDigit)))) / (float)(powf(10, (POINT_MAX_DIGIT - nCntDigit - 1)))));
@@ -168,12 +185,17 @@ void CFlagRaicingGamePolygon::Draw(void)
 //=============================
 void CFlagRaicingGamePolygon::CreateScore(void)
 {
-	float posX = 0 - (SCORE_SPACE*(POINT_MAX_DIGIT - 1)) / 2;
+	float posX = 0 - (SCORE_SPACE * (POINT_MAX_DIGIT - 1)) / 2;
 	int nScore = CFlagRaicingGame_rule::GetPlayer(m_nPlayerNum)->GetPoint();
 
 	for (int nCntDigit = 0; nCntDigit < POINT_MAX_DIGIT; nCntDigit++)
 	{
-		m_apScoreNumber[nCntDigit] = CNumber::Create(0, D3DXVECTOR3(m_pos.x + posX, SCORE_POS_Y, 0.0f), SIZE_SCORE, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_apScoreNumber[nCntDigit] = CNumber::Create(
+			0, 
+			D3DXVECTOR3(m_pos.x + posX, SCORE_POS_Y, 0.0f), 
+			SIZE_SCORE, 
+			D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
 		posX += SCORE_SPACE;
 
 		m_apScoreNumber[nCntDigit]->SetNumber((int)((nScore % (int)(powf(10.0f, (POINT_MAX_DIGIT - nCntDigit)))) / (float)(powf(10, (POINT_MAX_DIGIT - nCntDigit - 1)))));

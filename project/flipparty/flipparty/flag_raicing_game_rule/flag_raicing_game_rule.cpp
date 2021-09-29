@@ -48,7 +48,7 @@
 #define FLAG_PLAYER_POS_Y_NUM -100.0f	// プレイヤーのY座標
 #define FLAG_PLAYER_POS_Z_NUM -50.0f	// プレイヤーのZ座標
 
-#define POINT_UI_POS_Y_NUM 630.0f		// 点数のY座標
+#define POINT_UI_POS_Y_NUM 640.0f		// 点数のY座標
 #define POINT_UI_POS_Z_NUM 5.0f			// 点数のZ座標
 #define POINT_UI_SIZE_X_NUM 60.0f		// 点数UI横幅の大きさ
 #define POINT_UI_SIZE_Y_NUM 30.0f		// 点数UI縦幅の大きさ
@@ -79,10 +79,7 @@ int nAddPoint[MAX_PLAYER_NUM]=
 CFlagRaicingGame_rule::CFlagRaicingGame_rule()
 {
 	// 変数の初期化
-	ZeroMemory(&m_apUiPoint, sizeof(m_apUiPoint));
-	memset(m_apNumber, 0, sizeof(m_apNumber));
 	m_pCaptain = NULL;
-	m_nCntInputPlayer = 0;
 	m_nCntTime = 0;
 	m_nRandTime = 0;
 	m_pTimeLimit = NULL;
@@ -127,7 +124,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	CBg::Create();
 
 	m_bPlay = true;
-	//m_nRandTime = TIME_SET;
+
 	m_nRandTime = 30;
 
 	//カメラの生成
@@ -145,7 +142,7 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 		m_pPlayer[nCntPlayer] = CPlayerFlagRaicing::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
 		
 		// ポイントUIの生成
-		m_apUiPoint[nCntPlayer] = CFlagRaicingGamePolygon::Create(
+		CFlagRaicingGamePolygon::Create(
 			nCntPlayer,D3DXVECTOR3(posXUI, POINT_UI_POS_Y_NUM, 0.0f));
 
 		//点数加算UIの位置設定
@@ -194,25 +191,6 @@ void CFlagRaicingGame_rule::Uninit(void)
 {
 	// BGM停止
 	CManager::GetSound()->Stop(CSound::LABEL_BGM_FLAG_GAME);
-	
-	// 人数の取得
-	int nPlayerNum = CCountSelect::GetPlayerNum();
-
-	for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
-	{
-		// UIポイントの終了処理
-		if (m_apUiPoint[nCnt] != NULL)
-		{
-			//UIポイントの終了
-			m_apUiPoint[nCnt]->Uninit();
-
-			//メモリの削除
-			delete m_apUiPoint[nCnt];
-
-			//メモリのクリア
-			m_apUiPoint[nCnt] = NULL;
-		}
-	}
 }
 
 //======================================================
@@ -230,14 +208,6 @@ void CFlagRaicingGame_rule::Update(void)
 		{
 			// 乱数の初期化
 			srand((unsigned int)time(NULL));
-			for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
-			{
-				if (m_apUiPoint[nCnt])
-				{
-					// ポイント追加処理
-					m_apUiPoint[nCnt]->Update();
-				}
-			}
 			
 			// 時間経過で次の動作に入る
 			if (m_nCntTime == m_nRandTime)
@@ -299,15 +269,6 @@ void CFlagRaicingGame_rule::Update(void)
 //======================================================
 void CFlagRaicingGame_rule::Draw(void)
 {
-	int nPlayerNum = CCountSelect::GetPlayerNum();
-
-	for (int nCnt = 0; nCnt < nPlayerNum; nCnt++)
-	{
-		if (m_apUiPoint[nCnt])
-		{
-			m_apUiPoint[nCnt]->Draw();
-		}
-	}
 }
 
 //======================================================
@@ -421,14 +382,18 @@ void CFlagRaicingGame_rule::SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE
 
 				//ポイント加算
 				m_pPlayer[nPlayerNum]->AddPoint(nAddPoint[nVecNum + nIndex]);
+
+				//加算されたポイント数表示を行う
 				m_pPlayer[nPlayerNum]->GetAddPoitDisplay()->SetDisplay((CAddPointDisplay::POINT_DISPLAY_TYPE)(nVecNum + nIndex));
 			}
+			//ミスした場合
 			else
 			{
+				//ミス表示を行う
 				m_pPlayer[nPlayerNum]->GetAddPoitDisplay()->SetDisplay(CAddPointDisplay::POINT_DISPLAY_TYPE_MISS);
 			}
 
-			//行動済みのプレイヤー番号を登録
+			//行動したプレイヤーの番号を登録
 			m_vecPlayerNumber.push_back(nPlayerNum);
 		}
 	}

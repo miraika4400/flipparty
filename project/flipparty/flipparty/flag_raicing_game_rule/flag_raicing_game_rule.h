@@ -24,16 +24,13 @@
 //======================================================
 //	前方前言
 //======================================================
-class CPolygon;
 class CPlayerFlagRaicing;
 class CCaptain;
 class CCamera;
 class CTimeLimit;
 class CBlind;
-class CBillboard;
 class CPassingPenguin;
 class CNumber;
-class CFlagRaicingGamePolygon;
 
 //======================================================
 //	クラス定義
@@ -53,12 +50,6 @@ public:
 		CFlipper::FLIPPER_TYPE type;
 		CFlipper::FLIPPER_STATE state;
 	}FLIPPER_DATA;
-
-
-	typedef struct
-	{
-		CFlagRaicingGamePolygon * bPoint[PLAYER_NUM];
-	}PLAYER_POINT_VARIABLE;
 
 	CFlagRaicingGame_rule();
 	~CFlagRaicingGame_rule();
@@ -86,11 +77,9 @@ private:
 	CCamera *m_pCamera;				// カメラへのポインタ
 	CCaptain *m_pCaptain;			// キャプテンのポインタ
 	static CBlind *m_pBlind;					//ブラインドクラスのポインタ
-	CNumber *m_apNumber[MAX_POINT_NUM];
 
 	int m_nRandTime;				// フラッグを上げる間隔
 	int m_nCntTime;					// 時間計算
-	int m_nCntInputPlayer;			// 行動済みのプレイヤー数カウント
 
 	bool m_bPlay;					// プレイヤーが動くか動かないかの判別
 	static TRUN m_eTrun;			// 上げるか上げないかの判別
@@ -98,7 +87,6 @@ private:
 	CPassingPenguin *m_pPassingPenguin;	//通過ペンギンクラス
 	static FLIPPER_DATA m_CaptainData;	//キャプテンの行動データの保存変数
 	static std::vector<int> m_vecPlayerNumber;	//行動済みプレイヤー番号の保存変数
-	CFlagRaicingGamePolygon *m_apUiPoint[PLAYER_NUM];
 };
 
 

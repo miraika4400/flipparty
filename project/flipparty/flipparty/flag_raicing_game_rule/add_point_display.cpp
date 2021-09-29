@@ -16,16 +16,10 @@
 //=============================================================================
 //マクロ定義
 //=============================================================================
-#define UV_ONE_FRAME 1.0f / POINT_DISPLAY_TYPE_MAX
-#define DISPLAY_SIZE D3DXVECTOR3(120.0f,30.0f,0.0f)
+#define U_ONE_FRAME 1.0f / MAX_PLAYER_NUM
+#define V_ONE_FRAME 1.0f / POINT_DISPLAY_TYPE_MAX
+#define DISPLAY_SIZE D3DXVECTOR3(80.0f,40.0f,0.0f)
 
-D3DXCOLOR color[MAX_PLAYER_NUM]=
-{
-	D3DXCOLOR(1.0f,0.0f,0.0f,1.0f),	//1Pの色
-	D3DXCOLOR(0.0f,0.0f,1.0f,1.0f),	//2Pの色
-	D3DXCOLOR(0.0f,1.0f,0.0f,1.0f),	//3Pの色
-	D3DXCOLOR(1.0f,1.0f,0.1960f,1.0f)	//4Pの色
-};
 //=============================================================================
 //コンストラクタ
 //=============================================================================
@@ -76,10 +70,10 @@ HRESULT CAddPointDisplay::Init(void)
 	BindTexture(CResourceTexture::GetTexture(CResourceTexture::TEXTURE_ADD_POINT_DISPLAY));
 	
 	D3DXVECTOR2 uvPos[4];
-	uvPos[0] = D3DXVECTOR2(0.0f, m_displayType * UV_ONE_FRAME);
-	uvPos[1] = D3DXVECTOR2(1.0f, m_displayType * UV_ONE_FRAME);
-	uvPos[2] = D3DXVECTOR2(0.0f, m_displayType * UV_ONE_FRAME + UV_ONE_FRAME);
-	uvPos[3] = D3DXVECTOR2(1.0f, m_displayType * UV_ONE_FRAME + UV_ONE_FRAME);
+	uvPos[0] = D3DXVECTOR2(m_nPlayerNumber * U_ONE_FRAME, m_displayType * V_ONE_FRAME);
+	uvPos[1] = D3DXVECTOR2(m_nPlayerNumber * U_ONE_FRAME + U_ONE_FRAME, m_displayType * V_ONE_FRAME);
+	uvPos[2] = D3DXVECTOR2(m_nPlayerNumber * U_ONE_FRAME, m_displayType * V_ONE_FRAME + V_ONE_FRAME);
+	uvPos[3] = D3DXVECTOR2(m_nPlayerNumber * U_ONE_FRAME + U_ONE_FRAME, m_displayType * V_ONE_FRAME + V_ONE_FRAME);
 
 	//UV座標の設定
 	SetTextureUV(uvPos);
@@ -145,10 +139,10 @@ void CAddPointDisplay::SetDisplay(POINT_DISPLAY_TYPE displayType)
 		m_IsDraw = true;
 		m_nShoeCounter = 0;
 		D3DXVECTOR2 uvPos[4];
-		uvPos[0] = D3DXVECTOR2(0.0f, m_displayType * UV_ONE_FRAME);
-		uvPos[1] = D3DXVECTOR2(1.0f, m_displayType * UV_ONE_FRAME);
-		uvPos[2] = D3DXVECTOR2(0.0f, m_displayType * UV_ONE_FRAME + UV_ONE_FRAME);
-		uvPos[3] = D3DXVECTOR2(1.0f, m_displayType * UV_ONE_FRAME + UV_ONE_FRAME);
+		uvPos[0] = D3DXVECTOR2(m_nPlayerNumber * U_ONE_FRAME, m_displayType * V_ONE_FRAME);
+		uvPos[1] = D3DXVECTOR2(m_nPlayerNumber * U_ONE_FRAME + U_ONE_FRAME, m_displayType * V_ONE_FRAME);
+		uvPos[2] = D3DXVECTOR2(m_nPlayerNumber * U_ONE_FRAME, m_displayType * V_ONE_FRAME + V_ONE_FRAME);
+		uvPos[3] = D3DXVECTOR2(m_nPlayerNumber * U_ONE_FRAME + U_ONE_FRAME, m_displayType * V_ONE_FRAME + V_ONE_FRAME);
 
 		//UV座標の設定
 		SetTextureUV(uvPos);

@@ -12,9 +12,7 @@
 //*****************************
 //インクルード
 //*****************************
-#include "main.h"
 #include "scene.h"
-#include "rule_manager.h"
 
 //=============================
 // 前方宣言
@@ -32,7 +30,7 @@ class CNumber;
 //=============================
 
 //リザルトボードクラス
-class CFlagRaicingGamePolygon
+class CFlagRaicingGamePolygon :public CScene
 {
 public:
 	//============

@@ -51,7 +51,6 @@ public:
 	virtual void Update(void) = 0;  // çXêV
     virtual void Draw(void) = 0;    // ï`âÊ
 
-	//virtual void StratProcess(void) = 0;
 	virtual void GameProcess(void) = 0;
 	virtual void MiniResultProcess(void) = 0;
 
