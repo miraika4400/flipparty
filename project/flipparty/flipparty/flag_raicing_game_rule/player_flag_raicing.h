@@ -33,5 +33,7 @@ private:
 	void ControllFlipper(void);    // 羽の操作
 
 	CAddPointDisplay *m_pAddPointDisplay;
+	bool m_bIsOldLeftJoyPad;	//前回左スティックを使用したかどうか
+	bool m_bIsOldRightJoyPad;	//前回右スティック使用したかどうか
 };
 #endif // !_PLAYER_FLAG_RAICING_H_

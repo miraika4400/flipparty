@@ -105,7 +105,8 @@ void CRuleManager::Uninit(void)
 		delete m_pFadePolygon;
 		m_pFadePolygon = NULL;
 	}
-
+	// BGM’âŽ~
+	CManager::GetSound()->Stop(CSound::LABEL_BGM_TUTORIAL);
 	// ŠJ•úˆ—
 	Release();
 }

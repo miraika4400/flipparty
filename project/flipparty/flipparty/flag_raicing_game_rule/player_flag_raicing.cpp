@@ -25,6 +25,8 @@
 CPlayerFlagRaicing::CPlayerFlagRaicing()
 {
 	m_pAddPointDisplay = NULL;
+	m_bIsOldLeftJoyPad = false;
+	m_bIsOldRightJoyPad = false;
 }
 
 //=============================================================================
@@ -70,6 +72,8 @@ HRESULT CPlayerFlagRaicing::Init(void)
 
 	m_pAddPointDisplay = CAddPointDisplay::Create(GetPlayerNumber());
 
+	m_bIsOldLeftJoyPad = false;
+	m_bIsOldRightJoyPad = false;
 	return S_OK;
 }
 
@@ -87,7 +91,6 @@ void CPlayerFlagRaicing::Uninit(void)
 void CPlayerFlagRaicing::Update(void)
 {
 	CPlayer::Update();
-
 }
 
 //=============================================================================
@@ -98,12 +101,15 @@ void CPlayerFlagRaicing::Draw(void)
 	CPlayer::Draw();
 }
 
+//=============================================================================
+//羽のコントロール処理
+//=============================================================================
 void CPlayerFlagRaicing::ControllFlipper(void)
 {
 #ifdef _DEBUG
 	// キーボード操作
 	// 右羽を操作
-	if (CManager::GetKeyboard()->GetKeyPress(DIK_UP))
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_UP))
 	{// 上げる
 		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_UP)
 		{
@@ -120,7 +126,7 @@ void CPlayerFlagRaicing::ControllFlipper(void)
 		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 
 	}
-	else if (CManager::GetKeyboard()->GetKeyPress(DIK_DOWN))
+	else if (CManager::GetKeyboard()->GetKeyTrigger(DIK_DOWN))
 	{// 下げる
 		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_DOWN)
 		{
@@ -139,7 +145,7 @@ void CPlayerFlagRaicing::ControllFlipper(void)
 	}
 
 	// 左羽を操作
-	if (CManager::GetKeyboard()->GetKeyPress(DIK_W))
+	if (CManager::GetKeyboard()->GetKeyTrigger(DIK_W))
 	{// 上げる
 		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_UP)
 		{
@@ -156,7 +162,7 @@ void CPlayerFlagRaicing::ControllFlipper(void)
 		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 
 	}
-	else if (CManager::GetKeyboard()->GetKeyPress(DIK_S))
+	else if (CManager::GetKeyboard()->GetKeyTrigger(DIK_S))
 	{// 下げる
 		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_DOWN)
 		{
@@ -172,78 +178,113 @@ void CPlayerFlagRaicing::ControllFlipper(void)
 		//変更した情報を旗上げルールクラスへ送る
 		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
-
 #endif // _DEBUG
+
 	// コントローラー操作
 	// 右羽を操作
 	if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lRz <= -10)
 	{// 上げる
 
-		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_UP)
+		//前回右スティックを使用していなければ
+		if (m_bIsOldRightJoyPad == false) 
 		{
-			// SE
-			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_RIGHT1) + GetPlayerNumber()));
+			if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_UP)
+			{
+				// SE
+				CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_RIGHT1) + GetPlayerNumber()));
 
-			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
+				m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_UP;
+			}
+
+			// 移動状態の更新
+			m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+
+			//変更した情報を旗上げルールクラスへ送る
+			CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
+
+			//右スティックを使用していることにする
+			m_bIsOldRightJoyPad = true;
 		}
-
-		// 移動状態の更新
-		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
-
-		//変更した情報を旗上げルールクラスへ送る
-		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_UP);
 	}
-	else if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lRz >= 10)
+	else if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lRz >= 10 )
 	{// 下げる
 
-		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_DOWN)
+		//前回右スティックを使用していなければ
+		if (m_bIsOldRightJoyPad == false)
 		{
-			// SE
-			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_RIGHT1) + GetPlayerNumber()));
+			if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_DOWN)
+			{
+				// SE
+				CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_RIGHT1) + GetPlayerNumber()));
 
-			m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
+				m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] = RIGHT_FLIPPER_DIST_ANGLE_DOWN;
+			}
+			// 移動状態の更新
+			m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+
+			//変更した情報を旗上げルールクラスへ送る
+			CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+
+			//右スティックを使用していることにする
+			m_bIsOldRightJoyPad = true;
 		}
-		// 移動状態の更新
-		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
-
-		//変更した情報を旗上げルールクラスへ送る
-		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_RIGHT, CFlipper::FLIPPERSTATE_DOWN);
+	}
+	else
+	{
+		m_bIsOldRightJoyPad = false;
 	}
 
 	// 左羽を操作
 	if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lY <= -10)
 	{// 上げる
 
-		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_UP)
+		//前回左スティックを使用していなければ
+		if (m_bIsOldLeftJoyPad == false)
 		{
-			// SE
-			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_LEFT1) + GetPlayerNumber()));
+			if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_UP)
+			{
+				// SE
+				CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_LEFT1) + GetPlayerNumber()));
 
-			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
+				m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_UP;
+			}
+
+			// 移動状態の更新
+			m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+
+			//変更した情報を旗上げルールクラスへ送る
+			CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
+
+			//左スティックを使用していることにする
+			m_bIsOldLeftJoyPad = true;
 		}
-
-		// 移動状態の更新
-		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
-
-		//変更した情報を旗上げルールクラスへ送る
-		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_UP);
 	}
 	else if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lY >= 10)
 	{// 下げる
-		m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
 
-		if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_DOWN)
+		//前回左スティックを使用していなければ
+		if (m_bIsOldLeftJoyPad == false)
 		{
-			// SE
-			CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_LEFT1) + GetPlayerNumber()));
+			if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] != LEFT_FLIPPER_DIST_ANGLE_DOWN)
+			{
+				// SE
+				CManager::GetSound()->Play((CSound::LABEL)(((int)CSound::LABEL_SE_FLIPPER_LEFT1) + GetPlayerNumber()));
 
-			m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+				m_fFlipperDist[CFlipper::FLIPPER_TYPE_LEFT] = LEFT_FLIPPER_DIST_ANGLE_DOWN;
+			}
+
+			// 移動状態の更新
+			m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+
+			//変更した情報を旗上げルールクラスへ送る
+			CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+
+			//左スティックを使用していることにする
+			m_bIsOldLeftJoyPad = true;
 		}
-
-		// 移動状態の更新
-		m_pFlipperMoveState->SetState(CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
-
-		//変更した情報を旗上げルールクラスへ送る
-		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
+	}
+	else
+	{
+		m_bIsOldLeftJoyPad = false;
 	}
 }
