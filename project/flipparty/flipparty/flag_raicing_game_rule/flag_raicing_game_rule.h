@@ -83,13 +83,13 @@ public:
 	static TRUN GetGameTrun(void) { return m_eTrun; }		// ターン情報の取得
 	static void SetGameTrun(TRUN Trun) { m_eTrun = Trun; }	// ターン情報の設定
 	static CBlind *GetBlind(void) { return m_pBlind; }
-	static CPlayerFlagRaicing *GetPlayer(int playerNum) { return m_pPlayer[playerNum]; }
+	static CPlayerFlagRaicing *GetPlayer(int playerNum) { return m_apPlayer[playerNum]; }
 
 	static void SetCaptainData(CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state);
 	static void SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state);
 private:
 	
-	static CPlayerFlagRaicing *m_pPlayer[MAX_PLAYER_NUM];	// プレイヤーへのポインタ
+	static CPlayerFlagRaicing *m_apPlayer[MAX_PLAYER_NUM];	// プレイヤーへのポインタ
 	CCamera *m_pCamera;				// カメラへのポインタ
 	CCaptain *m_pCaptain;			// キャプテンのポインタ
 	static CBlind *m_pBlind;					//ブラインドクラスのポインタ

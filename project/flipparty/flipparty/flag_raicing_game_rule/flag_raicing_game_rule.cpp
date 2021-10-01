@@ -65,7 +65,7 @@
 CFlagRaicingGame_rule::TRUN CFlagRaicingGame_rule::m_eTrun
 	= CFlagRaicingGame_rule::CAPTAIN_TRUN;	// キャプテンのターンかプレイヤーのターンかを判別する変数
 CBlind *CFlagRaicingGame_rule::m_pBlind = NULL;	//ブラインドクラスのポインタ変数
-CPlayerFlagRaicing *CFlagRaicingGame_rule::m_pPlayer[MAX_PLAYER_NUM] = {};
+CPlayerFlagRaicing *CFlagRaicingGame_rule::m_apPlayer[MAX_PLAYER_NUM] = {};
 CFlagRaicingGame_rule::FLIPPER_DATA CFlagRaicingGame_rule::m_CaptainData = {};
 CFlagRaicingGame_rule::ANSWER_DATA CFlagRaicingGame_rule::m_answerData = {};
 int nAddPoint[MAX_PLAYER_NUM]=
@@ -139,14 +139,14 @@ HRESULT CFlagRaicingGame_rule::Init(void)
 	for (int nCntPlayer = 0; nCntPlayer < nPlayerNum; nCntPlayer++)
 	{
 		// プレイヤーの生成
-		m_pPlayer[nCntPlayer] = CPlayerFlagRaicing::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
+		m_apPlayer[nCntPlayer] = CPlayerFlagRaicing::Create(D3DXVECTOR3(posX, FLAG_PLAYER_POS_Y_NUM, FLAG_PLAYER_POS_Z_NUM), nCntPlayer);
 		
 		// ポイントUIの生成
 		CFlagRaicingGamePolygon::Create(
 			nCntPlayer,D3DXVECTOR3(posXUI, POINT_UI_POS_Y_NUM, 0.0f));
 
 		//点数加算UIの位置設定
-		m_pPlayer[nCntPlayer]->GetAddPoitDisplay()->SetPos(D3DXVECTOR3(posXUI, 550.0f, 0.0f));
+		m_apPlayer[nCntPlayer]->GetAddPoitDisplay()->SetPos(D3DXVECTOR3(posXUI, 550.0f, 0.0f));
 		
 		posX -= PLAYER_SPACE;
 		posXUI += POINT_UI_SPACE;
@@ -212,12 +212,8 @@ void CFlagRaicingGame_rule::Update(void)
 			// 時間経過で次の動作に入る
 			if (m_nCntTime == m_nRandTime)
 			{
-#ifdef _DEBUG
-				m_nRandTime = 360;	// ランダムで次に旗の変更するタイミングを設定
-#endif
-#ifndef _DEBUG
 				m_nRandTime = RAND_FLAG;	// ランダムで次に旗の変更するタイミングを設定
-#endif
+
 				SetGameTrun(CAPTAIN_TRUN);	// キャプテンのターンに変更
 				m_nCntTime = 0;				// タイムの初期化
 
@@ -302,17 +298,24 @@ void CFlagRaicingGame_rule::MiniResultProcess(void)
 //======================================================
 void CFlagRaicingGame_rule::JudgeRank(void)
 {
+	std::vector<CPlayerFlagRaicing *> vecPlayer;
+
+	for (int nCnt = 0; nCnt < CCountSelect::GetPlayerNum(); ++nCnt)
+	{
+		vecPlayer.push_back(m_apPlayer[nCnt]);
+	}
+
 	/* 数値を昇順にソート */
 	for (int nCnt = 0; nCnt < CCountSelect::GetPlayerNum(); ++nCnt)
 	{
 		for (int nCntSort = nCnt + 1; nCntSort<CCountSelect::GetPlayerNum(); ++nCntSort)
 		{
-			if (m_pPlayer[nCnt]->GetPoint() < m_pPlayer[nCntSort]->GetPoint())
+			if (vecPlayer[nCnt]->GetPoint() < vecPlayer[nCntSort]->GetPoint())
 			{
 				CPlayerFlagRaicing*pPlayer;
-				pPlayer = m_pPlayer[nCnt];
-				m_pPlayer[nCnt] = m_pPlayer[nCntSort];
-				m_pPlayer[nCntSort] = pPlayer;
+				pPlayer = vecPlayer[nCnt];
+				vecPlayer[nCnt] = vecPlayer[nCntSort];
+				vecPlayer[nCntSort] = pPlayer;
 			}
 		}
 	}
@@ -320,21 +323,22 @@ void CFlagRaicingGame_rule::JudgeRank(void)
 	for (int nCnt = 0; nCnt < CCountSelect::GetPlayerNum(); ++nCnt)
 	{
 		// 順番を入れ替えてリザルトに表示させる
-		m_pPlayer[nCnt]->SetRank(nCnt);
+		vecPlayer[nCnt]->SetRank(nCnt);
 
 		if (nCnt != 0)
 		{
-			if (m_pPlayer[nCnt]->GetPoint() == m_pPlayer[nCnt - 1]->GetPoint())
+			//ひとつ前のプレイヤーとポイント数が同じ時
+			if (vecPlayer[nCnt]->GetPoint() == vecPlayer[nCnt - 1]->GetPoint())
 			{
-				// 順番を入れ替えてリザルトに表示させる
-				m_pPlayer[nCnt]->SetRank(m_pPlayer[nCnt - 1]->GetRank());
+				// 同順位として設定
+				vecPlayer[nCnt]->SetRank(vecPlayer[nCnt - 1]->GetRank());
 			}
 		}
 
-		m_pPlayer[nCnt]->SetMoveFlag(false);
+		vecPlayer[nCnt]->SetMoveFlag(false);
 
 		// ミニゲームに順位を送る
-		CResult::SetMiniGameRank(CRuleManager::RULE_FLAG_RACING, m_pPlayer[nCnt]->GetPlayerNumber(), m_pPlayer[nCnt]->GetRank());
+		CResult::SetMiniGameRank(CRuleManager::RULE_FLAG_RACING, vecPlayer[nCnt]->GetPlayerNumber(), vecPlayer[nCnt]->GetRank());
 	}
 
 	// 仮のリザルト表示
@@ -389,10 +393,10 @@ void CFlagRaicingGame_rule::SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE
 				int nIndex = MAX_PLAYER_NUM - CCountSelect::GetPlayerNum();
 
 				//ポイント加算
-				m_pPlayer[nPlayerNum]->AddPoint(nAddPoint[m_answerData.nAnswerNum + nIndex]);
+				m_apPlayer[nPlayerNum]->AddPoint(nAddPoint[m_answerData.nAnswerNum + nIndex]);
 
 				//加算されたポイント数表示を行う
-				m_pPlayer[nPlayerNum]->GetAddPoitDisplay()->SetDisplay((CAddPointDisplay::POINT_DISPLAY_TYPE)(m_answerData.nAnswerNum + nIndex));
+				m_apPlayer[nPlayerNum]->GetAddPoitDisplay()->SetDisplay((CAddPointDisplay::POINT_DISPLAY_TYPE)(m_answerData.nAnswerNum + nIndex));
 
 				//正答数を加算
 				m_answerData.nAnswerNum++;
@@ -401,7 +405,7 @@ void CFlagRaicingGame_rule::SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE
 			else
 			{
 				//ミス表示を行う
-				m_pPlayer[nPlayerNum]->GetAddPoitDisplay()->SetDisplay(CAddPointDisplay::POINT_DISPLAY_TYPE_MISS);
+				m_apPlayer[nPlayerNum]->GetAddPoitDisplay()->SetDisplay(CAddPointDisplay::POINT_DISPLAY_TYPE_MISS);
 			}
 
 			//行動したプレイヤーの番号を登録

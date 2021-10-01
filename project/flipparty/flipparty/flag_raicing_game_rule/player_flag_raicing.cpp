@@ -178,6 +178,7 @@ void CPlayerFlagRaicing::ControllFlipper(void)
 		//変更した情報を旗上げルールクラスへ送る
 		CFlagRaicingGame_rule::SetPlayerData(GetPlayerNumber(), CFlipper::FLIPPER_TYPE_LEFT, CFlipper::FLIPPERSTATE_DOWN);
 	}
+
 #endif // _DEBUG
 
 	// コントローラー操作
@@ -186,7 +187,7 @@ void CPlayerFlagRaicing::ControllFlipper(void)
 	{// 上げる
 
 		//前回右スティックを使用していなければ
-		if (m_bIsOldRightJoyPad == false) 
+		if (m_bIsOldRightJoyPad == false)
 		{
 			if (m_fFlipperDist[CFlipper::FLIPPER_TYPE_RIGHT] != RIGHT_FLIPPER_DIST_ANGLE_UP)
 			{
@@ -206,7 +207,7 @@ void CPlayerFlagRaicing::ControllFlipper(void)
 			m_bIsOldRightJoyPad = true;
 		}
 	}
-	else if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lRz >= 10 )
+	else if (CManager::GetJoypad()->GetStick(GetPlayerNumber()).lRz >= 10)
 	{// 下げる
 
 		//前回右スティックを使用していなければ
