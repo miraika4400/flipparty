@@ -38,18 +38,34 @@ class CNumber;
 class CFlagRaicingGame_rule : public CRuleBase
 {
 public:
+
+	//======================================================
+	//ゲームターンの列挙
+	//======================================================
 	typedef enum
 	{
-		PLAYER_TRUN = 0,
-		CAPTAIN_TRUN,
+		PLAYER_TRUN = 0,	//プレイヤーのターン
+		CAPTAIN_TRUN,		//キャプテンのターン
 		TRUN_END
 	}TRUN;
 
+	//======================================================
+	//羽のデータ
+	//======================================================
 	typedef struct
 	{
-		CFlipper::FLIPPER_TYPE type;
-		CFlipper::FLIPPER_STATE state;
+		CFlipper::FLIPPER_TYPE type;	//羽の左右の種類
+		CFlipper::FLIPPER_STATE state;	//羽の状態
 	}FLIPPER_DATA;
+
+	//======================================================
+	//回答データ
+	//======================================================
+	typedef struct
+	{
+		std::vector<int> vecPlayerNumber;	//行動済みのプレイヤー番号保持変数
+		int nAnswerNum;	//正答した数
+	}ANSWER_DATA;
 
 	CFlagRaicingGame_rule();
 	~CFlagRaicingGame_rule();
@@ -67,13 +83,13 @@ public:
 	static TRUN GetGameTrun(void) { return m_eTrun; }		// ターン情報の取得
 	static void SetGameTrun(TRUN Trun) { m_eTrun = Trun; }	// ターン情報の設定
 	static CBlind *GetBlind(void) { return m_pBlind; }
-	static CPlayerFlagRaicing *GetPlayer(int playerNum) { return m_pPlayer[playerNum]; }
+	static CPlayerFlagRaicing *GetPlayer(int playerNum) { return m_apPlayer[playerNum]; }
 
 	static void SetCaptainData(CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state);
 	static void SetPlayerData(int nPlayerNum, CFlipper::FLIPPER_TYPE type, CFlipper::FLIPPER_STATE state);
 private:
 	
-	static CPlayerFlagRaicing *m_pPlayer[MAX_PLAYER_NUM];	// プレイヤーへのポインタ
+	static CPlayerFlagRaicing *m_apPlayer[MAX_PLAYER_NUM];	// プレイヤーへのポインタ
 	CCamera *m_pCamera;				// カメラへのポインタ
 	CCaptain *m_pCaptain;			// キャプテンのポインタ
 	static CBlind *m_pBlind;					//ブラインドクラスのポインタ
@@ -86,7 +102,7 @@ private:
 	CTimeLimit * m_pTimeLimit;		// 制限時間クラス
 	CPassingPenguin *m_pPassingPenguin;	//通過ペンギンクラス
 	static FLIPPER_DATA m_CaptainData;	//キャプテンの行動データの保存変数
-	static std::vector<int> m_vecPlayerNumber;	//行動済みプレイヤー番号の保存変数
+	static ANSWER_DATA m_answerData;	//行動済みプレイヤー番号の保存変数
 };
 
 
