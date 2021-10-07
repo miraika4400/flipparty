@@ -48,6 +48,7 @@ CRuleFly::CRuleFly()
 {
 	// 変数のクリア
 	m_pTimeLimit = NULL;
+	ZeroMemory(&m_anCloudTime, sizeof(m_anCloudTime));
 }
 
 //******************************
@@ -89,7 +90,7 @@ HRESULT CRuleFly::Init(void)
 
 	// プレイヤー数の取得
 	int nPlayNum = CCountSelect::GetPlayerNum();
-	
+
 	// プレイヤーの生成
 	// 生成位置X軸の調整
 	float posX = 0 + ((float)(nPlayNum - 1) * PLAYER_SPACE) / 2;
@@ -100,9 +101,13 @@ HRESULT CRuleFly::Init(void)
 
 		// ステージの生成
 		CStage::Create(D3DXVECTOR3(posX, 0.0f, 0.0f), CStage::STAGE_TYPE_NORMAL);
-		
+
 		posX -= PLAYER_SPACE;
 	}
+
+	m_anCloudTime[0] = (rand() % 5 + 22);
+	m_anCloudTime[1] = (rand() % 5 + 12);
+	m_anCloudTime[2] = (rand() % 5 + 2);
 
 	// 制限時間の生成
 	m_pTimeLimit = CTimeLimit::Create(PLAY_TIME);
@@ -132,16 +137,21 @@ void CRuleFly::Update(void)
 		////////////////////////////////////////
 		// 仮置き
 
-		// 雷雲の生成
-		if (m_pTimeLimit->GetTimeLimit() == 20 && m_pTimeLimit->GetTimeCount() == 0 || m_pTimeLimit->GetTimeLimit() == 10 && m_pTimeLimit->GetTimeCount() == 0)
+		for (int nCntCloudNum = 0; nCntCloudNum < CLOUD_NUM; nCntCloudNum++)
 		{
-			for (int nCntPlayer = 0; nCntPlayer < CCountSelect::GetPlayerNum(); nCntPlayer++)
+			// 雷雲の生成
+			if (m_pTimeLimit->GetTimeLimit() == m_anCloudTime[nCntCloudNum] && m_pTimeLimit->GetTimeCount() == 0)
 			{
-				//CCloud::Create(nCntPlayer);
+				for (int nCntPlayer = 0; nCntPlayer < CCountSelect::GetPlayerNum(); nCntPlayer++)
+				{
+					//CCloud::Create(nCntPlayer);
 
-				CWarningUI::Create(nCntPlayer);
+					CWarningUI::Create(nCntPlayer);
+				}
+				break;
 			}
 		}
+		
 
 		/////////////////////////////////////////
 

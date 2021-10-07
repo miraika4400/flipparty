@@ -16,12 +16,14 @@
 //*****************************
 // マクロ定義
 //*****************************
+#define CLOUD_NUM 3 // 雲の出現回数
 
 //*****************************
 // 前方宣言
 //*****************************
 class CTimeLimit;
 class CFlyGamePlayer;
+
 //*****************************
 // クラス定義
 //*****************************
@@ -55,6 +57,7 @@ private:
 	CTimeLimit * m_pTimeLimit; // 制限時間クラス
 	static bool m_bPlay; // プレイ中フラグ
 	static CFlyGamePlayer * m_pPlayer[4];
+	int m_anCloudTime[CLOUD_NUM];
 };
 
 
