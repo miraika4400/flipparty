@@ -9,6 +9,7 @@
 // インクルード
 //*****************************************************************************
 #include "camera_remember.h"
+#include "remember_rule.h"
 
 //*****************************************************************************
 // 静的メンバ変数
@@ -18,8 +19,8 @@ CCameraRemember* CCameraRemember::m_pInsutance = nullptr;
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define CAMERA_POS_V_REMEMBER D3DXVECTOR3(0.0f,0.0f, 150.0f)  // 位置
-#define CAMERA_POS_R_REMEMBER D3DXVECTOR3(0.0f, 15.0f, 0.0f)  // 注視点
+#define CAMERA_POS_V_REMEMBER(player) D3DXVECTOR3((CAMERA_POS_X * player)*-1,0.0f,150)  // 位置
+#define CAMERA_POS_R_REMEMBER(player) D3DXVECTOR3((CAMERA_POS_X * player)*-1, 15.0f, 0.0f)  // 注視点
 
 #define CAMERA_MOVE_SPEED (20)// カメラの移動速度
 #define CAMERA_POS_X (150)
@@ -62,9 +63,10 @@ HRESULT CCameraRemember::Init(void)
     m_nDist = false;// 移動中かどうか
     m_fCameraDest = 0;
 
+    int nTrunPlayer = CRememjber_rule::GetInstance()->IsAnyPlayerTurn();
     // 位置の設定
-    m_posV = CAMERA_POS_V_REMEMBER;
-    m_posR = CAMERA_POS_R_REMEMBER;
+    m_posV = CAMERA_POS_V_REMEMBER(nTrunPlayer);
+    m_posR = CAMERA_POS_R_REMEMBER(nTrunPlayer);
 
     return S_OK;
 }

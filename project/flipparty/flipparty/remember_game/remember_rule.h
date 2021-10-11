@@ -71,8 +71,8 @@ public:
     void MiniResultProcess(void);
 
     // Get関数
-    CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
-
+    static CRememjber_rule* GetInstance(void) { return m_pinstace; }// インスタンスの取得
+    int IsAnyPlayerTurn(void) { return m_nTurnPlayer; } // 現在のプレイヤーのターン取得
 private:
 
     //---------------------

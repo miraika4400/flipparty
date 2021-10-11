@@ -245,6 +245,28 @@ void CResult::Draw(void)
 }
 
 //=============================
+// [GetRank] その順位のプレイヤー番号を取得
+// Author : AYANOKUDO
+// 引数: 
+// 返り値 :プレイヤーの番号
+//=============================
+int CResult::GetRank(int nRank)
+{
+    int nPlayerNum = 0;// プレイヤーの番号
+    int aPoint = m_resultPoint[0].nPoint;
+    // 順位
+    for (int nCnt = 0; nCnt < MAX_PLAYER_NUM; nCnt++)
+    {
+        if (aPoint>=m_resultPoint[nCnt].nPoint)
+        {
+            nPlayerNum = nCnt;// プレイヤーの番号を保存
+            aPoint = m_resultPoint[nCnt].nPoint;// 一番低いポイントを保存
+        }
+    }
+    return nPlayerNum;
+}
+
+//=============================
 // プレイヤーのモーションを変える
 //=============================
 void CResult::ChagePlayerMotion(void)

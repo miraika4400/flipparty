@@ -69,6 +69,8 @@ public:
 	static void SetMiniGameRank(int nMiniGameNum, int nPlayerNum, int nRank) { m_resultPoint[nPlayerNum].nMiniGameRank[nMiniGameNum] = nRank; }
 	
 	static ResultPoint GetResultPoint(int nPlayerNum) { return m_resultPoint[nPlayerNum]; }
+    static int GetRank(int nRank);// 順位のゲッタ(工藤作成)
+
 private:
 	// プレイヤーのモーションを変える
 	void ChagePlayerMotion(void);

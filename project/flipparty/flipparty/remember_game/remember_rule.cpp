@@ -122,13 +122,16 @@ HRESULT CRememjber_rule::Init(void)
     // ターン数の管理
     for (int nCnt = 0; nCnt < MAX_PLAYER_NUM; nCnt++)
     {
-        m_aTurn[nCnt] = nCnt; // 入っている番号がプレイヤーの番号になる
+        m_aTurn[nCnt] = nCnt; 
     }
 
-    m_nTurnPlayer = 0;      // どのプレイヤーのターンか
-    m_nNumInput = 0;        // プレイヤーが入力した回数
-    m_IsinputEnd = false;   // プレイヤーが入力し終わったかのフラグ
-    m_nInputCount = 0;      // プレイヤーが入力できるようになるまでのカウント
+    // 乱数で最初のプレイヤーを決定
+    int nPlayerturn = std::rand() % CCountSelect::GetPlayerNum();
+
+    m_nTurnPlayer = nPlayerturn;      // どのプレイヤーのターンか
+    m_nNumInput = 0;                  // プレイヤーが入力した回数
+    m_IsinputEnd = false;             // プレイヤーが入力し終わったかのフラグ
+    m_nInputCount = 0;                // プレイヤーが入力できるようになるまでのカウント
     m_nInputTime = MAX_INPUT_TIME;                   // 入力できる制限時間の回復
     ZeroMemory(&m_FlipperData, sizeof(m_FlipperData));      // 見本データの配列
     ZeroMemory(&m_PlayerInput, sizeof(m_PlayerInput));      // プレイヤーの入力情報
